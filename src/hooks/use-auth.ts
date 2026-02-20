@@ -49,7 +49,20 @@ export function useAuth() {
       setIsLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // Re-validate auth when the tab becomes visible again (e.g. mobile browser
+    // waking up after the access token has expired). This triggers Supabase's
+    // token refresh and keeps the UI in sync with the actual session state.
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        getUser();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      subscription.unsubscribe();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [supabase, fetchProfile]);
 
   return {
