@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import Script from "next/script";
-import { Button } from "@/components/ui/button";
 import { createOrder, verifyPayment } from "@/app/(store)/checkout/actions";
-import { toast } from "sonner";
-import { Loader2, CreditCard } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/constants";
+import { CreditCard, Loader2 } from "lucide-react";
+import Script from "next/script";
+import { useState } from "react";
+import { toast } from "sonner";
 
 declare global {
   interface Window {
@@ -47,7 +47,7 @@ export function PaymentButton({
         amount: Math.round(amount * 100),
         currency: "INR",
         name: APP_NAME,
-        description: "Jewelry Purchase",
+        description: "Jewellery Purchase",
         order_id: razorpayOrderId,
         prefill: {
           email: userEmail,

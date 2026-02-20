@@ -82,19 +82,16 @@ export function useCartProvider(): CartContextType {
     const localItems = getLocalCart();
     if (localItems.length === 0) return;
 
-    for (const item of localItems) {
-      await supabase.from("cart_items").upsert(
-        {
-          user_id: user.id,
-          product_id: item.product.id,
-          quantity: item.quantity,
-        },
-        { onConflict: "user_id,product_id" }
-      );
-    }
+    const upsertItems = localItems.map((item) => ({
+      user_id: user.id,
+      product_id: item.product.id,
+      quantity: item.quantity,
+    }));
+    await supabase
+      .from("cart_items")
+      .upsert(upsertItems, { onConflict: "user_id,product_id" });
 
     localStorage.removeItem(CART_STORAGE_KEY);
-    await fetchCartFromDB();
   }, [user, supabase, fetchCartFromDB]);
 
   // Initialize cart

@@ -156,16 +156,44 @@ create table public.payment_transactions (
 -- INDEXES
 -- ============================================
 
+-- Products
 create index idx_products_category on public.products(category_id);
 create index idx_products_slug on public.products(slug);
 create index idx_products_active on public.products(is_active);
 create index idx_products_featured on public.products(featured);
+create index idx_products_active_category on public.products(is_active, category_id);
+create index idx_products_active_featured on public.products(is_active, featured) where featured = true;
+create index idx_products_active_created on public.products(is_active, created_at desc);
+create index idx_products_active_price on public.products(is_active, price);
+create index idx_products_active_material on public.products(is_active, material) where material is not null;
+
+-- Orders
 create index idx_orders_user on public.orders(user_id);
 create index idx_orders_status on public.orders(status);
+create index idx_orders_user_created on public.orders(user_id, created_at desc);
+create index idx_orders_status_created on public.orders(status, created_at);
+create index idx_orders_created on public.orders(created_at desc);
+
+-- Order items
 create index idx_order_items_order on public.order_items(order_id);
+create index idx_order_items_product on public.order_items(product_id);
+
+-- Payment transactions
+create index idx_payment_transactions_order on public.payment_transactions(order_id);
+create index idx_payment_transactions_razorpay_order on public.payment_transactions(razorpay_order_id);
+
+-- Cart & Wishlist
 create index idx_cart_items_user on public.cart_items(user_id);
 create index idx_wishlist_user on public.wishlist_items(user_id);
-create index idx_addresses_user on public.addresses(user_id);
+
+-- Addresses (composite replaces single-column for user_id)
+create index idx_addresses_user_default on public.addresses(user_id, is_default desc);
+
+-- Categories
+create index idx_categories_sort on public.categories(sort_order);
+
+-- Coupons
+create index idx_coupons_active on public.coupons(is_active) where is_active = true;
 
 -- Full Text Search on products
 alter table public.products add column fts tsvector

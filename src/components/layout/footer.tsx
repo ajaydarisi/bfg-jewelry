@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { APP_NAME, CATEGORIES, ROUTES } from "@/lib/constants";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -15,7 +15,7 @@ export function Footer() {
               ✦ {APP_NAME}
             </Link>
             <p className="mt-2 text-sm text-muted-foreground">
-              Discover exquisite fashion jewelry crafted with ❤️. From
+              Discover exquisite fashion jewellery crafted with ❤️. From
               statement necklaces to delicate rings, find your perfect piece.
             </p>
           </div>

@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
-  CommandDialog,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
+    CommandDialog,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
 } from "@/components/ui/command";
-import { createClient } from "@/lib/supabase/client";
 import { useDebounce } from "@/hooks/use-debounce";
-import { Search } from "lucide-react";
-import { formatPrice } from "@/lib/formatters";
 import { ROUTES } from "@/lib/constants";
+import { formatPrice } from "@/lib/formatters";
+import { createClient } from "@/lib/supabase/client";
+import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface ProductSearchProps {
   open: boolean;
@@ -76,7 +76,7 @@ export function ProductSearch({ open, onOpenChange }: ProductSearchProps) {
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <CommandInput
-        placeholder="Search for jewelry..."
+        placeholder="Search for jewellery..."
         value={query}
         onValueChange={setQuery}
       />

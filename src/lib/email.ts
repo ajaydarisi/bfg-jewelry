@@ -14,7 +14,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #18181b;">Welcome, ${name}!</h1>
           <p>Thank you for joining Sparkle Commerce. We're thrilled to have you.</p>
-          <p>Discover our exquisite collection of fashion jewelry — from elegant necklaces to stunning rings.</p>
+          <p>Discover our exquisite collection of fashion jewellery — from elegant necklaces to stunning rings.</p>
           <a href="${process.env.NEXT_PUBLIC_SITE_URL}/products"
              style="display: inline-block; padding: 12px 24px; background: #18181b; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">
             Start Shopping
@@ -34,7 +34,7 @@ export async function sendOrderConfirmationEmail(
   email: string,
   orderNumber: string,
   total: number,
-  items: Array<{ name: string; quantity: number; price: number }>
+  items: Array<{ name: string; quantity: number; price: number }>,
 ) {
   const itemsHtml = items
     .map(
@@ -43,7 +43,7 @@ export async function sendOrderConfirmationEmail(
           <td style="padding: 8px; border-bottom: 1px solid #e5e5e5;">${item.name}</td>
           <td style="padding: 8px; border-bottom: 1px solid #e5e5e5; text-align: center;">${item.quantity}</td>
           <td style="padding: 8px; border-bottom: 1px solid #e5e5e5; text-align: right;">₹${item.price}</td>
-        </tr>`
+        </tr>`,
     )
     .join("");
 
@@ -84,7 +84,7 @@ export async function sendOrderConfirmationEmail(
 
 export async function sendShippingNotificationEmail(
   email: string,
-  orderNumber: string
+  orderNumber: string,
 ) {
   try {
     await resend.emails.send({

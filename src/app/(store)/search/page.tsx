@@ -1,13 +1,13 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
 import { ProductGrid } from "@/components/products/product-grid";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Pagination } from "@/components/shared/pagination";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
+import { createClient } from "@/lib/supabase/server";
 import type { ProductWithCategory } from "@/types/product";
 import { Search } from "lucide-react";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string; page?: string }>;
@@ -86,7 +86,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <EmptyState
             icon={<Search className="h-16 w-16" />}
             title="Search for products"
-            description="Use the search bar to find jewelry you'll love"
+            description="Use the search bar to find jewellery you'll love"
           />
         )}
       </div>

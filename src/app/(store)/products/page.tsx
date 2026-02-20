@@ -43,20 +43,24 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   const supabase = await createClient();
 
-  let query = supabase
-    .from("products")
-    .select("*, category:categories(name, slug)", { count: "exact" })
-    .eq("is_active", true);
-
+  // Resolve category ID in parallel with building the query
+  let categoryId: string | null = null;
   if (category) {
     const { data: cat } = await supabase
       .from("categories")
       .select("id")
       .eq("slug", category)
       .single();
-    if (cat) {
-      query = query.eq("category_id", cat.id);
-    }
+    categoryId = cat?.id ?? null;
+  }
+
+  let query = supabase
+    .from("products")
+    .select("*, category:categories(name, slug)", { count: "exact" })
+    .eq("is_active", true);
+
+  if (categoryId) {
+    query = query.eq("category_id", categoryId);
   }
 
   if (material) {

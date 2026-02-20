@@ -19,15 +19,25 @@ export async function createOrder(
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  // Get cart items
-  const { data: cartItems } = await supabase
-    .from("cart_items")
-    .select("quantity, product:products(*)")
-    .eq("user_id", user.id);
+  // Get cart items and shipping address in parallel
+  const [{ data: cartItems }, { data: address }] = await Promise.all([
+    supabase
+      .from("cart_items")
+      .select("quantity, product:products(*)")
+      .eq("user_id", user.id),
+    supabase
+      .from("addresses")
+      .select("*")
+      .eq("id", addressId)
+      .eq("user_id", user.id)
+      .single(),
+  ]);
 
   if (!cartItems || cartItems.length === 0) {
     throw new Error("Cart is empty");
   }
+
+  if (!address) throw new Error("Address not found");
 
   // Validate stock
   for (const item of cartItems) {
@@ -36,16 +46,6 @@ export async function createOrder(
       throw new Error(`${product.name} is out of stock`);
     }
   }
-
-  // Get shipping address
-  const { data: address } = await supabase
-    .from("addresses")
-    .select("*")
-    .eq("id", addressId)
-    .eq("user_id", user.id)
-    .single();
-
-  if (!address) throw new Error("Address not found");
 
   // Calculate subtotal
   const subtotal = cartItems.reduce((sum, item) => {
@@ -216,38 +216,20 @@ export async function verifyPayment(
     .update({ status: "paid" })
     .eq("id", orderId);
 
-  // Decrement stock
-  const { data: orderItems } = await admin
-    .from("order_items")
-    .select("product_id, quantity")
-    .eq("order_id", orderId);
+  // Decrement stock and get order user_id in parallel
+  const [{ data: orderItems }, { data: order }] = await Promise.all([
+    admin.from("order_items").select("product_id, quantity").eq("order_id", orderId),
+    admin.from("orders").select("user_id").eq("id", orderId).single(),
+  ]);
 
-  if (orderItems) {
-    for (const item of orderItems) {
-      if (item.product_id) {
-        const { data: product } = await admin
-          .from("products")
-          .select("stock")
-          .eq("id", item.product_id)
-          .single();
-
-        if (product) {
-          await admin
-            .from("products")
-            .update({ stock: Math.max(0, product.stock - item.quantity) })
-            .eq("id", item.product_id);
-        }
-      }
-    }
+  if (orderItems && orderItems.length > 0) {
+    const items = orderItems
+      .filter((i) => i.product_id)
+      .map((i) => ({ product_id: i.product_id, quantity: i.quantity }));
+    await admin.rpc("decrement_product_stock" as never, { items } as never);
   }
 
   // Clear user's cart
-  const { data: order } = await admin
-    .from("orders")
-    .select("user_id")
-    .eq("id", orderId)
-    .single();
-
   if (order?.user_id) {
     await admin
       .from("cart_items")

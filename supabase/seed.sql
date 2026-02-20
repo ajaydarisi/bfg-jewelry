@@ -7,7 +7,7 @@ insert into public.categories (name, slug, description, sort_order) values
   ('Earrings', 'earrings', 'Statement earrings, studs, and hoops', 2),
   ('Bracelets', 'bracelets', 'Beautiful bracelets and bangles', 3),
   ('Rings', 'rings', 'Stunning rings for everyday wear and special occasions', 4),
-  ('Jewelry Sets', 'jewelry-sets', 'Complete jewelry sets for a coordinated look', 5);
+  ('Jewellery Sets', 'jewellery-sets', 'Complete jewellery sets for a coordinated look', 5);
 
 -- Products
 insert into public.products (name, slug, description, price, discount_price, category_id, stock, material, tags, images, is_active, featured) values
@@ -58,9 +58,9 @@ insert into public.products (name, slug, description, price, discount_price, cat
   (
     'Royal Elegance Set',
     'royal-elegance-set',
-    'A complete jewelry set including necklace, earrings, and bracelet. Gold-plated with crystal accents.',
+    'A complete jewellery set including necklace, earrings, and bracelet. Gold-plated with crystal accents.',
     3499, 2799,
-    (select id from public.categories where slug = 'jewelry-sets'),
+    (select id from public.categories where slug = 'jewellery-sets'),
     20, 'Gold Plated',
     array['Best Seller', 'Limited Edition'],
     array['https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=600'],

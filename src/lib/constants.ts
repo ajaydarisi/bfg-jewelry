@@ -1,13 +1,13 @@
-export const APP_NAME = "BFG Jewelry";
+export const APP_NAME = "BFG Jewellery";
 export const APP_DESCRIPTION =
-  "Discover exquisite fashion jewelry - necklaces, earrings, bracelets, rings, and jewelry sets.";
+  "Discover exquisite fashion jewellery - necklaces, earrings, bracelets, rings, and jewellery sets.";
 
 export const CATEGORIES = [
   { name: "Necklaces", slug: "necklaces" },
   { name: "Earrings", slug: "earrings" },
   { name: "Bracelets", slug: "bracelets" },
   { name: "Rings", slug: "rings" },
-  { name: "Jewelry Sets", slug: "jewelry-sets" },
+  { name: "Jewellery Sets", slug: "jewellery-sets" },
 ] as const;
 
 export const MATERIALS = [
@@ -30,11 +30,27 @@ export const PRODUCT_TAGS = [
 ] as const;
 
 export const ORDER_STATUSES = [
-  { value: "pending", label: "Pending", color: "bg-yellow-100 text-yellow-800" },
+  {
+    value: "pending",
+    label: "Pending",
+    color: "bg-yellow-100 text-yellow-800",
+  },
   { value: "paid", label: "Paid", color: "bg-blue-100 text-blue-800" },
-  { value: "processing", label: "Processing", color: "bg-indigo-100 text-indigo-800" },
-  { value: "shipped", label: "Shipped", color: "bg-purple-100 text-purple-800" },
-  { value: "delivered", label: "Delivered", color: "bg-green-100 text-green-800" },
+  {
+    value: "processing",
+    label: "Processing",
+    color: "bg-indigo-100 text-indigo-800",
+  },
+  {
+    value: "shipped",
+    label: "Shipped",
+    color: "bg-purple-100 text-purple-800",
+  },
+  {
+    value: "delivered",
+    label: "Delivered",
+    color: "bg-green-100 text-green-800",
+  },
   { value: "cancelled", label: "Cancelled", color: "bg-red-100 text-red-800" },
   { value: "refunded", label: "Refunded", color: "bg-gray-100 text-gray-800" },
 ] as const;

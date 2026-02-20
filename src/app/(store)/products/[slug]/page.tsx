@@ -1,6 +1,8 @@
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { ProductImages } from "@/components/products/product-images";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
@@ -12,6 +14,28 @@ import { Separator } from "@/components/ui/separator";
 import { ROUTES } from "@/lib/constants";
 import type { ProductWithCategory } from "@/types/product";
 
+const getProduct = cache(async (slug: string) => {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("*, category:categories(name, slug)")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .single();
+  return data;
+});
+
+export async function generateStaticParams() {
+  const supabase = createAdminClient();
+  const { data } = await supabase
+    .from("products")
+    .select("slug")
+    .eq("is_active", true);
+  return (data ?? []).map((p) => ({ slug: p.slug }));
+}
+
+export const revalidate = 3600;
+
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -20,13 +44,7 @@ export async function generateMetadata({
   params,
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createClient();
-  const { data: product } = await supabase
-    .from("products")
-    .select("name, description, images")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .single();
+  const product = await getProduct(slug);
 
   if (!product) return { title: "Product Not Found" };
 
@@ -43,18 +61,12 @@ export async function generateMetadata({
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const supabase = await createClient();
-
-  const { data: product } = await supabase
-    .from("products")
-    .select("*, category:categories(name, slug)")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .single();
+  const product = await getProduct(slug);
 
   if (!product) notFound();
 
   // Fetch related products from same category
+  const supabase = await createClient();
   const { data: relatedProducts } = await supabase
     .from("products")
     .select("*, category:categories(name, slug)")

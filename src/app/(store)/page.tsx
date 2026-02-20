@@ -1,29 +1,49 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ProductGrid } from "@/components/products/product-grid";
-import { createClient } from "@/lib/supabase/server";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CATEGORIES, ROUTES } from "@/lib/constants";
-import { ArrowRight, Sparkles, Truck, Shield, RefreshCw } from "lucide-react";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { ProductWithCategory } from "@/types/product";
+import { ArrowRight, RefreshCw, Shield, Sparkles, Truck } from "lucide-react";
+import { unstable_cache } from "next/cache";
+import Image from "next/image";
+import Link from "next/link";
+
+const getFeaturedProducts = unstable_cache(
+  async () => {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from("products")
+      .select("*, category:categories(name, slug)")
+      .eq("is_active", true)
+      .eq("featured", true)
+      .limit(8);
+    return data;
+  },
+  ["featured-products"],
+  { revalidate: 300 }
+);
+
+const getNewProducts = unstable_cache(
+  async () => {
+    const supabase = createAdminClient();
+    const { data } = await supabase
+      .from("products")
+      .select("*, category:categories(name, slug)")
+      .eq("is_active", true)
+      .order("created_at", { ascending: false })
+      .limit(4);
+    return data;
+  },
+  ["new-products"],
+  { revalidate: 300 }
+);
 
 export default async function HomePage() {
-  const supabase = await createClient();
-
-  const { data: featuredProducts } = await supabase
-    .from("products")
-    .select("*, category:categories(name, slug)")
-    .eq("is_active", true)
-    .eq("featured", true)
-    .limit(8);
-
-  const { data: newProducts } = await supabase
-    .from("products")
-    .select("*, category:categories(name, slug)")
-    .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(4);
+  const [featuredProducts, newProducts] = await Promise.all([
+    getFeaturedProducts(),
+    getNewProducts(),
+  ]);
 
   return (
     <div>
@@ -40,7 +60,7 @@ export default async function HomePage() {
               <span className="text-primary">Perfect Sparkle</span>
             </h1>
             <p className="mt-4 text-lg text-muted-foreground md:text-xl">
-              Explore our exquisite collection of fashion jewelry. From elegant
+              Explore our exquisite collection of fashion jewellery. From elegant
               necklaces to stunning rings, find pieces that express your unique
               style.
             </p>
@@ -52,7 +72,7 @@ export default async function HomePage() {
                 </Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
-                <Link href={`${ROUTES.products}?category=jewelry-sets`}>
+                <Link href={`${ROUTES.products}?category=jewellery-sets`}>
                   View Collections
                 </Link>
               </Button>
@@ -61,9 +81,9 @@ export default async function HomePage() {
           <div className="relative aspect-square overflow-hidden">
             <Image
               src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=4000&q=100"
-              alt="Fashion jewelry collection"
+              alt="Fashion jewellery collection"
               width={500}
-              height={20}
+              height={500}
               priority
               className="h-150 w-200 object-cover rounded-lg"
             />
@@ -76,7 +96,7 @@ export default async function HomePage() {
         <div className="mb-8 text-center">
           <h2 className="text-2xl font-bold md:text-3xl">Shop by Category</h2>
           <p className="mt-2 text-muted-foreground">
-            Browse our curated collection of fashion jewelry
+            Browse our curated collection of fashion jewellery
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -169,7 +189,7 @@ export default async function HomePage() {
             {
               icon: Sparkles,
               title: "Quality Assured",
-              description: "Premium fashion jewelry",
+              description: "Premium fashion jewellery",
             },
           ].map((feature) => (
             <div

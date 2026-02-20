@@ -46,40 +46,20 @@ export async function POST(request: Request) {
         .eq("id", transaction.order_id)
         .eq("status", "pending"); // Only update if still pending (idempotent)
 
-      // Decrement stock
-      const { data: orderItems } = await admin
-        .from("order_items")
-        .select("product_id, quantity")
-        .eq("order_id", transaction.order_id);
+      // Decrement stock and get order user_id in parallel
+      const [{ data: orderItems }, { data: order }] = await Promise.all([
+        admin.from("order_items").select("product_id, quantity").eq("order_id", transaction.order_id),
+        admin.from("orders").select("user_id").eq("id", transaction.order_id).single(),
+      ]);
 
-      if (orderItems) {
-        for (const item of orderItems) {
-          if (item.product_id) {
-            const { data: product } = await admin
-              .from("products")
-              .select("stock")
-              .eq("id", item.product_id)
-              .single();
-
-            if (product) {
-              await admin
-                .from("products")
-                .update({
-                  stock: Math.max(0, product.stock - item.quantity),
-                })
-                .eq("id", item.product_id);
-            }
-          }
-        }
+      if (orderItems && orderItems.length > 0) {
+        const items = orderItems
+          .filter((i) => i.product_id)
+          .map((i) => ({ product_id: i.product_id, quantity: i.quantity }));
+        await admin.rpc("decrement_product_stock" as never, { items } as never);
       }
 
       // Clear user's cart
-      const { data: order } = await admin
-        .from("orders")
-        .select("user_id")
-        .eq("id", transaction.order_id)
-        .single();
-
       if (order?.user_id) {
         await admin
           .from("cart_items")
