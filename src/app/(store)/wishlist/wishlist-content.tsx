@@ -89,7 +89,7 @@ export function WishlistContent({ products }: WishlistContentProps) {
               ) : (
                 <CheckAvailabilityButton
                   productName={product.name}
-                  productImage={product.images[0]}
+                  productSlug={product.slug}
                   size="sm"
                 />
               )}

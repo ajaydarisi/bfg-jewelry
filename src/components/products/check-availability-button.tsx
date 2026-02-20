@@ -6,19 +6,18 @@ import { MessageCircle } from "lucide-react";
 
 interface CheckAvailabilityButtonProps {
   productName: string;
-  productImage?: string;
+  productSlug: string;
   size?: "default" | "sm";
 }
 
 export function CheckAvailabilityButton({
   productName,
-  productImage,
+  productSlug,
   size = "default",
 }: CheckAvailabilityButtonProps) {
   function handleClick() {
-    const message = productImage
-      ? `Hi, is this available?\n\n*${productName}*\n${productImage}`
-      : `Hi, is this available?\n\n*${productName}*`;
+    const previewUrl = `${window.location.origin}/preview/${productSlug}`;
+    const message = `Hi, is this available?\n\n*${productName}*\n${previewUrl}`;
 
     const encoded = encodeURIComponent(message);
     const url = `https://wa.me/91${BUSINESS_INFO.whatsapp}?text=${encoded}`;

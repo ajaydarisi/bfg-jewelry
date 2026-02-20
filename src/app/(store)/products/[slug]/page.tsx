@@ -170,7 +170,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               ) : (
                 <CheckAvailabilityButton
                   productName={typedProduct.name}
-                  productImage={typedProduct.images[0]}
+                  productSlug={typedProduct.slug}
                 />
               )}
             </div>
