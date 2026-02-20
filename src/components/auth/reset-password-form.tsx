@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createClient } from "@/lib/supabase/client";
@@ -23,10 +23,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 export function ResetPasswordForm() {
+  const t = useTranslations("auth.resetPassword");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -52,15 +54,15 @@ export function ResetPasswordForm() {
       return;
     }
 
-    toast.success("Password updated successfully!");
+    toast.success(t("successToast"));
     router.push("/login");
   }
 
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Reset Password</CardTitle>
-        <CardDescription>Enter your new password below</CardDescription>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
+        <CardDescription>{t("subtitle")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -70,9 +72,9 @@ export function ResetPasswordForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Password</FormLabel>
+                  <FormLabel>{t("password")}</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••" {...field} />
+                    <Input type="password" placeholder={t("passwordPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -83,9 +85,9 @@ export function ResetPasswordForm() {
               name="confirm_password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm New Password</FormLabel>
+                  <FormLabel>{t("confirmPassword")}</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••" {...field} />
+                    <Input type="password" placeholder={t("confirmPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -93,7 +95,7 @@ export function ResetPasswordForm() {
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Update Password
+              {t("submit")}
             </Button>
           </form>
         </Form>

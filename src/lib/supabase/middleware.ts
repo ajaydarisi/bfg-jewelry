@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { locales } from "@/i18n/config";
 
 const STORE_MODE = process.env.NEXT_PUBLIC_STORE_MODE || "ONLINE";
 
@@ -10,10 +11,25 @@ const OFFLINE_DISABLED_ROUTES = [
   "/account/addresses",
 ];
 
-export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+// Strip locale prefix from pathname for route matching
+function stripLocale(pathname: string): string {
+  for (const locale of locales) {
+    if (pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`) {
+      return pathname.slice(`/${locale}`.length) || "/";
+    }
+  }
+  return pathname;
+}
+
+export async function updateSession(
+  request: NextRequest,
+  response?: NextResponse
+) {
+  let supabaseResponse =
+    response ??
+    NextResponse.next({
+      request,
+    });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -27,9 +43,11 @@ export async function updateSession(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
+          if (!response) {
+            supabaseResponse = NextResponse.next({
+              request,
+            });
+          }
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           );
@@ -43,11 +61,13 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
+  const strippedPath = stripLocale(pathname);
 
   // In OFFLINE mode, redirect disabled routes to home
   if (STORE_MODE === "OFFLINE") {
     const isDisabled = OFFLINE_DISABLED_ROUTES.some(
-      (route) => pathname === route || pathname.startsWith(route + "/")
+      (route) =>
+        strippedPath === route || strippedPath.startsWith(route + "/")
     );
     if (isDisabled) {
       const url = request.nextUrl.clone();
@@ -57,9 +77,11 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Protect account routes - require login
-  if (pathname.startsWith("/account") && !user) {
+  if (strippedPath.startsWith("/account") && !user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
+    // Preserve locale prefix in redirect
+    const localePrefix = pathname.replace(strippedPath, "");
+    url.pathname = `${localePrefix}/login`;
     url.searchParams.set("redirect", pathname);
     return NextResponse.redirect(url);
   }
@@ -90,9 +112,9 @@ export async function updateSession(request: NextRequest) {
   // Redirect logged-in users away from auth pages
   if (
     user &&
-    (pathname.startsWith("/login") ||
-      pathname.startsWith("/signup") ||
-      pathname.startsWith("/forgot-password"))
+    (strippedPath.startsWith("/login") ||
+      strippedPath.startsWith("/signup") ||
+      strippedPath.startsWith("/forgot-password"))
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/";

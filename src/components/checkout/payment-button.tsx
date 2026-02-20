@@ -1,6 +1,6 @@
 "use client";
 
-import { createOrder, verifyPayment } from "@/app/(store)/checkout/actions";
+import { createOrder, verifyPayment } from "@/app/[locale]/(store)/checkout/actions";
 import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/constants";
 import { CreditCard, Loader2 } from "lucide-react";

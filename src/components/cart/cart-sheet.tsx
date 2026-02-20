@@ -13,7 +13,7 @@ import { useCart } from "@/hooks/use-cart";
 import { ROUTES } from "@/lib/constants";
 import { formatPrice } from "@/lib/formatters";
 import { ShoppingBag } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { CartItem } from "./cart-item";
 
 interface CartSheetProps {

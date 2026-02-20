@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -9,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { MATERIALS, PRODUCT_TYPES } from "@/lib/constants";
 import { formatPrice } from "@/lib/formatters";
+import { getCategoryName } from "@/lib/i18n-helpers";
 import { useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import type { Category } from "@/types/product";
@@ -32,6 +34,9 @@ function buildCategoryTree(categories: Category[]) {
 export function ProductFilters({ categories = [] }: ProductFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const locale = useLocale();
+  const t = useTranslations("products.filters");
+  const tc = useTranslations("constants");
   const currentCategory = searchParams.get("category") || "";
   const currentMaterial = searchParams.get("material") || "";
   const currentType = searchParams.get("type") || "";
@@ -40,7 +45,6 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
 
   const [priceRange, setPriceRange] = useState([currentMinPrice, currentMaxPrice]);
   const [expandedParents, setExpandedParents] = useState<Set<string>>(() => {
-    // Auto-expand the parent that contains the current category
     const set = new Set<string>();
     if (currentCategory) {
       const cat = categories.find((c) => c.slug === currentCategory);
@@ -54,7 +58,6 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
   });
 
   const categoryTree = buildCategoryTree(categories);
-  // Groups (have children) first, standalone (no children) last
   const groupedParents = categoryTree.filter((p) => p.children.length > 0);
   const standaloneParents = categoryTree.filter((p) => p.children.length === 0);
 
@@ -106,7 +109,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold">Filters</h2>
+        <h2 className="font-semibold">{t("title")}</h2>
         {hasFilters && (
           <Button
             variant="ghost"
@@ -115,7 +118,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
             className="h-auto p-0 text-xs text-muted-foreground"
           >
             <X className="mr-1 h-3 w-3" />
-            Clear all
+            {t("clearAll")}
           </Button>
         )}
       </div>
@@ -124,7 +127,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
 
       {/* Type: Sale / Rental */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Type</h3>
+        <h3 className="mb-3 text-sm font-medium">{t("type")}</h3>
         <RadioGroup
           value={currentType || "all"}
           onValueChange={(value) =>
@@ -138,7 +141,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
                 htmlFor={`type-${type.value}`}
                 className="text-sm font-normal cursor-pointer"
               >
-                {type.label}
+                {tc(`productTypes.${type.value}`)}
               </Label>
             </div>
           ))}
@@ -147,9 +150,9 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
 
       <Separator />
 
-      {/* Category — Hierarchical (groups first, standalone last) */}
+      {/* Category — Hierarchical */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Category</h3>
+        <h3 className="mb-3 text-sm font-medium">{t("category")}</h3>
         <div className="space-y-1">
           {groupedParents.map((parent) => (
             <div key={parent.slug}>
@@ -176,7 +179,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
                   htmlFor={`cat-${parent.slug}`}
                   className="text-sm font-normal cursor-pointer"
                 >
-                  {parent.name}
+                  {getCategoryName(parent, locale)}
                 </Label>
               </div>
               {expandedParents.has(parent.id) &&
@@ -196,7 +199,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
                       htmlFor={`cat-${child.slug}`}
                       className="text-sm font-normal cursor-pointer"
                     >
-                      {child.name}
+                      {getCategoryName(child, locale)}
                     </Label>
                   </div>
                 ))}
@@ -218,7 +221,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
                 htmlFor={`cat-${cat.slug}`}
                 className="text-sm font-normal cursor-pointer"
               >
-                {cat.name}
+                {getCategoryName(cat, locale)}
               </Label>
             </div>
           ))}
@@ -229,7 +232,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
 
       {/* Price Range */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Price Range</h3>
+        <h3 className="mb-3 text-sm font-medium">{t("priceRange")}</h3>
         <Slider
           value={priceRange}
           onValueChange={setPriceRange}
@@ -248,7 +251,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
           className="mt-2 w-full"
           onClick={applyPriceFilter}
         >
-          Apply Price
+          {t("applyPrice")}
         </Button>
       </div>
 
@@ -256,7 +259,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
 
       {/* Material */}
       <div>
-        <h3 className="mb-3 text-sm font-medium">Material</h3>
+        <h3 className="mb-3 text-sm font-medium">{t("material")}</h3>
         <div className="space-y-2">
           {MATERIALS.map((material) => (
             <div key={material} className="flex items-center gap-2">
@@ -271,7 +274,7 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
                 htmlFor={`mat-${material}`}
                 className="text-sm font-normal"
               >
-                {material}
+                {tc(`materials.${material}`)}
               </Label>
             </div>
           ))}

@@ -1,15 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/routing";
 import { User, Package, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { IS_ONLINE, ROUTES } from "@/lib/constants";
+import { useTranslations } from "next-intl";
 
 const allAccountLinks = [
-  { href: ROUTES.account, label: "Profile", icon: User, onlineOnly: false },
-  { href: ROUTES.accountOrders, label: "Orders", icon: Package, onlineOnly: true },
-  { href: ROUTES.accountAddresses, label: "Addresses", icon: MapPin, onlineOnly: true },
+  { href: ROUTES.account, labelKey: "profile" as const, icon: User, onlineOnly: false },
+  { href: ROUTES.accountOrders, labelKey: "orders" as const, icon: Package, onlineOnly: true },
+  { href: ROUTES.accountAddresses, labelKey: "addresses" as const, icon: MapPin, onlineOnly: true },
 ];
 
 const accountLinks = allAccountLinks.filter(
@@ -18,6 +18,7 @@ const accountLinks = allAccountLinks.filter(
 
 export function AccountSidebar() {
   const pathname = usePathname();
+  const t = useTranslations("account.sidebar");
 
   return (
     <nav className="space-y-1">
@@ -37,7 +38,7 @@ export function AccountSidebar() {
             )}
           >
             <link.icon className="h-4 w-4" />
-            {link.label}
+            {t(link.labelKey)}
           </Link>
         );
       })}
@@ -47,6 +48,7 @@ export function AccountSidebar() {
 
 export function AccountMobileNav() {
   const pathname = usePathname();
+  const t = useTranslations("account.sidebar");
 
   return (
     <nav className="flex gap-1 overflow-x-auto md:hidden">
@@ -66,7 +68,7 @@ export function AccountMobileNav() {
             )}
           >
             <link.icon className="h-4 w-4" />
-            {link.label}
+            {t(link.labelKey)}
           </Link>
         );
       })}

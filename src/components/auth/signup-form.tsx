@@ -22,13 +22,15 @@ import { createClient } from "@/lib/supabase/client";
 import { signupSchema, type SignupInput } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export function SignupForm() {
+  const t = useTranslations("auth.signup");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -62,16 +64,16 @@ export function SignupForm() {
       return;
     }
 
-    toast.success("Account created! Please check your email to verify your account.");
+    toast.success(t("successToast"));
     router.push("/login");
   }
 
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Create Account</CardTitle>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
         <CardDescription>
-          Join Bhagyalakshmi Future Gold Commerce and start shopping
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -82,9 +84,9 @@ export function SignupForm() {
               name="full_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full Name</FormLabel>
+                  <FormLabel>{t("fullName")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your full name" {...field} />
+                    <Input placeholder={t("namePlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -95,11 +97,11 @@ export function SignupForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("email")}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t("emailPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -112,9 +114,9 @@ export function SignupForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("password")}</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••" {...field} />
+                    <Input type="password" placeholder={t("passwordPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -125,9 +127,9 @@ export function SignupForm() {
               name="confirm_password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>{t("confirmPassword")}</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="••••••" {...field} />
+                    <Input type="password" placeholder={t("confirmPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,16 +137,16 @@ export function SignupForm() {
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Create Account
+              {t("submit")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
-          Already have an account?{" "}
+          {t("hasAccount")}{" "}
           <Link href="/login" className="font-medium text-primary hover:underline">
-            Sign in
+            {t("signIn")}
           </Link>
         </p>
       </CardFooter>

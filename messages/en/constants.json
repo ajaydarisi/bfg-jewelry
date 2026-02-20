@@ -1,0 +1,39 @@
+{
+  "categories": {
+    "gold-jewelry": "Gold Jewelry",
+    "polish-finish-types": "Polish / Finish Types",
+    "metal-types": "Metal Types",
+    "bangles-bracelets": "Bangles & Bracelets",
+    "neck-jewelry": "Neck Jewelry",
+    "dance-traditional-ornaments": "Dance & Traditional Ornaments",
+    "leg-hair-accessories": "Leg & Hair Accessories",
+    "marriage-rental-sets": "Marriage Rental Sets"
+  },
+  "productTypes": {
+    "all": "All",
+    "sale": "For Sale",
+    "rental": "For Rent"
+  },
+  "materials": {
+    "Gold Plated": "Gold Plated",
+    "Silver": "Silver",
+    "Rose Gold": "Rose Gold",
+    "Beads": "Beads",
+    "Pearl": "Pearl",
+    "Crystal": "Crystal",
+    "Stainless Steel": "Stainless Steel",
+    "Brass": "Brass",
+    "Panchaloha": "Panchaloha"
+  },
+  "sortOptions": {
+    "newest": "Newest",
+    "price-asc": "Price: Low → High",
+    "price-desc": "Price: High → Low",
+    "name-asc": "Name: A → Z"
+  },
+  "brandStory": {
+    "tagline": "Quality-Checked Fashion Jewellery from the Heart of Andhra Pradesh",
+    "short": "Bhagyalakshmi Future Gold brings you quality-checked fashion jewellery sourced from trusted Mumbai dealers and skilled Machilipatnam craftsmen. Based in Chirala, we personally inspect every piece before it reaches you.",
+    "mission": "To make beautiful, quality-assured fashion jewellery accessible to everyone — whether you visit our Chirala store or shop online."
+  }
+}

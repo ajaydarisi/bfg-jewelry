@@ -1,13 +1,16 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 
 interface CheckoutStepsProps {
   currentStep: number;
 }
 
-const steps = ["Address", "Review", "Payment"];
-
 export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
+  const t = useTranslations("cart.checkout.steps");
+  const steps = [t("address"), t("review"), t("payment")];
   return (
     <div className="flex items-center justify-center gap-2">
       {steps.map((step, index) => (

@@ -5,18 +5,22 @@ import { APP_NAME, BUSINESS_INFO, CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/co
 import { createClient } from "@/lib/supabase/client";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 export function Footer() {
   const { user } = useAuth();
   const router = useRouter();
+  const t = useTranslations("footer");
+  const tc = useTranslations("constants");
+  const tCommon = useTranslations();
 
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    toast.success("Signed out successfully");
+    toast.success(tCommon("signedOut"));
     router.push("/");
     router.refresh();
   }
@@ -25,14 +29,13 @@ export function Footer() {
       {/* Newsletter / Community section */}
       <div className="container mx-auto px-4 py-16 text-center border-b">
         <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
-          Stay in Touch
+          {t("stayInTouch")}
         </p>
         <h3 className="text-2xl md:text-3xl mb-3">
-          Join the Bhagyalakshmi Future Gold World
+          {t("joinWorld")}
         </h3>
         <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          Be the first to know about new collections, exclusive offers,
-          and styling inspiration.
+          {t("joinDescription")}
         </p>
       </div>
 
@@ -49,15 +52,14 @@ export function Footer() {
               {APP_NAME}
             </Link>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-              Quality-checked fashion jewellery from Chirala, sourced from
-              Mumbai dealers and Machilipatnam craftsmen.
+              {t("brandDescription")}
             </p>
           </div>
 
           {/* Categories */}
           <div>
             <h3 className="text-xs uppercase tracking-[0.15em] font-medium mb-4">
-              Categories
+              {t("categories")}
             </h3>
             <ul className="space-y-2.5">
               {CATEGORIES.map((cat) => (
@@ -66,7 +68,7 @@ export function Footer() {
                     href={`${ROUTES.products}?category=${cat.slug}`}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    {cat.name}
+                    {tc(`categories.${cat.slug}`)}
                   </Link>
                 </li>
               ))}
@@ -76,7 +78,7 @@ export function Footer() {
           {/* Customer Care */}
           <div>
             <h3 className="text-xs uppercase tracking-[0.15em] font-medium mb-4">
-              Customer Care
+              {t("customerCare")}
             </h3>
             <ul className="space-y-2.5">
               {IS_ONLINE && (
@@ -85,7 +87,7 @@ export function Footer() {
                     href={ROUTES.accountOrders}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Track Order
+                    {t("trackOrder")}
                   </Link>
                 </li>
               )}
@@ -95,7 +97,7 @@ export function Footer() {
                     href={ROUTES.cart}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Shopping Bag
+                    {t("shoppingBag")}
                   </Link>
                 </li>
               )}
@@ -104,7 +106,7 @@ export function Footer() {
                   href={ROUTES.wishlist}
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Wishlist
+                  {t("wishlist")}
                 </Link>
               </li>
               <li>
@@ -112,7 +114,7 @@ export function Footer() {
                   href={ROUTES.about}
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  About Us
+                  {t("aboutUs")}
                 </Link>
               </li>
             </ul>
@@ -121,7 +123,7 @@ export function Footer() {
           {/* Account */}
           <div>
             <h3 className="text-xs uppercase tracking-[0.15em] font-medium mb-4">
-              My Account
+              {t("myAccount")}
             </h3>
             <ul className="space-y-2.5">
               <li>
@@ -129,7 +131,7 @@ export function Footer() {
                   href={ROUTES.account}
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Profile
+                  {t("profile")}
                 </Link>
               </li>
               {IS_ONLINE && (
@@ -138,7 +140,7 @@ export function Footer() {
                     href={ROUTES.accountAddresses}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Addresses
+                    {t("addresses")}
                   </Link>
                 </li>
               )}
@@ -148,14 +150,14 @@ export function Footer() {
                     onClick={handleSignOut}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Sign Out
+                    {tCommon("nav.signOut")}
                   </button>
                 ) : (
                   <Link
                     href={ROUTES.login}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Sign In
+                    {tCommon("nav.signIn")}
                   </Link>
                 )}
               </li>
@@ -165,7 +167,7 @@ export function Footer() {
           {/* Visit Our Store */}
           <div>
             <h3 className="text-xs uppercase tracking-[0.15em] font-medium mb-4">
-              Visit Our Store
+              {t("visitOurStore")}
             </h3>
             <ul className="space-y-2.5">
               <li className="flex items-start gap-2 text-sm text-muted-foreground">
@@ -213,7 +215,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t pt-6 text-center text-xs text-muted-foreground tracking-wide">
-          <p>&copy; {new Date().getFullYear()} {APP_NAME}. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {APP_NAME}. {t("allRightsReserved")}</p>
         </div>
       </div>
     </footer>

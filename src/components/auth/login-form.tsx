@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { Link } from "@/i18n/routing";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createClient } from "@/lib/supabase/client";
@@ -25,10 +26,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 export function LoginForm() {
+  const t = useTranslations("auth.login");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -57,7 +60,7 @@ export function LoginForm() {
       return;
     }
 
-    toast.success("Welcome back!");
+    toast.success(t("successToast"));
     router.push(redirectTo);
     router.refresh();
   }
@@ -65,9 +68,9 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Welcome Back</CardTitle>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
         <CardDescription>
-          Sign in to your account to continue shopping
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -78,11 +81,11 @@ export function LoginForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("email")}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t("emailPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -96,16 +99,16 @@ export function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{t("password")}</FormLabel>
                     <Link
                       href="/forgot-password"
                       className="text-sm text-muted-foreground hover:text-primary"
                     >
-                      Forgot password?
+                      {t("forgotPassword")}
                     </Link>
                   </div>
                   <FormControl>
-                    <Input type="password" placeholder="••••••" {...field} />
+                    <Input type="password" placeholder={t("passwordPlaceholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -113,16 +116,16 @@ export function LoginForm() {
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Sign In
+              {t("submit")}
             </Button>
           </form>
         </Form>
       </CardContent>
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
+          {t("noAccount")}{" "}
           <Link href="/signup" className="font-medium text-primary hover:underline">
-            Sign up
+            {t("signUp")}
           </Link>
         </p>
       </CardFooter>

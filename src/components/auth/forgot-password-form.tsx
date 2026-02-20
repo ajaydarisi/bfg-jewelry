@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createClient } from "@/lib/supabase/client";
@@ -24,10 +24,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft } from "lucide-react";
 
 export function ForgotPasswordForm() {
+  const t = useTranslations("auth.forgotPassword");
   const [isLoading, setIsLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
@@ -60,10 +62,9 @@ export function ForgotPasswordForm() {
     return (
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Check Your Email</CardTitle>
+          <CardTitle className="text-2xl">{t("emailSentTitle")}</CardTitle>
           <CardDescription>
-            We&apos;ve sent a password reset link to your email address. Please
-            check your inbox and follow the instructions.
+            {t("emailSentDesc")}
           </CardDescription>
         </CardHeader>
         <CardFooter className="justify-center">
@@ -72,7 +73,7 @@ export function ForgotPasswordForm() {
             className="inline-flex items-center text-sm font-medium text-primary hover:underline"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to login
+            {t("backToLogin")}
           </Link>
         </CardFooter>
       </Card>
@@ -82,9 +83,9 @@ export function ForgotPasswordForm() {
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Forgot Password</CardTitle>
+        <CardTitle className="text-2xl">{t("title")}</CardTitle>
         <CardDescription>
-          Enter your email and we&apos;ll send you a reset link
+          {t("subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -95,11 +96,11 @@ export function ForgotPasswordForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("email")}</FormLabel>
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t("emailPlaceholder")}
                       {...field}
                     />
                   </FormControl>
@@ -109,7 +110,7 @@ export function ForgotPasswordForm() {
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Send Reset Link
+              {t("submit")}
             </Button>
           </form>
         </Form>
@@ -120,7 +121,7 @@ export function ForgotPasswordForm() {
           className="inline-flex items-center text-sm text-muted-foreground hover:text-primary"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to login
+          {t("backToLogin")}
         </Link>
       </CardFooter>
     </Card>

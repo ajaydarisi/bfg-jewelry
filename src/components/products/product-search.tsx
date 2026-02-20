@@ -13,7 +13,8 @@ import { ROUTES } from "@/lib/constants";
 import { formatPrice } from "@/lib/formatters";
 import { createClient } from "@/lib/supabase/client";
 import { Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 interface ProductSearchProps {
@@ -35,6 +36,7 @@ export function ProductSearch({ open, onOpenChange }: ProductSearchProps) {
   const [isSearching, setIsSearching] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
   const router = useRouter();
+  const t = useTranslations("products.search");
 
   useEffect(() => {
     if (!debouncedQuery || debouncedQuery.length < 2) {
@@ -76,16 +78,16 @@ export function ProductSearch({ open, onOpenChange }: ProductSearchProps) {
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <CommandInput
-        placeholder="Search for jewellery..."
+        placeholder={t("placeholder")}
         value={query}
         onValueChange={setQuery}
       />
       <CommandList>
         <CommandEmpty>
-          {isSearching ? "Searching..." : "No products found."}
+          {isSearching ? t("searching") : t("noResults")}
         </CommandEmpty>
         {results.length > 0 && (
-          <CommandGroup heading="Products">
+          <CommandGroup heading={t("heading")}>
             {results.map((product) => (
               <CommandItem
                 key={product.id}
@@ -105,7 +107,7 @@ export function ProductSearch({ open, onOpenChange }: ProductSearchProps) {
           <CommandGroup>
             <CommandItem onSelect={handleSearchAll} className="cursor-pointer">
               <Search className="mr-2 h-4 w-4" />
-              Search all for &quot;{query}&quot;
+              {t("searchAll", { query })}
             </CommandItem>
           </CommandGroup>
         )}

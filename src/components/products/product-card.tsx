@@ -1,15 +1,20 @@
-import Link from "next/link";
+"use client";
+
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { IS_ONLINE, ROUTES } from "@/lib/constants";
 import type { ProductWithCategory } from "@/types/product";
+import { useTranslations } from "next-intl";
 
 interface ProductCardProps {
   product: ProductWithCategory;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const t = useTranslations("products.card");
+
   return (
     <Link
       href={ROUTES.product(product.slug)}
@@ -26,7 +31,7 @@ export function ProductCard({ product }: ProductCardProps) {
           />
         ) : (
           <div className="flex h-full items-center justify-center text-muted-foreground">
-            No Image
+            {t("noImage")}
           </div>
         )}
         {product.tags.length > 0 && (
@@ -45,7 +50,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {IS_ONLINE && product.stock === 0 && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[2px]">
             <span className="text-xs uppercase tracking-wider font-medium text-muted-foreground">
-              Sold Out
+              {t("soldOut")}
             </span>
           </div>
         )}

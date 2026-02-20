@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { addressSchema, type AddressInput } from "@/lib/validators";
 import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { Address } from "@/types/user";
 
@@ -30,9 +31,9 @@ interface AddressFormProps {
   onCancel?: () => void;
 }
 
-const LABELS = ["Home", "Work", "Other"];
-
 export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
+  const t = useTranslations("cart.checkout.addressForm");
+  const LABELS = [t("home"), t("work"), t("other")];
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<AddressInput>({
@@ -69,11 +70,11 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
           name="label"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Label</FormLabel>
+              <FormLabel>{t("label")}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select label" />
+                    <SelectValue placeholder={t("selectLabel")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -95,9 +96,9 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
             name="full_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>{t("fullName")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="Full name" {...field} />
+                  <Input placeholder={t("fullNamePlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -108,9 +109,9 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone</FormLabel>
+                <FormLabel>{t("phone")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="10-digit phone" {...field} />
+                  <Input placeholder={t("phonePlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -123,9 +124,9 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
           name="address_line_1"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Address Line 1</FormLabel>
+              <FormLabel>{t("addressLine1")}</FormLabel>
               <FormControl>
-                <Input placeholder="Street address" {...field} />
+                <Input placeholder={t("addressLine1Placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -137,9 +138,9 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
           name="address_line_2"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Address Line 2 (Optional)</FormLabel>
+              <FormLabel>{t("addressLine2")}</FormLabel>
               <FormControl>
-                <Input placeholder="Apartment, suite, etc." {...field} />
+                <Input placeholder={t("addressLine2Placeholder")} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -152,9 +153,9 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
             name="city"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>City</FormLabel>
+                <FormLabel>{t("city")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="City" {...field} />
+                  <Input placeholder={t("cityPlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -165,9 +166,9 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
             name="state"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>State</FormLabel>
+                <FormLabel>{t("state")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="State" {...field} />
+                  <Input placeholder={t("statePlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -178,9 +179,9 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
             name="postal_code"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Postal Code</FormLabel>
+                <FormLabel>{t("postalCode")}</FormLabel>
                 <FormControl>
-                  <Input placeholder="6-digit code" {...field} />
+                  <Input placeholder={t("postalCodePlaceholder")} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -191,11 +192,11 @@ export function AddressForm({ address, onSubmit, onCancel }: AddressFormProps) {
         <div className="flex gap-2">
           <Button type="submit" disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {address ? "Update Address" : "Add Address"}
+            {address ? t("update") : t("add")}
           </Button>
           {onCancel && (
             <Button type="button" variant="outline" onClick={onCancel}>
-              Cancel
+              {t("cancel")}
             </Button>
           )}
         </div>

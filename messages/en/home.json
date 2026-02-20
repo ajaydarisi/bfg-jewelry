@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "badge": "New Collection 2026",
+    "titleLine1": "Adorn Your",
+    "titleLine2": "Every Moment",
+    "subtitle": "Explore our exquisite collection of fashion jewellery, designed to celebrate your unique style.",
+    "shopCollection": "Shop Collection",
+    "rentalSets": "Rental Sets"
+  },
+  "categories": {
+    "label": "Explore",
+    "title": "Shop by Category"
+  },
+  "brandStory": {
+    "label": "Our Story",
+    "title": "Quality-Checked Jewellery,",
+    "titleLine2": "Rooted in Chirala",
+    "cta": "Our Story"
+  },
+  "featured": {
+    "label": "Curated for You",
+    "title": "Featured Pieces",
+    "viewAll": "View All"
+  },
+  "wishlistCta": {
+    "label": "Pro Tip",
+    "title": "Save Time at the Store",
+    "description": "Wishlist your favourites now and skip the browsing when you visit — walk in knowing exactly what you want.",
+    "cta": "Start Wishlisting"
+  },
+  "newArrivals": {
+    "label": "Just Landed",
+    "title": "New Arrivals",
+    "shopNew": "Shop New"
+  },
+  "trustBar": {
+    "online": {
+      "shipping": "Complimentary Shipping",
+      "shippingDesc": "On orders above ₹999",
+      "checkout": "Secure Checkout",
+      "checkoutDesc": "100% secure payments",
+      "returns": "Easy Returns",
+      "returnsDesc": "7-day return policy",
+      "quality": "Quality Assured",
+      "qualityDesc": "Every piece quality-checked"
+    },
+    "offline": {
+      "whatsapp": "WhatsApp Support",
+      "whatsappDesc": "Chat with us instantly",
+      "visit": "Visit Our Store",
+      "visitDesc": "See pieces in person",
+      "favourites": "Save Your Favourites",
+      "favouritesDesc": "Wishlist the pieces you love",
+      "quality": "Quality Assured",
+      "qualityDesc": "Every piece quality-checked"
+    }
+  }
+}

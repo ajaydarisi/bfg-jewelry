@@ -1,0 +1,12 @@
+{
+  "title": "My Wishlist",
+  "breadcrumb": "Wishlist",
+  "empty": "Your wishlist is empty",
+  "emptyDescription": "Save items you love to your wishlist and they'll show up here.",
+  "browseProducts": "Browse Products",
+  "moveToCart": "Move to Cart",
+  "outOfStock": "Out of Stock",
+  "removed": "Removed from wishlist",
+  "checkAvailability": "Check Availability",
+  "noImage": "No Image"
+}

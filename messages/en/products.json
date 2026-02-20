@@ -1,0 +1,50 @@
+{
+  "listing": {
+    "breadcrumb": "Products",
+    "allProducts": "All Products",
+    "forRent": "For Rent",
+    "forSale": "For Sale",
+    "productCount": "{count, plural, one {# product} other {# products}} found",
+    "noProducts": "No products found",
+    "noProductsDesc": "Try adjusting your filters or search criteria",
+    "clearFilters": "Clear Filters"
+  },
+  "detail": {
+    "forSale": "For Sale",
+    "forRent": "For Rent",
+    "rentalDetails": "Rental Details",
+    "rentalPrice": "Rental Price:",
+    "deposit": "Deposit:",
+    "maxDuration": "Max Duration:",
+    "days": "{count} days",
+    "description": "Description",
+    "material": "Material",
+    "availability": "Availability",
+    "inStock": "In Stock ({count} available)",
+    "outOfStock": "Out of Stock",
+    "relatedProducts": "You May Also Like"
+  },
+  "filters": {
+    "title": "Filters",
+    "clearAll": "Clear all",
+    "type": "Type",
+    "category": "Category",
+    "priceRange": "Price Range",
+    "applyPrice": "Apply Price",
+    "material": "Material"
+  },
+  "sort": {
+    "placeholder": "Sort by"
+  },
+  "card": {
+    "noImage": "No Image",
+    "soldOut": "Sold Out"
+  },
+  "search": {
+    "placeholder": "Search for jewellery...",
+    "searching": "Searching...",
+    "noResults": "No products found.",
+    "heading": "Products",
+    "searchAll": "Search all for \"{query}\""
+  }
+}

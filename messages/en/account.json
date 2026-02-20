@@ -1,0 +1,63 @@
+{
+  "title": "My Account",
+  "breadcrumb": "Account",
+  "sidebar": {
+    "profile": "Profile",
+    "orders": "Orders",
+    "addresses": "Addresses"
+  },
+  "profile": {
+    "title": "Profile Information",
+    "email": "Email",
+    "emailHint": "Email cannot be changed",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your full name",
+    "phone": "Phone Number",
+    "phonePlaceholder": "10-digit phone number",
+    "save": "Save Changes",
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Failed to update profile"
+  },
+  "orders": {
+    "title": "My Orders",
+    "orderHistory": "Order History",
+    "noOrders": "No orders yet",
+    "noOrdersDesc": "Your order history will appear here once you make a purchase.",
+    "startShopping": "Start Shopping",
+    "view": "View"
+  },
+  "orderDetail": {
+    "title": "Order {orderNumber}",
+    "placedOn": "Placed on {date}",
+    "items": "Items",
+    "qty": "Qty: {quantity} x {price}",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "free": "Free",
+    "total": "Total",
+    "shippingAddress": "Shipping Address",
+    "phone": "Phone: {phone}"
+  },
+  "addresses": {
+    "title": "Shipping Addresses",
+    "addAddress": "Add Address",
+    "editAddress": "Edit Address",
+    "addNewAddress": "Add New Address",
+    "empty": "No addresses yet",
+    "emptyDesc": "Add a shipping address to get started",
+    "default": "Default",
+    "setDefault": "Set as default",
+    "deleteTitle": "Delete address?",
+    "deleteDesc": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "addSuccess": "Address added",
+    "updateSuccess": "Address updated",
+    "deleteSuccess": "Address deleted",
+    "defaultSuccess": "Default address updated",
+    "addError": "Failed to add address",
+    "updateError": "Failed to update address",
+    "deleteError": "Failed to delete address"
+  }
+}

@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { applyCoupon } from "@/app/(store)/checkout/actions";
+import { applyCoupon } from "@/app/[locale]/(store)/checkout/actions";
 import { formatPrice } from "@/lib/formatters";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Loader2, Tag, X } from "lucide-react";
 
@@ -22,6 +23,7 @@ export function CouponInput({
   onRemove,
   appliedCoupon,
 }: CouponInputProps) {
+  const t = useTranslations("cart.checkout");
   const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,10 +33,10 @@ export function CouponInput({
     try {
       const result = await applyCoupon(code, subtotal);
       onApply(result.code, result.discountAmount);
-      toast.success(`Coupon applied! You save ${formatPrice(result.discountAmount)}`);
+      toast.success(t("couponSuccess", { amount: formatPrice(result.discountAmount) }));
       setCode("");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Invalid coupon");
+      toast.error(error instanceof Error ? error.message : t("couponInvalid"));
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +69,7 @@ export function CouponInput({
   return (
     <div className="flex gap-2">
       <Input
-        placeholder="Enter coupon code"
+        placeholder={t("couponPlaceholder")}
         value={code}
         onChange={(e) => setCode(e.target.value.toUpperCase())}
         className="flex-1"
@@ -80,7 +82,7 @@ export function CouponInput({
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
-          "Apply"
+          t("couponApply")
         )}
       </Button>
     </div>

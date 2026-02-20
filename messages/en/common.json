@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "categories": "Categories",
+    "allProducts": "All Products",
+    "rentals": "Rentals",
+    "about": "About",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "myProfile": "My Profile",
+    "myOrders": "My Orders",
+    "addresses": "Addresses",
+    "adminDashboard": "Admin Dashboard",
+    "search": "Search",
+    "wishlist": "Wishlist",
+    "shoppingBag": "Shopping Bag",
+    "myAccount": "My Account",
+    "aboutUs": "About Us",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode",
+    "changeLanguage": "Change Language"
+  },
+  "footer": {
+    "stayInTouch": "Stay in Touch",
+    "joinWorld": "Join the Bhagyalakshmi Future Gold World",
+    "joinDescription": "Be the first to know about new collections, exclusive offers, and styling inspiration.",
+    "categories": "Categories",
+    "customerCare": "Customer Care",
+    "trackOrder": "Track Order",
+    "shoppingBag": "Shopping Bag",
+    "wishlist": "Wishlist",
+    "aboutUs": "About Us",
+    "myAccount": "My Account",
+    "profile": "Profile",
+    "addresses": "Addresses",
+    "visitOurStore": "Visit Our Store",
+    "brandDescription": "Quality-checked fashion jewellery from Chirala, sourced from Mumbai dealers and Machilipatnam craftsmen.",
+    "allRightsReserved": "All rights reserved."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "backToHome": "Back to Home"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "tryAgain": "Try Again"
+  },
+  "signedOut": "Signed out successfully"
+}

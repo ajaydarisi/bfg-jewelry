@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, usePathname } from "@/i18n/routing";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations, useLocale } from "next-intl";
 import { useState } from "react";
 import {
   Search,
@@ -13,6 +14,9 @@ import {
   MapPin,
   LayoutDashboard,
   Menu,
+  Languages,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,27 +27,54 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { MobileNav } from "./mobile-nav";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { LanguageSwitcher } from "@/components/shared/language-switcher";
 import { ProductSearch } from "@/components/products/product-search";
+import { useTheme } from "next-themes";
+import { locales } from "@/i18n/config";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
 import { createClient } from "@/lib/supabase/client";
 import { APP_NAME, CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/constants";
 import { toast } from "sonner";
 import Image from "next/image";
+import NextLink from "next/link";
 
 export function Header() {
+  const t = useTranslations("nav");
+  const tc = useTranslations("constants");
+  const tCommon = useTranslations();
   const { user, profile, isAdmin } = useAuth();
   const { itemCount } = useCart();
   const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
+  const { theme, setTheme } = useTheme();
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [langDialogOpen, setLangDialogOpen] = useState(false);
+
+  const localeLabels: Record<string, string> = {
+    en: "English",
+    te: "తెలుగు",
+  };
+
+  function switchLocale(newLocale: string) {
+    router.replace(pathname, { locale: newLocale });
+    setLangDialogOpen(false);
+  }
 
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    toast.success("Signed out successfully");
+    toast.success(tCommon("signedOut"));
     router.push("/");
     router.refresh();
   }
@@ -75,19 +106,19 @@ export function Header() {
           <nav className="hidden lg:flex items-center gap-8">
             <DropdownMenu>
               <DropdownMenuTrigger className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-primary cursor-pointer">
-                Categories
+                {t("categories")}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-56">
                 {CATEGORIES.map((cat) => (
                   <DropdownMenuItem key={cat.slug} asChild>
                     <Link href={`${ROUTES.products}?category=${cat.slug}`}>
-                      {cat.name}
+                      {tc(`categories.${cat.slug}`)}
                     </Link>
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href={ROUTES.products}>All Products</Link>
+                  <Link href={ROUTES.products}>{t("allProducts")}</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -95,13 +126,13 @@ export function Header() {
               href={`${ROUTES.products}?type=rental`}
               className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-primary"
             >
-              Rentals
+              {t("rentals")}
             </Link>
             <Link
               href={ROUTES.about}
               className="text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-primary"
             >
-              About
+              {t("about")}
             </Link>
           </nav>
 
@@ -109,6 +140,7 @@ export function Header() {
           <div className="flex items-center gap-2">
             {/* Desktop-only actions */}
             <div className="hidden md:flex items-center gap-2">
+              <LanguageSwitcher />
               <ThemeToggle />
               <Button
                 variant="ghost"
@@ -160,10 +192,10 @@ export function Header() {
                     {isAdmin && (
                       <>
                         <DropdownMenuItem asChild>
-                          <Link href={ROUTES.admin}>
+                          <NextLink href={ROUTES.admin}>
                             <LayoutDashboard className="mr-2 h-4 w-4" />
-                            Admin Dashboard
-                          </Link>
+                            {t("adminDashboard")}
+                          </NextLink>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                       </>
@@ -171,14 +203,14 @@ export function Header() {
                     <DropdownMenuItem asChild>
                       <Link href={ROUTES.account}>
                         <User className="mr-2 h-4 w-4" />
-                        My Profile
+                        {t("myProfile")}
                       </Link>
                     </DropdownMenuItem>
                     {IS_ONLINE && (
                       <DropdownMenuItem asChild>
                         <Link href={ROUTES.accountOrders}>
                           <Package className="mr-2 h-4 w-4" />
-                          My Orders
+                          {t("myOrders")}
                         </Link>
                       </DropdownMenuItem>
                     )}
@@ -186,41 +218,143 @@ export function Header() {
                       <DropdownMenuItem asChild>
                         <Link href={ROUTES.accountAddresses}>
                           <MapPin className="mr-2 h-4 w-4" />
-                          Addresses
+                          {t("addresses")}
                         </Link>
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleSignOut}>
                       <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
+                      {t("signOut")}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href={ROUTES.login}>Sign In</Link>
+                  <Link href={ROUTES.login}>{t("signIn")}</Link>
                 </Button>
               )}
             </div>
 
             {/* Mobile-only: Sign In or User icon */}
             {user ? (
-              <Button variant="ghost" size="icon" className="md:hidden" asChild>
-                <Link href={ROUTES.account}>
-                  <User className="h-5 w-5" strokeWidth={1.5} />
-                </Link>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="md:hidden">
+                    <User className="h-5 w-5" strokeWidth={1.5} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-2 py-1.5">
+                    <p className="text-sm font-medium">
+                      {profile?.full_name || "User"}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {user.email}
+                    </p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <NextLink href={ROUTES.admin}>
+                          <LayoutDashboard className="mr-2 h-4 w-4" />
+                          {t("adminDashboard")}
+                        </NextLink>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem asChild>
+                    <Link href={ROUTES.account}>
+                      <User className="mr-2 h-4 w-4" />
+                      {t("myProfile")}
+                    </Link>
+                  </DropdownMenuItem>
+                  {IS_ONLINE && (
+                    <DropdownMenuItem asChild>
+                      <Link href={ROUTES.accountOrders}>
+                        <Package className="mr-2 h-4 w-4" />
+                        {t("myOrders")}
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  {IS_ONLINE && (
+                    <DropdownMenuItem asChild>
+                      <Link href={ROUTES.accountAddresses}>
+                        <MapPin className="mr-2 h-4 w-4" />
+                        {t("addresses")}
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setLangDialogOpen(true)}>
+                    <Languages className="mr-2 h-4 w-4" />
+                    {t("changeLanguage")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                    <Sun className="mr-2 h-4 w-4 dark:hidden" />
+                    <Moon className="mr-2 hidden h-4 w-4 dark:block" />
+                    {theme === "dark" ? t("lightMode") : t("darkMode")}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t("signOut")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
-              <Button variant="ghost" size="sm" className="md:hidden" asChild>
-                <Link href={ROUTES.login}>Sign In</Link>
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="md:hidden">
+                    <User className="h-5 w-5" strokeWidth={1.5} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <Link href={ROUTES.login}>
+                      <User className="mr-2 h-4 w-4" />
+                      {t("signIn")}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setLangDialogOpen(true)}>
+                    <Languages className="mr-2 h-4 w-4" />
+                    {t("changeLanguage")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                    <Sun className="mr-2 h-4 w-4 dark:hidden" />
+                    <Moon className="mr-2 hidden h-4 w-4 dark:block" />
+                    {theme === "dark" ? t("lightMode") : t("darkMode")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
         </div>
       </header>
 
       <ProductSearch open={searchOpen} onOpenChange={setSearchOpen} />
+      <Dialog open={langDialogOpen} onOpenChange={setLangDialogOpen}>
+        <DialogContent className="sm:max-w-xs">
+          <DialogHeader>
+            <DialogTitle>{t("changeLanguage")}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-2">
+            {locales.map((loc) => (
+              <Button
+                key={loc}
+                variant={loc === locale ? "default" : "outline"}
+                onClick={() => switchLocale(loc)}
+                className="w-full"
+              >
+                {localeLabels[loc]}
+              </Button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
       <MobileNav
         open={mobileNavOpen}
         onOpenChange={setMobileNavOpen}
@@ -229,10 +363,6 @@ export function Header() {
           setSearchOpen(true);
         }}
         itemCount={itemCount}
-        user={user}
-        profileName={profile?.full_name || null}
-        isAdmin={isAdmin}
-        onSignOut={handleSignOut}
       />
     </>
   );

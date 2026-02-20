@@ -1,0 +1,50 @@
+{
+  "listing": {
+    "breadcrumb": "ఉత్పత్తులు",
+    "allProducts": "అన్ని ఉత్పత్తులు",
+    "forRent": "అద్దెకు",
+    "forSale": "అమ్మకానికి",
+    "productCount": "{count, plural, one {# ఉత్పత్తి} other {# ఉత్పత్తులు}} కనుగొనబడ్డాయి",
+    "noProducts": "ఉత్పత్తులు కనుగొనబడలేదు",
+    "noProductsDesc": "మీ ఫిల్టర్లు లేదా సెర్చ్ క్రైటీరియా సవరించి ప్రయత్నించండి",
+    "clearFilters": "ఫిల్టర్లు తొలగించండి"
+  },
+  "detail": {
+    "forSale": "అమ్మకానికి",
+    "forRent": "అద్దెకు",
+    "rentalDetails": "అద్దె వివరాలు",
+    "rentalPrice": "అద్దె ధర:",
+    "deposit": "డిపాజిట్:",
+    "maxDuration": "గరిష్ట వ్యవధి:",
+    "days": "{count} రోజులు",
+    "description": "వివరణ",
+    "material": "మెటీరియల్",
+    "availability": "లభ్యత",
+    "inStock": "స్టాక్‌లో ఉంది ({count} అందుబాటులో)",
+    "outOfStock": "స్టాక్ లేదు",
+    "relatedProducts": "మీకు ఇవి కూడా నచ్చవచ్చు"
+  },
+  "filters": {
+    "title": "ఫిల్టర్లు",
+    "clearAll": "అన్నీ తొలగించు",
+    "type": "రకం",
+    "category": "వర్గం",
+    "priceRange": "ధర పరిధి",
+    "applyPrice": "ధర వర్తింపజేయి",
+    "material": "మెటీరియల్"
+  },
+  "sort": {
+    "placeholder": "క్రమబద్ధీకరించు"
+  },
+  "card": {
+    "noImage": "చిత్రం లేదు",
+    "soldOut": "అయిపోయింది"
+  },
+  "search": {
+    "placeholder": "జ్యువెలరీ కోసం వెతకండి...",
+    "searching": "వెతుకుతోంది...",
+    "noResults": "ఉత్పత్తులు కనుగొనబడలేదు.",
+    "heading": "ఉత్పత్తులు",
+    "searchAll": "\"{query}\" కోసం అన్నింటిలో వెతకండి"
+  }
+}
