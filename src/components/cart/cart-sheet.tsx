@@ -1,21 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetFooter,
-} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { CartItem } from "./cart-item";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle
+} from "@/components/ui/sheet";
 import { useCart } from "@/hooks/use-cart";
-import { formatPrice } from "@/lib/formatters";
 import { ROUTES } from "@/lib/constants";
+import { formatPrice } from "@/lib/formatters";
 import { ShoppingBag } from "lucide-react";
+import Link from "next/link";
+import { CartItem } from "./cart-item";
 
 interface CartSheetProps {
   open: boolean;

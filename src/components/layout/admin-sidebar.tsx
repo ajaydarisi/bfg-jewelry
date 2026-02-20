@@ -84,7 +84,7 @@ export function AdminSidebar() {
     <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r bg-card lg:flex">
       <div className="flex h-14 items-center gap-2 px-6">
         <Sparkles className="size-5 text-primary" />
-        <span className="text-lg font-bold">Sparkle Admin</span>
+        <span className="text-lg font-bold">BFG Admin</span>
       </div>
 
       <Separator />
@@ -109,7 +109,7 @@ export function AdminMobileHeader() {
           <SheetHeader className="px-6 pt-4">
             <SheetTitle className="flex items-center gap-2">
               <Sparkles className="size-5 text-primary" />
-              Sparkle Admin
+              BFG Admin
             </SheetTitle>
           </SheetHeader>
           <Separator className="mt-4" />
@@ -118,7 +118,7 @@ export function AdminMobileHeader() {
       </Sheet>
       <div className="flex items-center gap-2">
         <Sparkles className="size-5 text-primary" />
-        <span className="text-lg font-bold">Sparkle Admin</span>
+        <span className="text-lg font-bold">BFG Admin</span>
       </div>
     </header>
   );

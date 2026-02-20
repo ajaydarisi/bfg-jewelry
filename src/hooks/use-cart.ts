@@ -1,17 +1,17 @@
 "use client";
 
+import { createClient } from "@/lib/supabase/client";
+import type { CartItem } from "@/types/cart";
+import type { Product } from "@/types/product";
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
-  useState,
-  useCallback,
   useMemo,
+  useState,
 } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "./use-auth";
-import type { Product } from "@/types/product";
-import type { CartItem } from "@/types/cart";
 
 interface CartContextType {
   items: CartItem[];
@@ -24,7 +24,7 @@ interface CartContextType {
   clearCart: () => Promise<void>;
 }
 
-const CART_STORAGE_KEY = "sparkle-cart";
+const CART_STORAGE_KEY = "bfg-jewellery-cart";
 
 export const CartContext = createContext<CartContextType | null>(null);
 
@@ -99,7 +99,9 @@ export function useCartProvider(): CartContextType {
     if (authLoading) return;
 
     if (user) {
-      mergeLocalCartToDB().then(() => fetchCartFromDB()).finally(() => setIsLoading(false));
+      mergeLocalCartToDB()
+        .then(() => fetchCartFromDB())
+        .finally(() => setIsLoading(false));
     } else {
       setItems(getLocalCart());
       setIsLoading(false);
@@ -129,19 +131,16 @@ export function useCartProvider(): CartContextType {
           newItems = items.map((i) =>
             i.product.id === product.id
               ? { ...i, quantity: i.quantity + quantity }
-              : i
+              : i,
           );
         } else {
-          newItems = [
-            ...items,
-            { id: crypto.randomUUID(), product, quantity },
-          ];
+          newItems = [...items, { id: crypto.randomUUID(), product, quantity }];
         }
         setItems(newItems);
         setLocalCart(newItems);
       }
     },
-    [items, user, supabase, fetchCartFromDB]
+    [items, user, supabase, fetchCartFromDB],
   );
 
   const updateQuantity = useCallback(
@@ -160,13 +159,13 @@ export function useCartProvider(): CartContextType {
         await fetchCartFromDB();
       } else {
         const newItems = items.map((i) =>
-          i.product.id === productId ? { ...i, quantity } : i
+          i.product.id === productId ? { ...i, quantity } : i,
         );
         setItems(newItems);
         setLocalCart(newItems);
       }
     },
-    [items, user, supabase, fetchCartFromDB]
+    [items, user, supabase, fetchCartFromDB],
   );
 
   const removeItem = useCallback(
@@ -184,7 +183,7 @@ export function useCartProvider(): CartContextType {
         setLocalCart(newItems);
       }
     },
-    [items, user, supabase, fetchCartFromDB]
+    [items, user, supabase, fetchCartFromDB],
   );
 
   const clearCart = useCallback(async () => {
@@ -199,7 +198,7 @@ export function useCartProvider(): CartContextType {
 
   const itemCount = useMemo(
     () => items.reduce((sum, i) => sum + i.quantity, 0),
-    [items]
+    [items],
   );
 
   const subtotal = useMemo(
@@ -207,9 +206,9 @@ export function useCartProvider(): CartContextType {
       items.reduce(
         (sum, i) =>
           sum + (i.product.discount_price || i.product.price) * i.quantity,
-        0
+        0,
       ),
-    [items]
+    [items],
   );
 
   return {

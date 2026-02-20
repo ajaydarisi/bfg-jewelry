@@ -1,18 +1,18 @@
-import { cache } from "react";
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { ProductImages } from "@/components/products/product-images";
-import { PriceDisplay } from "@/components/shared/price-display";
-import { Breadcrumbs } from "@/components/shared/breadcrumbs";
-import { ProductGrid } from "@/components/products/product-grid";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
-import { WishlistButton } from "@/components/wishlist/wishlist-button";
+import { ProductGrid } from "@/components/products/product-grid";
+import { ProductImages } from "@/components/products/product-images";
+import { Breadcrumbs } from "@/components/shared/breadcrumbs";
+import { PriceDisplay } from "@/components/shared/price-display";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { WishlistButton } from "@/components/wishlist/wishlist-button";
 import { ROUTES } from "@/lib/constants";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import type { ProductWithCategory } from "@/types/product";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { cache } from "react";
 
 const getProduct = cache(async (slug: string) => {
   const supabase = await createClient();
@@ -50,7 +50,7 @@ export async function generateMetadata({
 
   return {
     title: product.name,
-    description: product.description || `Shop ${product.name} at Sparkle Commerce`,
+    description: product.description || `Shop ${product.name} at BFG Jewellery Commerce`,
     openGraph: {
       title: product.name,
       description: product.description || undefined,

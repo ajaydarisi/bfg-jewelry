@@ -2,25 +2,26 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = "Sparkle Commerce <noreply@sparkle-commerce.com>";
+const FROM_EMAIL =
+  "BFG Jewellery Commerce <noreply@bfg-jewellery-commerce.com>";
 
 export async function sendWelcomeEmail(email: string, name: string) {
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
       to: email,
-      subject: "Welcome to Sparkle Commerce!",
+      subject: "Welcome to BFG Jewellery Commerce!",
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h1 style="color: #18181b;">Welcome, ${name}!</h1>
-          <p>Thank you for joining Sparkle Commerce. We're thrilled to have you.</p>
+          <p>Thank you for joining BFG Jewellery Commerce. We're thrilled to have you.</p>
           <p>Discover our exquisite collection of fashion jewellery — from elegant necklaces to stunning rings.</p>
           <a href="${process.env.NEXT_PUBLIC_SITE_URL}/products"
              style="display: inline-block; padding: 12px 24px; background: #18181b; color: white; text-decoration: none; border-radius: 6px; margin-top: 16px;">
             Start Shopping
           </a>
           <p style="margin-top: 24px; color: #71717a; font-size: 14px;">
-            — The Sparkle Commerce Team
+            — The BFG Jewellery Commerce Team
           </p>
         </div>
       `,
@@ -72,7 +73,7 @@ export async function sendOrderConfirmationEmail(
             Track Order
           </a>
           <p style="margin-top: 24px; color: #71717a; font-size: 14px;">
-            Thank you for shopping with Sparkle Commerce!
+            Thank you for shopping with BFG Jewellery Commerce!
           </p>
         </div>
       `,
@@ -101,7 +102,7 @@ export async function sendShippingNotificationEmail(
             Track Order
           </a>
           <p style="margin-top: 24px; color: #71717a; font-size: 14px;">
-            — The Sparkle Commerce Team
+            — The BFG Jewellery Commerce Team
           </p>
         </div>
       `,

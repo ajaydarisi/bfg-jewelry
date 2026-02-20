@@ -1,4 +1,4 @@
--- Sparkle Commerce Database Schema
+-- BFG Jewellery Commerce Database Schema
 -- Run this in your Supabase SQL Editor
 
 -- Enable UUID generation
