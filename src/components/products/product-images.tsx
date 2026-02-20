@@ -39,7 +39,7 @@ export function ProductImages({ images, name }: ProductImagesProps) {
               key={index}
               onClick={() => setSelectedIndex(index)}
               className={cn(
-                "relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border-2",
+                "relative h-16 w-16 sm:h-20 sm:w-20 flex-shrink-0 overflow-hidden rounded-md border-2",
                 index === selectedIndex
                   ? "border-primary"
                   : "border-transparent hover:border-muted-foreground/50"

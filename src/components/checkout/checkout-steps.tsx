@@ -30,7 +30,7 @@ export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
           </div>
           <span
             className={cn(
-              "text-sm font-medium",
+              "hidden sm:inline text-sm font-medium",
               index <= currentStep
                 ? "text-foreground"
                 : "text-muted-foreground"
@@ -41,7 +41,7 @@ export function CheckoutSteps({ currentStep }: CheckoutStepsProps) {
           {index < steps.length - 1 && (
             <div
               className={cn(
-                "h-px w-12",
+                "h-px w-8 sm:w-12",
                 index < currentStep ? "bg-primary" : "bg-muted-foreground/30"
               )}
             />

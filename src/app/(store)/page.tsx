@@ -64,7 +64,7 @@ export default async function HomePage() {
               necklaces to stunning rings, find pieces that express your unique
               style.
             </p>
-            <div className="mt-8 flex gap-4">
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Button size="lg" asChild>
                 <Link href={ROUTES.products}>
                   Shop Now
@@ -85,7 +85,7 @@ export default async function HomePage() {
               width={500}
               height={500}
               priority
-              className="h-150 w-200 object-cover rounded-lg"
+              className="h-full w-full object-cover rounded-lg"
             />
           </div>
         </div>
@@ -118,7 +118,7 @@ export default async function HomePage() {
       {/* Featured Products */}
       {featuredProducts && featuredProducts.length > 0 && (
         <section className="container mx-auto px-4 py-16">
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 className="text-2xl font-bold md:text-3xl">
                 Featured Products
@@ -144,7 +144,7 @@ export default async function HomePage() {
       {newProducts && newProducts.length > 0 && (
         <section className="bg-muted/50">
           <div className="container mx-auto px-4 py-16">
-            <div className="mb-8 flex items-center justify-between">
+            <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-bold md:text-3xl">
                   New Arrivals

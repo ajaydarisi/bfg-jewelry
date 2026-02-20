@@ -10,6 +10,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { ProductGridSkeleton } from "@/components/shared/loading-skeleton";
 import { PRODUCTS_PER_PAGE, CATEGORIES } from "@/lib/constants";
 import type { ProductWithCategory, SortOption } from "@/types/product";
+import { MobileFilterSheet } from "@/components/products/mobile-filter-sheet";
 import { Search } from "lucide-react";
 
 interface ProductsPageProps {
@@ -107,7 +108,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         ]}
       />
 
-      <div className="mt-6 flex items-center justify-between">
+      <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold md:text-3xl">
             {categoryName || "All Products"}
@@ -116,9 +117,14 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             {count || 0} product{count !== 1 ? "s" : ""} found
           </p>
         </div>
-        <Suspense>
-          <ProductSort />
-        </Suspense>
+        <div className="flex items-center gap-2">
+          <Suspense>
+            <MobileFilterSheet />
+          </Suspense>
+          <Suspense>
+            <ProductSort />
+          </Suspense>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[250px_1fr]">

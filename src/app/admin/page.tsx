@@ -99,7 +99,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
+      <h1 className="text-2xl font-bold md:text-3xl">Dashboard</h1>
 
       {/* Stats cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -140,13 +140,13 @@ export default async function AdminDashboardPage() {
         <CardHeader>
           <CardTitle>Recent Orders</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Order</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead className="hidden sm:table-cell">Customer</TableHead>
+                <TableHead className="hidden sm:table-cell">Date</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Total</TableHead>
               </TableRow>
@@ -158,12 +158,12 @@ export default async function AdminDashboardPage() {
                     <TableCell className="font-medium">
                       {order.order_number}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       {order.user_id
                         ? profileMap.get(order.user_id) ?? "Unknown"
                         : "Guest"}
                     </TableCell>
-                    <TableCell>{formatDate(order.created_at)}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{formatDate(order.created_at)}</TableCell>
                     <TableCell>
                       <OrderStatusBadge status={order.status} />
                     </TableCell>

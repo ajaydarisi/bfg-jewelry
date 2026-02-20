@@ -163,7 +163,9 @@ export default async function ProductPage({ params }: ProductPageProps) {
           <Separator />
 
           <div className="flex gap-3">
-            <AddToCartButton product={typedProduct} />
+            <div className="flex-1">
+              <AddToCartButton product={typedProduct} />
+            </div>
             <WishlistButton productId={typedProduct.id} />
           </div>
         </div>

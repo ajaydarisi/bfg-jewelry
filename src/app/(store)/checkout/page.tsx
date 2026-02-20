@@ -121,7 +121,7 @@ export default function CheckoutPage() {
                         Add New
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-lg">
+                    <DialogContent className="max-w-[95vw] sm:max-w-lg">
                       <DialogHeader>
                         <DialogTitle>Add New Address</DialogTitle>
                       </DialogHeader>
