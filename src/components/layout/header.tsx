@@ -175,8 +175,14 @@ export function Header() {
               )}
             </div>
 
-            {/* Mobile-only: Sign In */}
-            {!user && (
+            {/* Mobile-only: Sign In or User icon */}
+            {user ? (
+              <Button variant="ghost" size="icon" className="md:hidden" asChild>
+                <Link href={ROUTES.account}>
+                  <User className="h-5 w-5" strokeWidth={1.5} />
+                </Link>
+              </Button>
+            ) : (
               <Button variant="ghost" size="sm" className="md:hidden" asChild>
                 <Link href={ROUTES.login}>Sign In</Link>
               </Button>
@@ -194,6 +200,10 @@ export function Header() {
           setSearchOpen(true);
         }}
         itemCount={itemCount}
+        user={user}
+        profileName={profile?.full_name || null}
+        isAdmin={isAdmin}
+        onSignOut={handleSignOut}
       />
     </>
   );

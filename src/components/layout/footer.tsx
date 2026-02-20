@@ -1,7 +1,23 @@
-import { APP_NAME, CATEGORIES, ROUTES } from "@/lib/constants";
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { APP_NAME, CATEGORIES, ROUTES } from "@/lib/constants";
+import { useAuth } from "@/hooks/use-auth";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 export function Footer() {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    toast.success("Signed out successfully");
+    router.push("/");
+    router.refresh();
+  }
   return (
     <footer className="border-t">
       {/* Newsletter / Community section */}
@@ -110,12 +126,21 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href={ROUTES.login}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Sign In
-                </Link>
+                {user ? (
+                  <button
+                    onClick={handleSignOut}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                ) : (
+                  <Link
+                    href={ROUTES.login}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                )}
               </li>
             </ul>
           </div>
