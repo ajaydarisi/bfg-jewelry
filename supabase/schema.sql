@@ -58,6 +58,7 @@ create table public.products (
   name_telugu text,
   slug text not null unique,
   description text,
+  description_telugu text,
   price numeric(10,2) not null check (price >= 0),
   discount_price numeric(10,2) check (discount_price >= 0),
   category_id uuid references public.categories(id) on delete set null,

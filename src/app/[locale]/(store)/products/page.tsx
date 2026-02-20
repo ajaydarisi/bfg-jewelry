@@ -91,7 +91,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   let query = supabase
     .from("products")
-    .select("*, category:categories(name, slug)", { count: "exact" })
+    .select("*, category:categories(name, name_telugu, slug)", { count: "exact" })
     .eq("is_active", true);
 
   if (categoryIds.length === 1) {

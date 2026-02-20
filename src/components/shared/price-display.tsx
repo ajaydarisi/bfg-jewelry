@@ -1,6 +1,9 @@
+"use client";
+
 import { formatPrice, calculateDiscount } from "@/lib/formatters";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface PriceDisplayProps {
   price: number;
@@ -13,6 +16,7 @@ export function PriceDisplay({
   discountPrice,
   size = "md",
 }: PriceDisplayProps) {
+  const t = useTranslations();
   const discount = calculateDiscount(price, discountPrice ?? null);
   const hasDiscount = discount !== null && discountPrice;
 
@@ -41,7 +45,7 @@ export function PriceDisplay({
             {formatPrice(price)}
           </span>
           <Badge variant="destructive" className="text-xs">
-            {discount}% OFF
+            {t("discountOff", { discount })}
           </Badge>
         </>
       )}

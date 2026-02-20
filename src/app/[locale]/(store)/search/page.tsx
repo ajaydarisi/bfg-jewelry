@@ -40,7 +40,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
     const { data, count: totalCount } = await supabase
       .from("products")
-      .select("*, category:categories(name, slug)", { count: "exact" })
+      .select("*, category:categories(name, name_telugu, slug)", { count: "exact" })
       .eq("is_active", true)
       .textSearch("fts", query, { type: "websearch" })
       .range(from, to);

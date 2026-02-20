@@ -25,6 +25,13 @@
     "Brass": "Brass",
     "Panchaloha": "Panchaloha"
   },
+  "tags": {
+    "Trending": "Trending",
+    "New": "New",
+    "Best Seller": "Best Seller",
+    "Sale": "Sale",
+    "Limited Edition": "Limited Edition"
+  },
   "sortOptions": {
     "newest": "Newest",
     "price-asc": "Price: Low → High",

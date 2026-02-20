@@ -83,6 +83,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
       name_telugu: product?.name_telugu ?? null,
       slug: product?.slug ?? "",
       description: product?.description ?? "",
+      description_telugu: product?.description_telugu ?? null,
       price: product?.price ?? 0,
       discount_price: product?.discount_price ?? null,
       category_id: product?.category_id ?? null,
@@ -173,6 +174,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         formData.set("name_telugu", data.name_telugu ?? "");
         formData.set("slug", data.slug);
         formData.set("description", data.description ?? "");
+        formData.set("description_telugu", data.description_telugu ?? "");
         formData.set("price", String(data.price));
         formData.set(
           "discount_price",
@@ -296,6 +298,25 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                           {...field}
                           value={field.value ?? ""}
                           placeholder="Product description..."
+                          rows={5}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="description_telugu"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description (Telugu)</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          {...field}
+                          value={field.value ?? ""}
+                          placeholder="తెలుగులో ఉత్పత్తి వివరణ..."
                           rows={5}
                         />
                       </FormControl>

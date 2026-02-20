@@ -12,7 +12,7 @@ export type CategoryWithChildren = Category & {
 };
 
 export type ProductWithCategory = Product & {
-  category: Pick<Category, "name" | "slug"> | null;
+  category: Pick<Category, "name" | "name_telugu" | "slug"> | null;
 };
 
 export interface ProductFilters {

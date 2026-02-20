@@ -5,8 +5,9 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { IS_ONLINE, ROUTES } from "@/lib/constants";
+import { getCategoryName, getProductName } from "@/lib/i18n-helpers";
 import type { ProductWithCategory } from "@/types/product";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ProductCardProps {
   product: ProductWithCategory;
@@ -14,6 +15,10 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const t = useTranslations("products.card");
+  const tc = useTranslations("constants");
+  const locale = useLocale();
+
+  const displayName = getProductName(product, locale);
 
   return (
     <Link
@@ -24,7 +29,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {product.images[0] ? (
           <Image
             src={product.images[0]}
-            alt={product.name}
+            alt={displayName}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             className="object-cover transition-all duration-500 group-hover:scale-[1.03]"
@@ -42,7 +47,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 variant="secondary"
                 className="text-[10px] uppercase tracking-wider font-medium bg-background/80 backdrop-blur-sm border-0"
               >
-                {tag}
+                {tc(`tags.${tag}`)}
               </Badge>
             ))}
           </div>
@@ -58,11 +63,11 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="space-y-1">
         {product.category && (
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-            {product.category.name}
+            {getCategoryName(product.category, locale)}
           </p>
         )}
         <h3 className="font-sans text-sm font-medium leading-snug group-hover:text-primary transition-colors">
-          {product.name}
+          {displayName}
         </h3>
         <div>
           <PriceDisplay

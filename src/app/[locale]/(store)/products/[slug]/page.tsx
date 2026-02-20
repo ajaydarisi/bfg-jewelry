@@ -9,19 +9,20 @@ import { Separator } from "@/components/ui/separator";
 import { WishlistButton } from "@/components/wishlist/wishlist-button";
 import { IS_ONLINE, ROUTES } from "@/lib/constants";
 import { formatPrice } from "@/lib/formatters";
+import { getCategoryName, getProductName, getProductDescription } from "@/lib/i18n-helpers";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { ProductWithCategory } from "@/types/product";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 
 const getProduct = cache(async (slug: string) => {
   const supabase = await createClient();
   const { data } = await supabase
     .from("products")
-    .select("*, category:categories(name, slug)")
+    .select("*, category:categories(name, name_telugu, slug)")
     .eq("slug", slug)
     .eq("is_active", true)
     .single();
@@ -48,15 +49,19 @@ export async function generateMetadata({
 }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProduct(slug);
+  const locale = await getLocale();
 
   if (!product) return { title: "Product Not Found" };
 
+  const displayName = getProductName(product, locale);
+  const displayDesc = getProductDescription(product, locale);
+
   return {
-    title: product.name,
-    description: product.description || `Shop ${product.name} at Bhagyalakshmi Future Gold Commerce`,
+    title: displayName,
+    description: displayDesc || `Shop ${displayName} at Bhagyalakshmi Future Gold Commerce`,
     openGraph: {
-      title: product.name,
-      description: product.description || undefined,
+      title: displayName,
+      description: displayDesc || undefined,
       images: product.images[0] ? [product.images[0]] : undefined,
     },
   };
@@ -68,55 +73,62 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   if (!product) notFound();
 
+  const locale = await getLocale();
   const t = await getTranslations("products.detail");
+  const tl = await getTranslations("products.listing");
+  const tc = await getTranslations("constants");
 
   // Fetch related products from same category
   const supabase = await createClient();
   const { data: relatedProducts } = await supabase
     .from("products")
-    .select("*, category:categories(name, slug)")
+    .select("*, category:categories(name, name_telugu, slug)")
     .eq("is_active", true)
     .eq("category_id", product.category_id!)
     .neq("id", product.id)
     .limit(4);
 
   const typedProduct = product as unknown as ProductWithCategory;
+  const displayName = getProductName(typedProduct, locale);
+  const displayDescription = getProductDescription(typedProduct, locale);
+  // Show the alternate language name as subtitle
+  const subtitleName = locale === "te" ? typedProduct.name : typedProduct.name_telugu;
 
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumbs
         items={[
-          { label: "Products", href: ROUTES.products },
+          { label: tl("breadcrumb"), href: ROUTES.products },
           ...(typedProduct.category
             ? [
                 {
-                  label: typedProduct.category.name,
+                  label: getCategoryName(typedProduct.category, locale),
                   href: `${ROUTES.products}?category=${typedProduct.category.slug}`,
                 },
               ]
             : []),
-          { label: typedProduct.name },
+          { label: displayName },
         ]}
       />
 
       <div className="mt-8 grid gap-8 md:grid-cols-2">
         {/* Images */}
-        <ProductImages images={typedProduct.images} name={typedProduct.name} />
+        <ProductImages images={typedProduct.images} name={displayName} />
 
         {/* Details */}
         <div className="space-y-6">
           <div>
             {typedProduct.category && (
               <p className="text-sm text-muted-foreground">
-                {typedProduct.category.name}
+                {getCategoryName(typedProduct.category, locale)}
               </p>
             )}
             <h1 className="text-2xl font-bold md:text-3xl">
-              {typedProduct.name}
+              {displayName}
             </h1>
-            {typedProduct.name_telugu && (
+            {subtitleName && (
               <p className="text-sm text-muted-foreground mt-1">
-                {typedProduct.name_telugu}
+                {subtitleName}
               </p>
             )}
           </div>
@@ -136,7 +148,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
             {typedProduct.tags.map((tag) => (
               <Badge key={tag} variant="secondary">
-                {tag}
+                {tc(`tags.${tag}`)}
               </Badge>
             ))}
           </div>
@@ -174,11 +186,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           <Separator />
 
-          {typedProduct.description && (
+          {displayDescription && (
             <div>
               <h3 className="font-semibold">{t("description")}</h3>
               <p className="mt-2 text-muted-foreground whitespace-pre-line">
-                {typedProduct.description}
+                {displayDescription}
               </p>
             </div>
           )}
@@ -187,7 +199,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             <div>
               <h3 className="font-semibold">{t("material")}</h3>
               <p className="mt-1 text-muted-foreground">
-                {typedProduct.material}
+                {tc(`materials.${typedProduct.material}`)}
               </p>
             </div>
           )}
@@ -215,7 +227,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <AddToCartButton product={typedProduct} />
               ) : (
                 <CheckAvailabilityButton
-                  productName={typedProduct.name}
+                  productName={displayName}
                   productSlug={typedProduct.slug}
                 />
               )}

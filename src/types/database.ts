@@ -133,6 +133,7 @@ export type Database = {
           name_telugu: string | null;
           slug: string;
           description: string | null;
+          description_telugu: string | null;
           price: number;
           discount_price: number | null;
           category_id: string | null;
@@ -156,6 +157,7 @@ export type Database = {
           name_telugu?: string | null;
           slug: string;
           description?: string | null;
+          description_telugu?: string | null;
           price: number;
           discount_price?: number | null;
           category_id?: string | null;
@@ -179,6 +181,7 @@ export type Database = {
           name_telugu?: string | null;
           slug?: string;
           description?: string | null;
+          description_telugu?: string | null;
           price?: number;
           discount_price?: number | null;
           category_id?: string | null;

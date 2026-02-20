@@ -75,6 +75,7 @@ export const productSchema = z
     name_telugu: z.string().optional().nullable(),
     slug: z.string().min(2, "Slug is required"),
     description: z.string().optional(),
+    description_telugu: z.string().optional().nullable(),
     price: z.number().positive("Price must be greater than 0"),
     discount_price: z.number().positive().optional().nullable(),
     category_id: z.string().uuid("Select a category").optional().nullable(),

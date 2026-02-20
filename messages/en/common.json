@@ -45,5 +45,6 @@
     "title": "Something went wrong",
     "tryAgain": "Try Again"
   },
-  "signedOut": "Signed out successfully"
+  "signedOut": "Signed out successfully",
+  "discountOff": "{discount}% OFF"
 }

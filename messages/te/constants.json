@@ -25,6 +25,13 @@
     "Brass": "ఇత్తడి",
     "Panchaloha": "పంచలోహం"
   },
+  "tags": {
+    "Trending": "ట్రెండింగ్",
+    "New": "కొత్తది",
+    "Best Seller": "బెస్ట్ సెల్లర్",
+    "Sale": "సేల్",
+    "Limited Edition": "లిమిటెడ్ ఎడిషన్"
+  },
   "sortOptions": {
     "newest": "కొత్తవి",
     "price-asc": "ధర: తక్కువ → ఎక్కువ",
