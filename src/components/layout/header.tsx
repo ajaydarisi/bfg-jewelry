@@ -236,7 +236,7 @@ export function Header() {
               )}
             </div>
 
-            {/* Mobile-only: Sign In or User icon */}
+            {/* Mobile-only: User dropdown with search/wishlist */}
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -288,6 +288,17 @@ export function Header() {
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setSearchOpen(true)}>
+                    <Search className="mr-2 h-4 w-4" />
+                    {t("search")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={ROUTES.wishlist}>
+                      <Heart className="mr-2 h-4 w-4" />
+                      {t("wishlist")}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => setLangDialogOpen(true)}>
                     <Languages className="mr-2 h-4 w-4" />
                     {t("changeLanguage")}
@@ -316,6 +327,17 @@ export function Header() {
                     <Link href={pathname === "/" ? ROUTES.login : `${ROUTES.login}?redirect=${encodeURIComponent(pathname)}`}>
                       <User className="mr-2 h-4 w-4" />
                       {t("signIn")}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setSearchOpen(true)}>
+                    <Search className="mr-2 h-4 w-4" />
+                    {t("search")}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href={ROUTES.wishlist}>
+                      <Heart className="mr-2 h-4 w-4" />
+                      {t("wishlist")}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -358,10 +380,6 @@ export function Header() {
       <MobileNav
         open={mobileNavOpen}
         onOpenChange={setMobileNavOpen}
-        onSearchOpen={() => {
-          setMobileNavOpen(false);
-          setSearchOpen(true);
-        }}
         itemCount={itemCount}
       />
     </>

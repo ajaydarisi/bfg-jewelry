@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-import { Search, Heart, ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -17,11 +17,10 @@ import Image from "next/image";
 interface MobileNavProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSearchOpen: () => void;
   itemCount: number;
 }
 
-export function MobileNav({ open, onOpenChange, onSearchOpen, itemCount }: MobileNavProps) {
+export function MobileNav({ open, onOpenChange, itemCount }: MobileNavProps) {
   const t = useTranslations("nav");
   const tc = useTranslations("constants");
 
@@ -69,21 +68,6 @@ export function MobileNav({ open, onOpenChange, onSearchOpen, itemCount }: Mobil
               className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
             >
               {t("aboutUs")}
-            </Link>
-            <button
-              onClick={onSearchOpen}
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-muted text-left"
-            >
-              <Search className="h-4 w-4" strokeWidth={1.5} />
-              {t("search")}
-            </button>
-            <Link
-              href={ROUTES.wishlist}
-              onClick={() => onOpenChange(false)}
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
-            >
-              <Heart className="h-4 w-4" strokeWidth={1.5} />
-              {t("wishlist")}
             </Link>
             {IS_ONLINE && (
               <Link
