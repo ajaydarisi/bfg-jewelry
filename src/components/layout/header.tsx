@@ -231,7 +231,7 @@ export function Header() {
                 </DropdownMenu>
               ) : (
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href={ROUTES.login}>{t("signIn")}</Link>
+                  <Link href={pathname === "/" ? ROUTES.login : `${ROUTES.login}?redirect=${encodeURIComponent(pathname)}`}>{t("signIn")}</Link>
                 </Button>
               )}
             </div>
@@ -313,7 +313,7 @@ export function Header() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuItem asChild>
-                    <Link href={ROUTES.login}>
+                    <Link href={pathname === "/" ? ROUTES.login : `${ROUTES.login}?redirect=${encodeURIComponent(pathname)}`}>
                       <User className="mr-2 h-4 w-4" />
                       {t("signIn")}
                     </Link>

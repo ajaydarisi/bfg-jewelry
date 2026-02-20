@@ -32,7 +32,7 @@ export default async function OrderDetailPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login");
+  if (!user) redirect(`/login?redirect=/account/orders/${id}`);
 
   const { data: order } = await supabase
     .from("orders")

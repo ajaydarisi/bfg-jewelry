@@ -5,14 +5,14 @@ import { APP_NAME, BUSINESS_INFO, CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/co
 import { createClient } from "@/lib/supabase/client";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
-import { Link } from "@/i18n/routing";
-import { useRouter } from "@/i18n/routing";
+import { Link, useRouter, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 export function Footer() {
   const { user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const t = useTranslations("footer");
   const tc = useTranslations("constants");
   const tCommon = useTranslations();
@@ -154,7 +154,7 @@ export function Footer() {
                   </button>
                 ) : (
                   <Link
-                    href={ROUTES.login}
+                    href={pathname === "/" ? ROUTES.login : `${ROUTES.login}?redirect=${encodeURIComponent(pathname)}`}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {tCommon("nav.signIn")}

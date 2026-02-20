@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { useWishlist } from "@/hooks/use-wishlist";
 import { useAuth } from "@/hooks/use-auth";
@@ -22,13 +22,14 @@ export function WishlistButton({
   const { isInWishlist, addItem, removeItem } = useWishlist();
   const { isLoggedIn } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const t = useTranslations("wishlist");
   const isWishlisted = isInWishlist(productId);
 
   async function handleToggle() {
     if (!isLoggedIn) {
       toast.info(t("signInRequired"));
-      router.push(ROUTES.login);
+      router.push(`${ROUTES.login}?redirect=${encodeURIComponent(pathname)}`);
       return;
     }
 
