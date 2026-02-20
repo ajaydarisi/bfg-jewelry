@@ -1,6 +1,6 @@
 export const APP_NAME = "BFG Jewellery";
 export const APP_DESCRIPTION =
-  "Discover exquisite fashion jewellery - necklaces, earrings, bracelets, rings, and jewellery sets.";
+  "Shop contemporary fashion jewellery at BFG Jewellery. Explore curated collections of necklaces, earrings, bracelets, rings, and jewellery sets crafted with premium materials. Free shipping on orders above \u20B9999.";
 
 export const CATEGORIES = [
   { name: "Necklaces", slug: "necklaces" },

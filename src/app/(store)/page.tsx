@@ -1,10 +1,9 @@
 import { ProductGrid } from "@/components/products/product-grid";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES, ROUTES } from "@/lib/constants";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { ProductWithCategory } from "@/types/product";
-import { ArrowRight, RefreshCw, Shield, Sparkles, Truck } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
@@ -48,89 +47,122 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-primary/10 via-background to-primary/5">
-        <div className="container mx-auto grid items-center gap-8 px-4 py-20 md:grid-cols-2 md:py-32">
-          <div className="max-w-2xl">
-            <Badge variant="secondary" className="mb-4">
-              <Sparkles className="mr-1 h-3 w-3 stroke-yellow-600" />
-              New Collection Available
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight md:text-6xl">
-              Discover Your{" "}
-              <span className="text-primary">Perfect Sparkle</span>
+      <section className="relative h-[70vh] min-h-125 max-h-200 overflow-hidden">
+        <Image
+          src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=2000&q=90"
+          alt="Fashion jewellery collection"
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-r from-black/50 via-black/25 to-transparent" />
+        <div className="container mx-auto relative h-full flex items-center px-4">
+          <div className="max-w-xl text-white">
+            <p className="text-xs uppercase tracking-[0.2em] mb-4 text-white/80">
+              New Collection 2026
+            </p>
+            <h1 className="text-4xl md:text-6xl leading-tight">
+              Adorn Your
+              <br />
+              Every Moment
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground md:text-xl">
-              Explore our exquisite collection of fashion jewellery. From elegant
-              necklaces to stunning rings, find pieces that express your unique
-              style.
+            <p className="mt-4 text-base md:text-lg text-white/80 max-w-md font-sans">
+              Explore our exquisite collection of fashion jewellery, designed
+              to celebrate your unique style.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Button size="lg" asChild>
-                <Link href={ROUTES.products}>
-                  Shop Now
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
+              <Button
+                size="lg"
+                className="bg-white text-neutral-900 hover:bg-white/90"
+                asChild
+              >
+                <Link href={ROUTES.products}>Shop Collection</Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white/10"
+                asChild
+              >
                 <Link href={`${ROUTES.products}?category=jewellery-sets`}>
-                  View Collections
+                  View Sets
                 </Link>
               </Button>
             </div>
-          </div>
-          <div className="relative aspect-square overflow-hidden">
-            <Image
-              src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=4000&q=100"
-              alt="Fashion jewellery collection"
-              width={500}
-              height={500}
-              priority
-              className="h-full w-full object-cover rounded-lg"
-            />
           </div>
         </div>
       </section>
 
       {/* Categories */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="mb-8 text-center">
-          <h2 className="text-2xl font-bold md:text-3xl">Shop by Category</h2>
-          <p className="mt-2 text-muted-foreground">
-            Browse our curated collection of fashion jewellery
+      <section className="container mx-auto px-4 py-20">
+        <div className="mb-12 text-center">
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+            Explore
           </p>
+          <h2 className="text-3xl md:text-4xl">Shop by Category</h2>
         </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.slug}
               href={`${ROUTES.products}?category=${cat.slug}`}
-              className="group flex flex-col items-center rounded-lg border bg-card p-6 text-center transition-colors hover:border-primary hover:bg-primary/5"
+              className="group relative flex items-center justify-center py-10 px-4 text-center border border-border bg-card transition-all duration-300 hover:border-primary hover:shadow-md"
             >
-              <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                <Sparkles className="h-6 w-6" />
-              </div>
-              <h3 className="font-medium">{cat.name}</h3>
+              <h3 className="text-sm uppercase tracking-[0.15em] font-medium group-hover:text-primary transition-colors">
+                {cat.name}
+              </h3>
             </Link>
           ))}
         </div>
       </section>
 
+      {/* Brand Story */}
+      <section className="py-20 bg-accent/30">
+        <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              Our Story
+            </p>
+            <h2 className="text-3xl md:text-4xl leading-snug">
+              Crafted with Passion,
+              <br />
+              Worn with Confidence
+            </h2>
+            <p className="mt-4 text-muted-foreground leading-relaxed max-w-md font-sans">
+              Every piece in our collection is thoughtfully designed to bring
+              elegance to your everyday. From statement necklaces to delicate
+              rings, BFG Jewellery blends contemporary design with timeless
+              craftsmanship.
+            </p>
+            <Button variant="outline" className="mt-6" asChild>
+              <Link href={ROUTES.products}>Discover More</Link>
+            </Button>
+          </div>
+          <div className="relative aspect-4/5 overflow-hidden">
+            <Image
+              src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=1200&q=85"
+              alt="Elegant jewellery craftsmanship"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Featured Products */}
       {featuredProducts && featuredProducts.length > 0 && (
-        <section className="container mx-auto px-4 py-16">
-          <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <section className="container mx-auto px-4 py-20">
+          <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold md:text-3xl">
-                Featured Products
-              </h2>
-              <p className="mt-1 text-muted-foreground">
-                Our most popular picks for you
+              <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                Curated for You
               </p>
+              <h2 className="text-3xl md:text-4xl">Featured Pieces</h2>
             </div>
-            <Button variant="outline" asChild>
+            <Button variant="link" className="text-primary underline-offset-4" asChild>
               <Link href={ROUTES.products}>
                 View All
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
           </div>
@@ -142,21 +174,19 @@ export default async function HomePage() {
 
       {/* New Arrivals */}
       {newProducts && newProducts.length > 0 && (
-        <section className="bg-muted/50">
-          <div className="container mx-auto px-4 py-16">
-            <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <section className="border-t border-b">
+          <div className="container mx-auto px-4 py-20">
+            <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold md:text-3xl">
-                  New Arrivals
-                </h2>
-                <p className="mt-1 text-muted-foreground">
-                  Just landed - fresh new styles
+                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                  Just Landed
                 </p>
+                <h2 className="text-3xl md:text-4xl">New Arrivals</h2>
               </div>
-              <Button variant="outline" asChild>
+              <Button variant="link" className="text-primary underline-offset-4" asChild>
                 <Link href={`${ROUTES.products}?sort=newest`}>
                   Shop New
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
               </Button>
             </div>
@@ -167,44 +197,34 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Features */}
+      {/* Trust Bar */}
       <section className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
           {[
             {
-              icon: Truck,
-              title: "Free Shipping",
-              description: "On orders above ₹999",
+              title: "Complimentary Shipping",
+              description: "On orders above \u20B9999",
             },
             {
-              icon: Shield,
-              title: "Secure Payment",
-              description: "100% secure checkout",
+              title: "Secure Checkout",
+              description: "100% secure payments",
             },
             {
-              icon: RefreshCw,
               title: "Easy Returns",
               description: "7-day return policy",
             },
             {
-              icon: Sparkles,
               title: "Quality Assured",
-              description: "Premium fashion jewellery",
+              description: "Premium craftsmanship",
             },
           ].map((feature) => (
-            <div
-              key={feature.title}
-              className="flex items-start gap-4 rounded-lg border p-4"
-            >
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <feature.icon className="h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="font-medium">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {feature.description}
-                </p>
-              </div>
+            <div key={feature.title} className="text-center py-4">
+              <h3 className="text-xs uppercase tracking-[0.15em] font-medium">
+                {feature.title}
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1 font-sans">
+                {feature.description}
+              </p>
             </div>
           ))}
         </div>

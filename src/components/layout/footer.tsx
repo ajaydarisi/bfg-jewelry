@@ -3,32 +3,49 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="border-t bg-muted/50">
+    <footer className="border-t">
+      {/* Newsletter / Community section */}
+      <div className="container mx-auto px-4 py-16 text-center border-b">
+        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+          Stay in Touch
+        </p>
+        <h3 className="text-2xl md:text-3xl mb-3">
+          Join the BFG Jewellery World
+        </h3>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          Be the first to know about new collections, exclusive offers,
+          and styling inspiration.
+        </p>
+      </div>
+
+      {/* Links grid */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
             <Link
               href="/"
-              className="text-lg font-bold tracking-tight text-primary"
+              className="font-heading text-lg tracking-wide text-primary"
             >
-              ✦ {APP_NAME}
+              {APP_NAME}
             </Link>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Discover exquisite fashion jewellery crafted with ❤️. From
-              statement necklaces to delicate rings, find your perfect piece.
+            <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+              Contemporary fashion jewellery designed to celebrate your
+              unique style, every day.
             </p>
           </div>
 
           {/* Categories */}
           <div>
-            <h3 className="font-semibold">Categories</h3>
-            <ul className="mt-3 space-y-2">
+            <h3 className="text-xs uppercase tracking-[0.15em] font-medium mb-4">
+              Categories
+            </h3>
+            <ul className="space-y-2.5">
               {CATEGORIES.map((cat) => (
                 <li key={cat.slug}>
                   <Link
                     href={`${ROUTES.products}?category=${cat.slug}`}
-                    className="text-sm text-muted-foreground hover:text-primary"
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
                     {cat.name}
                   </Link>
@@ -37,14 +54,16 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Customer Service */}
+          {/* Customer Care */}
           <div>
-            <h3 className="font-semibold">Customer Service</h3>
-            <ul className="mt-3 space-y-2">
+            <h3 className="text-xs uppercase tracking-[0.15em] font-medium mb-4">
+              Customer Care
+            </h3>
+            <ul className="space-y-2.5">
               <li>
                 <Link
                   href={ROUTES.accountOrders}
-                  className="text-sm text-muted-foreground hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Track Order
                 </Link>
@@ -52,15 +71,15 @@ export function Footer() {
               <li>
                 <Link
                   href={ROUTES.cart}
-                  className="text-sm text-muted-foreground hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Shopping Cart
+                  Shopping Bag
                 </Link>
               </li>
               <li>
                 <Link
                   href={ROUTES.wishlist}
-                  className="text-sm text-muted-foreground hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Wishlist
                 </Link>
@@ -70,12 +89,14 @@ export function Footer() {
 
           {/* Account */}
           <div>
-            <h3 className="font-semibold">My Account</h3>
-            <ul className="mt-3 space-y-2">
+            <h3 className="text-xs uppercase tracking-[0.15em] font-medium mb-4">
+              My Account
+            </h3>
+            <ul className="space-y-2.5">
               <li>
                 <Link
                   href={ROUTES.account}
-                  className="text-sm text-muted-foreground hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Profile
                 </Link>
@@ -83,7 +104,7 @@ export function Footer() {
               <li>
                 <Link
                   href={ROUTES.accountAddresses}
-                  className="text-sm text-muted-foreground hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Addresses
                 </Link>
@@ -91,7 +112,7 @@ export function Footer() {
               <li>
                 <Link
                   href={ROUTES.login}
-                  className="text-sm text-muted-foreground hover:text-primary"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   Sign In
                 </Link>
@@ -100,7 +121,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t pt-6 text-center text-sm text-muted-foreground">
+        <div className="mt-12 border-t pt-6 text-center text-xs text-muted-foreground tracking-wide">
           <p>&copy; {new Date().getFullYear()} {APP_NAME}. All rights reserved.</p>
         </div>
       </div>

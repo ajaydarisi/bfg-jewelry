@@ -1,30 +1,49 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { APP_NAME, APP_DESCRIPTION } from "@/lib/constants";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const playfair = Playfair_Display({
+  variable: "--font-heading",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const dmSans = DM_Sans({
+  variable: "--font-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: APP_NAME,
+    default: `${APP_NAME} — Contemporary Fashion Jewellery`,
     template: `%s | ${APP_NAME}`,
   },
   description: APP_DESCRIPTION,
+  keywords: [
+    "fashion jewellery",
+    "necklaces",
+    "earrings",
+    "bracelets",
+    "rings",
+    "jewellery sets",
+    "gold plated jewellery",
+    "rose gold jewellery",
+    "online jewellery store India",
+  ],
   openGraph: {
-    title: APP_NAME,
+    title: `${APP_NAME} — Contemporary Fashion Jewellery`,
     description: APP_DESCRIPTION,
     type: "website",
+    siteName: APP_NAME,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${APP_NAME} — Contemporary Fashion Jewellery`,
+    description: APP_DESCRIPTION,
   },
 };
 
@@ -36,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${playfair.variable} ${dmSans.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
