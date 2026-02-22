@@ -28,6 +28,8 @@ import { useRouter } from "@/i18n/routing";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
+import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 
 export function SignupForm() {
   const t = useTranslations("auth.signup");
@@ -141,6 +143,16 @@ export function SignupForm() {
             </Button>
           </form>
         </Form>
+        <div className="relative my-4">
+          <Separator />
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+            {t("orContinueWith")}
+          </span>
+        </div>
+        <GoogleSignInButton
+          label={t("googleSignIn")}
+          errorLabel={t("googleError")}
+        />
       </CardContent>
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">

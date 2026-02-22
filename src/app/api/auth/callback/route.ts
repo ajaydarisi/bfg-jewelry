@@ -5,15 +5,21 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/";
+  const localePrefix = searchParams.get("locale_prefix") ?? "";
+
+  // Only allow relative paths to prevent open redirects
+  const safeNext = next.startsWith("/") ? next : "/";
 
   if (code) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`);
+      return NextResponse.redirect(`${origin}${safeNext}`);
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth`);
+  // Locale-aware error redirect
+  const loginPath = localePrefix ? `${localePrefix}/login` : "/login";
+  return NextResponse.redirect(`${origin}${loginPath}?error=auth`);
 }

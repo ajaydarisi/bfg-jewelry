@@ -29,6 +29,8 @@ import {
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 
 export function LoginForm() {
   const t = useTranslations("auth.login");
@@ -120,6 +122,16 @@ export function LoginForm() {
             </Button>
           </form>
         </Form>
+        <div className="relative my-4">
+          <Separator />
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+            {t("orContinueWith")}
+          </span>
+        </div>
+        <GoogleSignInButton
+          label={t("googleSignIn")}
+          errorLabel={t("googleError")}
+        />
       </CardContent>
       <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
