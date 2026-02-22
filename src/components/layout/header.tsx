@@ -42,7 +42,7 @@ import { locales } from "@/i18n/config";
 import { useAuth } from "@/hooks/use-auth";
 import { useCart } from "@/hooks/use-cart";
 import { createClient } from "@/lib/supabase/client";
-import { APP_NAME, CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/constants";
+import { CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/constants";
 import { toast } from "sonner";
 import Image from "next/image";
 import NextLink from "next/link";
@@ -95,10 +95,10 @@ export function Header() {
             </Button>
             <Link
               href="/"
-              className="flex items-center gap-2 font-heading text-xl tracking-wide text-primary"
+              className="flex items-center gap-2 font-brand text-xl tracking-wide text-primary"
             >
               <Image src="/images/logo.svg" alt="" width={24} height={24} className="hidden md:block" />
-              {APP_NAME}
+              {tCommon("appName")}
             </Link>
           </div>
 

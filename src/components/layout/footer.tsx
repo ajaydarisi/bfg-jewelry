@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
-import { APP_NAME, BUSINESS_INFO, CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/constants";
+import { BUSINESS_INFO, CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/constants";
 import { createClient } from "@/lib/supabase/client";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
@@ -46,10 +46,10 @@ export function Footer() {
           <div>
             <Link
               href="/"
-              className="flex items-center gap-2 font-heading text-lg tracking-wide text-primary"
+              className="flex items-center gap-2 font-brand text-lg tracking-wide text-primary"
             >
               <Image src="/images/logo.svg" alt="" width={20} height={20} />
-              {APP_NAME}
+              {tCommon("appName")}
             </Link>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
               {t("brandDescription")}
@@ -215,7 +215,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t pt-6 text-center text-xs text-muted-foreground tracking-wide">
-          <p>&copy; {new Date().getFullYear()} {APP_NAME}. {t("allRightsReserved")}</p>
+          <p>&copy; {new Date().getFullYear()} {tCommon("appName")}. {t("allRightsReserved")}</p>
         </div>
       </div>
     </footer>

@@ -9,6 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
+  --font-brand: var(--font-brand);
+  --font-telugu: var(--font-telugu);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -186,5 +188,17 @@
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading), ui-serif, Georgia, serif;
+  }
+
+  /* Telugu locale: NTR font for all text */
+  html[lang="te"] body {
+    font-family: var(--font-telugu), ui-sans-serif, system-ui, sans-serif;
+  }
+  html[lang="te"] h1, html[lang="te"] h2, html[lang="te"] h3,
+  html[lang="te"] h4, html[lang="te"] h5, html[lang="te"] h6 {
+    font-family: var(--font-telugu), ui-serif, Georgia, serif;
+  }
+  html[lang="te"] .font-brand {
+    font-family: var(--font-telugu);
   }
 }

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { APP_NAME, CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/constants";
+import { CATEGORIES, IS_ONLINE, ROUTES } from "@/lib/constants";
 import Image from "next/image";
 
 interface MobileNavProps {
@@ -23,14 +23,15 @@ interface MobileNavProps {
 export function MobileNav({ open, onOpenChange, itemCount }: MobileNavProps) {
   const t = useTranslations("nav");
   const tc = useTranslations("constants");
+  const tCommon = useTranslations();
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-80 pl-3">
         <SheetHeader>
-          <SheetTitle className="flex items-center gap-2 text-left font-heading tracking-wide text-primary">
+          <SheetTitle className="flex items-center gap-2 text-left font-brand tracking-wide text-primary">
             <Image src="/images/logo.svg" alt="" width={20} height={20} />
-            {APP_NAME}
+            {tCommon("appName")}
           </SheetTitle>
         </SheetHeader>
         <div className="mt-6 flex flex-col gap-4 overflow-y-auto">
