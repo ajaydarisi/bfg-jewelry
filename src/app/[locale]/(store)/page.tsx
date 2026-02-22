@@ -10,7 +10,11 @@ import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { getLocale } from "next-intl/server";
 import { getCategoryName } from "@/lib/i18n-helpers";
-import { Confetti } from "@/components/shared/confetti";
+import dynamic from "next/dynamic";
+
+const Confetti = dynamic(() =>
+  import("@/components/shared/confetti").then((m) => m.Confetti),
+);
 
 const getFeaturedProducts = unstable_cache(
   async () => {

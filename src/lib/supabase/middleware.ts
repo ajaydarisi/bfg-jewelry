@@ -56,9 +56,13 @@ export async function updateSession(
     }
   );
 
+  // Use getSession() for fast cookie-based check (no API round-trip).
+  // This is sufficient for route protection in middleware.
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const user = session?.user ?? null;
 
   const { pathname } = request.nextUrl;
   const strippedPath = stripLocale(pathname);
@@ -95,11 +99,23 @@ export async function updateSession(
       return NextResponse.redirect(url);
     }
 
+    // Use getUser() only for admin — verifies token with Supabase server
+    const {
+      data: { user: verifiedUser },
+    } = await supabase.auth.getUser();
+
+    if (!verifiedUser) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
+
     // Check admin role
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
-      .eq("id", user.id)
+      .eq("id", verifiedUser.id)
       .single();
 
     if (profile?.role !== "admin") {

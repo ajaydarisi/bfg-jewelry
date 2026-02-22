@@ -12,7 +12,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { RevenueChart } from "@/components/admin/revenue-chart";
+import dynamic from "next/dynamic";
+
+const RevenueChart = dynamic(() =>
+  import("@/components/admin/revenue-chart").then((m) => m.RevenueChart),
+);
 
 export default async function AdminDashboardPage() {
   const supabase = createAdminClient();

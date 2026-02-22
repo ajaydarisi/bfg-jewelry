@@ -59,6 +59,11 @@ export function useCartProvider(): CartContextType {
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoading: authLoading } = useAuth();
   const prevUserIdRef = useRef<string | null>(null);
+  // Use ref for stable access to items in callbacks without re-creating them
+  const itemsRef = useRef(items);
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
 
   const fetchCartFromDB = useCallback(async (userId: string) => {
     const { data } = await supabase
@@ -116,7 +121,21 @@ export function useCartProvider(): CartContextType {
 
   const addItem = useCallback(
     async (product: Product, quantity = 1) => {
-      const existing = items.find((i) => i.product.id === product.id);
+      const currentItems = itemsRef.current;
+      const existing = currentItems.find((i) => i.product.id === product.id);
+
+      // Optimistic update — apply immediately
+      if (existing) {
+        setItems(
+          currentItems.map((i) =>
+            i.product.id === product.id
+              ? { ...i, quantity: i.quantity + quantity }
+              : i,
+          ),
+        );
+      } else {
+        setItems([...currentItems, { id: crypto.randomUUID(), product, quantity }]);
+      }
 
       if (user) {
         if (existing) {
@@ -130,41 +149,32 @@ export function useCartProvider(): CartContextType {
             .from("cart_items")
             .insert({ user_id: user.id, product_id: product.id, quantity });
         }
-        await fetchCartFromDB(user.id);
       } else {
-        let newItems: CartItem[];
-        if (existing) {
-          newItems = items.map((i) =>
-            i.product.id === product.id
-              ? { ...i, quantity: i.quantity + quantity }
-              : i,
-          );
-        } else {
-          newItems = [...items, { id: crypto.randomUUID(), product, quantity }];
-        }
-        setItems(newItems);
-        setLocalCart(newItems);
+        setLocalCart(itemsRef.current);
       }
     },
-    [items, user, fetchCartFromDB],
+    [user],
   );
 
   const removeItem = useCallback(
     async (productId: string) => {
+      const currentItems = itemsRef.current;
+
+      // Optimistic update
+      const newItems = currentItems.filter((i) => i.product.id !== productId);
+      setItems(newItems);
+
       if (user) {
         await supabase
           .from("cart_items")
           .delete()
           .eq("user_id", user.id)
           .eq("product_id", productId);
-        await fetchCartFromDB(user.id);
       } else {
-        const newItems = items.filter((i) => i.product.id !== productId);
-        setItems(newItems);
         setLocalCart(newItems);
       }
     },
-    [items, user, fetchCartFromDB],
+    [user],
   );
 
   const updateQuantity = useCallback(
@@ -174,22 +184,25 @@ export function useCartProvider(): CartContextType {
         return;
       }
 
+      const currentItems = itemsRef.current;
+
+      // Optimistic update
+      const newItems = currentItems.map((i) =>
+        i.product.id === productId ? { ...i, quantity } : i,
+      );
+      setItems(newItems);
+
       if (user) {
         await supabase
           .from("cart_items")
           .update({ quantity })
           .eq("user_id", user.id)
           .eq("product_id", productId);
-        await fetchCartFromDB(user.id);
       } else {
-        const newItems = items.map((i) =>
-          i.product.id === productId ? { ...i, quantity } : i,
-        );
-        setItems(newItems);
         setLocalCart(newItems);
       }
     },
-    [items, user, removeItem, fetchCartFromDB],
+    [user, removeItem],
   );
 
   const clearCart = useCallback(async () => {
