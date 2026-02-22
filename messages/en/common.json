@@ -46,6 +46,7 @@
     "title": "Something went wrong",
     "tryAgain": "Try Again"
   },
+  "breadcrumbHome": "Home",
   "appName": "Bhagyalakshmi Future Gold",
   "signedOut": "Signed out successfully",
   "discountOff": "{discount}% OFF"

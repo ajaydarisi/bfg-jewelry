@@ -58,6 +58,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   const locale = await getLocale();
   const t = await getTranslations("products.listing");
+  const tRoot = await getTranslations();
 
   const supabase = await createClient();
 
@@ -144,6 +145,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumbs
+        homeLabel={tRoot("breadcrumbHome")}
         items={[
           { label: t("breadcrumb"), href: categoryName ? "/products" : undefined },
           ...(categoryName ? [{ label: categoryName }] : []),

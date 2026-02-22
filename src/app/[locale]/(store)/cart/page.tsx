@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 
 export default function CartPage() {
   const t = useTranslations("cart");
+  const tc = useTranslations();
   const { items, isLoading } = useCart();
 
   if (isLoading) {
@@ -28,7 +29,7 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Breadcrumbs items={[{ label: t("breadcrumb") }]} />
+      <Breadcrumbs items={[{ label: t("breadcrumb") }]} homeLabel={tc("breadcrumbHome")} />
 
       <h1 className="mt-6 text-2xl font-bold md:text-3xl">{t("title")}</h1>
 

@@ -74,11 +74,23 @@ export function ProductCard({ product }: ProductCardProps) {
           {displayName}
         </h3>
         <div>
-          <PriceDisplay
-            price={product.price}
-            discountPrice={product.discount_price}
-            size="sm"
-          />
+          {product.is_sale ? (
+            <PriceDisplay
+              price={product.price}
+              discountPrice={product.discount_price}
+              size="sm"
+            />
+          ) : product.is_rental && product.rental_price ? (
+            <PriceDisplay
+              price={product.rental_price}
+              size="sm"
+            />
+          ) : (
+            <PriceDisplay
+              price={product.price}
+              size="sm"
+            />
+          )}
         </div>
       </div>
     </Link>

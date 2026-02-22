@@ -29,6 +29,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const query = params.q || "";
   const page = Number(params.page) || 1;
   const t = await getTranslations("search");
+  const tRoot = await getTranslations();
 
   const supabase = await createClient();
 
@@ -54,7 +55,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Breadcrumbs items={[{ label: t("breadcrumb") }]} />
+      <Breadcrumbs items={[{ label: t("breadcrumb") }]} homeLabel={tRoot("breadcrumbHome")} />
 
       <div className="mt-6">
         <h1 className="text-2xl font-bold md:text-3xl">

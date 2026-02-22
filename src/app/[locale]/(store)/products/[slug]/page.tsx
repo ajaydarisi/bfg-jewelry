@@ -9,14 +9,14 @@ import { Separator } from "@/components/ui/separator";
 import { WishlistButton } from "@/components/wishlist/wishlist-button";
 import { IS_ONLINE, ROUTES } from "@/lib/constants";
 import { formatPrice } from "@/lib/formatters";
-import { getCategoryName, getProductName, getProductDescription } from "@/lib/i18n-helpers";
+import { getCategoryName, getProductDescription, getProductName } from "@/lib/i18n-helpers";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import type { ProductWithCategory } from "@/types/product";
 import type { Metadata } from "next";
+import { getLocale, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import { getTranslations, getLocale } from "next-intl/server";
 
 const getProduct = cache(async (slug: string) => {
   const supabase = await createClient();
@@ -79,6 +79,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const t = await getTranslations("products.detail");
   const tl = await getTranslations("products.listing");
   const tc = await getTranslations("constants");
+  const tCommon = await getTranslations();
 
   // Fetch related products from same category
   const supabase = await createClient();
@@ -99,6 +100,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <Breadcrumbs
+        homeLabel={tCommon("breadcrumbHome")}
         items={[
           { label: tl("breadcrumb"), href: ROUTES.products },
           ...(typedProduct.category
@@ -135,11 +137,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
           </div>
 
-          <PriceDisplay
-            price={typedProduct.price}
-            discountPrice={typedProduct.discount_price}
-            size="lg"
-          />
+          {typedProduct.is_sale && (
+            <PriceDisplay
+              price={typedProduct.price}
+              discountPrice={typedProduct.discount_price}
+              size="lg"
+            />
+          )}
 
           <div className="flex flex-wrap gap-2">
             {typedProduct.is_sale && (
@@ -186,8 +190,23 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           )}
 
-          <Separator />
 
+          <div className="flex gap-3">
+            <div className="flex-1">
+              {IS_ONLINE ? (
+                <AddToCartButton product={typedProduct} />
+              ) : (
+                <CheckAvailabilityButton
+                productName={displayName}
+                  productSlug={typedProduct.slug}
+                />
+              )}
+            </div>
+            <WishlistButton productId={typedProduct.id} />
+          </div>
+
+          <Separator />
+          
           {displayDescription && (
             <div>
               <h3 className="font-semibold">{t("description")}</h3>
@@ -221,21 +240,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           )}
 
-          <Separator />
-
-          <div className="flex gap-3">
-            <div className="flex-1">
-              {IS_ONLINE ? (
-                <AddToCartButton product={typedProduct} />
-              ) : (
-                <CheckAvailabilityButton
-                  productName={displayName}
-                  productSlug={typedProduct.slug}
-                />
-              )}
-            </div>
-            <WishlistButton productId={typedProduct.id} />
-          </div>
         </div>
       </div>
 

@@ -86,7 +86,7 @@ export default async function AboutPage() {
       </section>
 
       {/* Our Sourcing */}
-      <section className="container mx-auto px-4 pb-20">
+      {/* <section className="container mx-auto px-4 pb-20">
         <div className="mb-12 text-center">
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
             {t("sourcingLabel")}
@@ -112,7 +112,7 @@ export default async function AboutPage() {
             </div>
           ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Quality & Warranty */}
       <section className="bg-accent/30 py-20">

@@ -8,10 +8,11 @@ export default async function AccountLayout({
   children: React.ReactNode;
 }) {
   const t = await getTranslations("account");
+  const tRoot = await getTranslations();
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Breadcrumbs items={[{ label: t("breadcrumb") }]} />
+      <Breadcrumbs items={[{ label: t("breadcrumb") }]} homeLabel={tRoot("breadcrumbHome")} />
       <h1 className="mt-6 text-2xl font-bold md:text-3xl">{t("title")}</h1>
       <div className="mt-6">
         <AccountMobileNav />

@@ -9,13 +9,14 @@ interface BreadcrumbItem {
 
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
+  homeLabel?: string;
 }
 
-export function Breadcrumbs({ items }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, homeLabel = "Home" }: BreadcrumbsProps) {
   return (
     <nav className="flex items-center gap-1 text-sm text-muted-foreground">
       <Link href="/" className="hover:text-primary">
-        Home
+        {homeLabel}
       </Link>
       {items.map((item, index) => (
         <Fragment key={index}>

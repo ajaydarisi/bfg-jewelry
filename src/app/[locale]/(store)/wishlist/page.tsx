@@ -15,6 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function WishlistPage() {
   const t = await getTranslations("wishlist");
+  const tRoot = await getTranslations();
   const supabase = await createClient();
   const {
     data: { user },
@@ -35,7 +36,7 @@ export default async function WishlistPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Breadcrumbs items={[{ label: t("breadcrumb") }]} />
+      <Breadcrumbs items={[{ label: t("breadcrumb") }]} homeLabel={tRoot("breadcrumbHome")} />
       <h1 className="mt-6 text-2xl font-bold md:text-3xl">{t("title")}</h1>
       <WishlistContent products={products} />
     </div>
