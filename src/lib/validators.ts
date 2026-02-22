@@ -78,7 +78,7 @@ export const productSchema = z
     description_telugu: z.string().optional().nullable(),
     price: z.number().positive("Price must be greater than 0"),
     discount_price: z.number().positive().optional().nullable(),
-    category_id: z.string().uuid("Select a category").optional().nullable(),
+    category_id: z.string().min(1, "Select a category").optional().nullable(),
     stock: z.number().int().min(0, "Stock cannot be negative").default(0),
     material: z.string().optional().nullable(),
     tags: z.array(z.string()).default([]),
