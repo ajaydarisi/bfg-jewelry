@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "./use-auth";
 
@@ -22,33 +22,49 @@ export function useWishlist() {
   return context;
 }
 
-export function useWishlistProvider(initialItems?: string[]): WishlistContextType {
-  const [items, setItems] = useState<string[]>(initialItems ?? []);
-  const [isLoading, setIsLoading] = useState(!initialItems);
-  const { user, isLoading: authLoading } = useAuth();
-  const supabase = createClient();
+const supabase = createClient();
 
-  const fetchWishlist = useCallback(async () => {
-    if (!user) {
-      setItems([]);
-      setIsLoading(false);
+export function useWishlistProvider(): WishlistContextType {
+  const [items, setItems] = useState<string[]>([]);
+  const [fetchCount, setFetchCount] = useState(0);
+  const { user, isLoading: authLoading } = useAuth();
+  const prevUserIdRef = useRef<string | undefined>(undefined);
+
+  // Derive loading: still loading until at least one fetch cycle completes
+  const isLoading = authLoading || fetchCount === 0;
+
+  useEffect(() => {
+    if (authLoading) return;
+
+    const userId = user?.id;
+    if (userId === prevUserIdRef.current) return;
+    prevUserIdRef.current = userId;
+
+    if (!userId) {
+      // Resolve immediately via microtask so setState is in a callback, not synchronous
+      Promise.resolve().then(() => {
+        setItems([]);
+        setFetchCount((c) => c + 1);
+      });
       return;
     }
 
-    const { data } = await supabase
+    let cancelled = false;
+
+    supabase
       .from("wishlist_items")
       .select("product_id")
-      .eq("user_id", user.id);
+      .eq("user_id", userId)
+      .then(({ data }: { data: { product_id: string }[] | null }) => {
+        if (cancelled) return;
+        setItems(data?.map((i) => i.product_id) || []);
+        setFetchCount((c) => c + 1);
+      });
 
-    setItems(data?.map((i) => i.product_id) || []);
-    setIsLoading(false);
-  }, [user, supabase]);
-
-  useEffect(() => {
-    if (!authLoading) {
-      fetchWishlist();
-    }
-  }, [authLoading, fetchWishlist]);
+    return () => {
+      cancelled = true;
+    };
+  }, [authLoading, user?.id]);
 
   const addItem = useCallback(
     async (productId: string) => {
@@ -58,7 +74,7 @@ export function useWishlistProvider(initialItems?: string[]): WishlistContextTyp
         .from("wishlist_items")
         .insert({ user_id: user.id, product_id: productId });
     },
-    [user, supabase]
+    [user]
   );
 
   const removeItem = useCallback(
@@ -71,7 +87,7 @@ export function useWishlistProvider(initialItems?: string[]): WishlistContextTyp
         .eq("user_id", user.id)
         .eq("product_id", productId);
     },
-    [user, supabase]
+    [user]
   );
 
   const isInWishlist = useCallback(

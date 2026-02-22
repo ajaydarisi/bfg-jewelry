@@ -1,27 +1,43 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 import type { Profile } from "@/types/user";
 
-export function useAuth() {
+interface AuthContextType {
+  user: User | null;
+  profile: Profile | null;
+  isLoading: boolean;
+  isAdmin: boolean;
+  isLoggedIn: boolean;
+}
+
+export const AuthContext = createContext<AuthContextType | null>(null);
+
+export function useAuth(): AuthContextType {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}
+
+const supabase = createClient();
+
+export function useAuthProvider(): AuthContextType {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const supabase = createClient();
 
-  const fetchProfile = useCallback(
-    async (userId: string) => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-      setProfile(data);
-    },
-    [supabase]
-  );
+  const fetchProfile = useCallback(async (userId: string) => {
+    const { data } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+    setProfile(data);
+  }, []);
 
   useEffect(() => {
     const getUser = async () => {
@@ -39,7 +55,7 @@ export function useAuth() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange(async (_event: AuthChangeEvent, session: Session | null) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         await fetchProfile(session.user.id);
@@ -49,9 +65,6 @@ export function useAuth() {
       setIsLoading(false);
     });
 
-    // Re-validate auth when the tab becomes visible again (e.g. mobile browser
-    // waking up after the access token has expired). This triggers Supabase's
-    // token refresh and keeps the UI in sync with the actual session state.
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         getUser();
@@ -63,7 +76,7 @@ export function useAuth() {
       subscription.unsubscribe();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [supabase, fetchProfile]);
+  }, [fetchProfile]);
 
   return {
     user,

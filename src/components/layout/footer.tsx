@@ -10,8 +10,10 @@ import { Link, useRouter, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
+const supabase = createClient();
+
 export function Footer() {
-  const { user } = useAuth();
+  const { isLoggedIn } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("footer");
@@ -19,7 +21,6 @@ export function Footer() {
   const tCommon = useTranslations();
 
   async function handleSignOut() {
-    const supabase = createClient();
     await supabase.auth.signOut();
     toast.success(tCommon("signedOut"));
     router.push("/");
@@ -153,7 +154,7 @@ export function Footer() {
                 </li>
               )}
               <li>
-                {user ? (
+                {isLoggedIn ? (
                   <button
                     onClick={handleSignOut}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"

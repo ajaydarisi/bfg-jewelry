@@ -9,6 +9,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useAuth } from "./use-auth";
@@ -51,39 +52,38 @@ function setLocalCart(items: CartItem[]) {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
 }
 
+const supabase = createClient();
+
 export function useCartProvider(): CartContextType {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoading: authLoading } = useAuth();
-  const supabase = createClient();
+  const prevUserIdRef = useRef<string | null>(null);
 
-  const fetchCartFromDB = useCallback(async () => {
-    if (!user) return;
+  const fetchCartFromDB = useCallback(async (userId: string) => {
     const { data } = await supabase
       .from("cart_items")
       .select("id, quantity, product_id, product:products(*)")
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     if (data) {
-      const cartItems: CartItem[] = data
+      const cartItems: CartItem[] = (data as { id: string; quantity: number; product_id: string; product: unknown }[])
         .filter((item) => item.product)
         .map((item) => ({
           id: item.id,
-          product: item.product as unknown as Product,
+          product: item.product as Product,
           quantity: item.quantity,
         }));
       setItems(cartItems);
     }
-  }, [user, supabase]);
+  }, []);
 
-  // Merge local cart into DB on login
-  const mergeLocalCartToDB = useCallback(async () => {
-    if (!user) return;
+  const mergeLocalCartToDB = useCallback(async (userId: string) => {
     const localItems = getLocalCart();
     if (localItems.length === 0) return;
 
     const upsertItems = localItems.map((item) => ({
-      user_id: user.id,
+      user_id: userId,
       product_id: item.product.id,
       quantity: item.quantity,
     }));
@@ -92,21 +92,27 @@ export function useCartProvider(): CartContextType {
       .upsert(upsertItems, { onConflict: "user_id,product_id" });
 
     localStorage.removeItem(CART_STORAGE_KEY);
-  }, [user, supabase, fetchCartFromDB]);
+  }, []);
 
   // Initialize cart
   useEffect(() => {
     if (authLoading) return;
 
-    if (user) {
-      mergeLocalCartToDB()
-        .then(() => fetchCartFromDB())
+    const userId = user?.id ?? null;
+    if (userId === prevUserIdRef.current) return;
+    prevUserIdRef.current = userId;
+
+    if (userId) {
+      mergeLocalCartToDB(userId)
+        .then(() => fetchCartFromDB(userId))
         .finally(() => setIsLoading(false));
     } else {
-      setItems(getLocalCart());
-      setIsLoading(false);
+      Promise.resolve().then(() => {
+        setItems(getLocalCart());
+        setIsLoading(false);
+      });
     }
-  }, [user, authLoading, fetchCartFromDB, mergeLocalCartToDB]);
+  }, [user?.id, authLoading, fetchCartFromDB, mergeLocalCartToDB]);
 
   const addItem = useCallback(
     async (product: Product, quantity = 1) => {
@@ -124,7 +130,7 @@ export function useCartProvider(): CartContextType {
             .from("cart_items")
             .insert({ user_id: user.id, product_id: product.id, quantity });
         }
-        await fetchCartFromDB();
+        await fetchCartFromDB(user.id);
       } else {
         let newItems: CartItem[];
         if (existing) {
@@ -140,7 +146,25 @@ export function useCartProvider(): CartContextType {
         setLocalCart(newItems);
       }
     },
-    [items, user, supabase, fetchCartFromDB],
+    [items, user, fetchCartFromDB],
+  );
+
+  const removeItem = useCallback(
+    async (productId: string) => {
+      if (user) {
+        await supabase
+          .from("cart_items")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("product_id", productId);
+        await fetchCartFromDB(user.id);
+      } else {
+        const newItems = items.filter((i) => i.product.id !== productId);
+        setItems(newItems);
+        setLocalCart(newItems);
+      }
+    },
+    [items, user, fetchCartFromDB],
   );
 
   const updateQuantity = useCallback(
@@ -156,7 +180,7 @@ export function useCartProvider(): CartContextType {
           .update({ quantity })
           .eq("user_id", user.id)
           .eq("product_id", productId);
-        await fetchCartFromDB();
+        await fetchCartFromDB(user.id);
       } else {
         const newItems = items.map((i) =>
           i.product.id === productId ? { ...i, quantity } : i,
@@ -165,25 +189,7 @@ export function useCartProvider(): CartContextType {
         setLocalCart(newItems);
       }
     },
-    [items, user, supabase, fetchCartFromDB],
-  );
-
-  const removeItem = useCallback(
-    async (productId: string) => {
-      if (user) {
-        await supabase
-          .from("cart_items")
-          .delete()
-          .eq("user_id", user.id)
-          .eq("product_id", productId);
-        await fetchCartFromDB();
-      } else {
-        const newItems = items.filter((i) => i.product.id !== productId);
-        setItems(newItems);
-        setLocalCart(newItems);
-      }
-    },
-    [items, user, supabase, fetchCartFromDB],
+    [items, user, removeItem, fetchCartFromDB],
   );
 
   const clearCart = useCallback(async () => {
@@ -194,7 +200,7 @@ export function useCartProvider(): CartContextType {
       setItems([]);
       localStorage.removeItem(CART_STORAGE_KEY);
     }
-  }, [user, supabase]);
+  }, [user]);
 
   const itemCount = useMemo(
     () => items.reduce((sum, i) => sum + i.quantity, 0),

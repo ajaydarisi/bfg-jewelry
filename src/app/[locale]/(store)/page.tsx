@@ -72,10 +72,11 @@ export default async function HomePage() {
       {/* Hero Section */}
       <section className="relative h-[70vh] min-h-125 max-h-200 overflow-hidden">
         <Image
-          src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=2000&q=90"
+          src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=1600&q=80"
           alt="Fashion jewellery collection"
           fill
           priority
+          sizes="100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-linear-to-r from-black/50 via-black/25 to-transparent" />
@@ -159,9 +160,10 @@ export default async function HomePage() {
           </div>
           <div className="relative aspect-4/5 overflow-hidden">
             <Image
-              src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=1200&q=85"
+              src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80"
               alt="Elegant jewellery craftsmanship"
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
           </div>

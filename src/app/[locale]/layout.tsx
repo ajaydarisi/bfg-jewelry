@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { AuthProvider } from "@/components/auth/auth-provider";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { routing } from "@/i18n/routing";
@@ -73,7 +74,9 @@ export default async function LocaleLayout({
         enableSystem
         disableTransitionOnChange
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Toaster position="bottom-right" />
       </ThemeProvider>
     </NextIntlClientProvider>
