@@ -10,10 +10,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SORT_OPTIONS } from "@/lib/constants";
+import { useFilterLoading } from "./filter-loading-context";
 
 export function ProductSort() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { setLoading } = useFilterLoading();
   const currentSort = searchParams.get("sort") || "newest";
   const t = useTranslations("products.sort");
   const tc = useTranslations("constants");
@@ -22,6 +24,7 @@ export function ProductSort() {
     const params = new URLSearchParams(searchParams.toString());
     params.set("sort", value);
     params.delete("page");
+    setLoading(true);
     router.push(`?${params.toString()}`);
   }
 

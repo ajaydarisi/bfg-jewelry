@@ -41,7 +41,8 @@
     "category": "Category",
     "priceRange": "Price Range",
     "applyPrice": "Apply Price",
-    "material": "Material"
+    "material": "Material",
+    "applyFilters": "Apply Filters"
   },
   "sort": {
     "placeholder": "Sort by"

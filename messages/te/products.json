@@ -41,7 +41,8 @@
     "category": "వర్గం",
     "priceRange": "ధర పరిధి",
     "applyPrice": "ధర వర్తింపజేయి",
-    "material": "మెటీరియల్"
+    "material": "మెటీరియల్",
+    "applyFilters": "ఫిల్టర్లు వర్తింపజేయి"
   },
   "sort": {
     "placeholder": "క్రమబద్ధీకరించు"

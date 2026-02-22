@@ -11,6 +11,8 @@ import { ProductGridSkeleton } from "@/components/shared/loading-skeleton";
 import { PRODUCTS_PER_PAGE } from "@/lib/constants";
 import type { ProductWithCategory, SortOption } from "@/types/product";
 import { MobileFilterSheet } from "@/components/products/mobile-filter-sheet";
+import { FilterLoadingProvider } from "@/components/products/filter-loading-context";
+import { ProductsHeading } from "@/components/products/products-heading";
 import { Search } from "lucide-react";
 import { getTranslations, getLocale } from "next-intl/server";
 import { getCategoryName } from "@/lib/i18n-helpers";
@@ -176,71 +178,72 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   const totalPages = Math.ceil((count || 0) / PRODUCTS_PER_PAGE);
 
+  const headingTitle = `${categoryName || t("allProducts")}${type === "rental" ? ` — ${t("forRent")}` : ""}${type === "sale" ? ` — ${t("forSale")}` : ""}`;
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Breadcrumbs
-        homeLabel={tRoot("breadcrumbHome")}
-        items={[
-          { label: t("breadcrumb"), href: categoryName ? "/products" : undefined },
-          ...(categoryName ? [{ label: categoryName }] : []),
-        ]}
-      />
+    <FilterLoadingProvider>
+      <div className="container mx-auto px-4 py-8">
+        <Breadcrumbs
+          homeLabel={tRoot("breadcrumbHome")}
+          items={[
+            { label: t("breadcrumb"), href: categoryName ? "/products" : undefined },
+            ...(categoryName ? [{ label: categoryName }] : []),
+          ]}
+        />
 
-      <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold md:text-3xl">
-            {categoryName || t("allProducts")}
-            {type === "rental" && ` — ${t("forRent")}`}
-            {type === "sale" && ` — ${t("forSale")}`}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {t("productCount", { count: count || 0 })}
-          </p>
+        <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <Suspense>
+            <ProductsHeading
+              title={headingTitle}
+              count={count || 0}
+              countLabel={t("productCount", { count: count || 0 })}
+            />
+          </Suspense>
+          <div className="flex items-center gap-2">
+            <Suspense>
+              <MobileFilterSheet categories={categoriesList} />
+            </Suspense>
+            <Suspense>
+              <ProductSort />
+            </Suspense>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Suspense>
-            <MobileFilterSheet categories={categoriesList} />
-          </Suspense>
-          <Suspense>
-            <ProductSort />
-          </Suspense>
-        </div>
-      </div>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[250px_1fr]">
-        {/* Sidebar Filters */}
-        <aside className="hidden lg:block">
-          <Suspense>
-            <ProductFilters categories={categoriesList} />
-          </Suspense>
-        </aside>
+        <div className="mt-8 grid gap-8 lg:grid-cols-[250px_1fr]">
+          {/* Sidebar Filters */}
+          <aside className="hidden lg:block">
+            <Suspense>
+              <ProductFilters categories={categoriesList} />
+            </Suspense>
+          </aside>
 
-        {/* Product Grid */}
-        <div>
-          <Suspense fallback={<ProductGridSkeleton />}>
-            {products && products.length > 0 ? (
-              <>
-                <ProductGrid
-                  products={products as unknown as ProductWithCategory[]}
+          {/* Product Grid */}
+          <div>
+            <Suspense fallback={<ProductGridSkeleton />}>
+              {products && products.length > 0 ? (
+                <>
+                  <ProductGrid
+                    products={products as unknown as ProductWithCategory[]}
+                  />
+                  <div className="mt-8">
+                    <Suspense>
+                      <Pagination currentPage={page} totalPages={totalPages} />
+                    </Suspense>
+                  </div>
+                </>
+              ) : (
+                <EmptyState
+                  icon={<Search className="h-16 w-16" />}
+                  title={t("noProducts")}
+                  description={t("noProductsDesc")}
+                  actionLabel={t("clearFilters")}
+                  actionHref="/products"
                 />
-                <div className="mt-8">
-                  <Suspense>
-                    <Pagination currentPage={page} totalPages={totalPages} />
-                  </Suspense>
-                </div>
-              </>
-            ) : (
-              <EmptyState
-                icon={<Search className="h-16 w-16" />}
-                title={t("noProducts")}
-                description={t("noProductsDesc")}
-                actionLabel={t("clearFilters")}
-                actionHref="/products"
-              />
-            )}
-          </Suspense>
+              )}
+            </Suspense>
+          </div>
         </div>
       </div>
-    </div>
+    </FilterLoadingProvider>
   );
 }

@@ -11,12 +11,22 @@ import { Separator } from "@/components/ui/separator";
 import { MATERIALS, PRODUCT_TYPES } from "@/lib/constants";
 import { formatPrice } from "@/lib/formatters";
 import { getCategoryName } from "@/lib/i18n-helpers";
+import { useFilterLoading } from "./filter-loading-context";
 import { useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import type { Category } from "@/types/product";
 
+export interface PendingFilters {
+  category: string;
+  material: string;
+  type: string;
+  priceRange: number[];
+}
+
 interface ProductFiltersProps {
   categories?: Category[];
+  mode?: "immediate" | "deferred";
+  onFiltersChange?: (filters: PendingFilters) => void;
 }
 
 function buildCategoryTree(categories: Category[]) {
@@ -31,37 +41,76 @@ function buildCategoryTree(categories: Category[]) {
   }));
 }
 
-export function ProductFilters({ categories = [] }: ProductFiltersProps) {
+export function ProductFilters({ categories = [], mode = "immediate", onFiltersChange }: ProductFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const locale = useLocale();
   const t = useTranslations("products.filters");
   const tc = useTranslations("constants");
-  const currentCategory = searchParams.get("category") || "";
-  const currentMaterial = searchParams.get("material") || "";
-  const currentType = searchParams.get("type") || "";
-  const currentMinPrice = Number(searchParams.get("minPrice")) || 0;
-  const currentMaxPrice = Number(searchParams.get("maxPrice")) || 10000;
+  const { setLoading } = useFilterLoading();
+  const isDeferred = mode === "deferred";
 
-  const [priceRange, setPriceRange] = useState([currentMinPrice, currentMaxPrice]);
+  const urlCategory = searchParams.get("category") || "";
+  const urlMaterial = searchParams.get("material") || "";
+  const urlType = searchParams.get("type") || "";
+  const urlMinPrice = Number(searchParams.get("minPrice")) || 0;
+  const urlMaxPrice = Number(searchParams.get("maxPrice")) || 10000;
+
+  // In deferred mode, all selections are local state
+  const [pendingCategory, setPendingCategory] = useState(urlCategory);
+  const [pendingMaterial, setPendingMaterial] = useState(urlMaterial);
+  const [pendingType, setPendingType] = useState(urlType);
+  const [priceRange, setPriceRange] = useState([urlMinPrice, urlMaxPrice]);
   const [expandedParents, setExpandedParents] = useState<Set<string>>(() => {
+    const cat = urlCategory;
     const set = new Set<string>();
-    if (currentCategory) {
-      const cat = categories.find((c) => c.slug === currentCategory);
-      if (cat?.parent_id) {
-        set.add(cat.parent_id);
-      } else if (cat) {
-        set.add(cat.id);
+    if (cat) {
+      const found = categories.find((c) => c.slug === cat);
+      if (found?.parent_id) {
+        set.add(found.parent_id);
+      } else if (found) {
+        set.add(found.id);
       }
     }
     return set;
   });
 
+  // Effective values: deferred reads local state, immediate reads URL
+  const currentCategory = isDeferred ? pendingCategory : urlCategory;
+  const currentMaterial = isDeferred ? pendingMaterial : urlMaterial;
+  const currentType = isDeferred ? pendingType : urlType;
+
   const categoryTree = buildCategoryTree(categories);
   const groupedParents = categoryTree.filter((p) => p.children.length > 0);
   const standaloneParents = categoryTree.filter((p) => p.children.length === 0);
 
+  // Notify parent of filter changes in deferred mode
+  function notifyChange(overrides: Partial<PendingFilters>) {
+    if (isDeferred && onFiltersChange) {
+      onFiltersChange({
+        category: pendingCategory,
+        material: pendingMaterial,
+        type: pendingType,
+        priceRange,
+        ...overrides,
+      });
+    }
+  }
+
   function updateFilter(key: string, value: string) {
+    if (isDeferred) {
+      if (key === "category") {
+        setPendingCategory(value);
+        notifyChange({ category: value });
+      } else if (key === "material") {
+        setPendingMaterial(value);
+        notifyChange({ material: value });
+      } else if (key === "type") {
+        setPendingType(value);
+        notifyChange({ type: value });
+      }
+      return;
+    }
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
       params.set(key, value);
@@ -69,10 +118,15 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
       params.delete(key);
     }
     params.delete("page");
+    setLoading(true);
     router.push(`?${params.toString()}`);
   }
 
   function applyPriceFilter() {
+    if (isDeferred) {
+      notifyChange({ priceRange });
+      return;
+    }
     const params = new URLSearchParams(searchParams.toString());
     if (priceRange[0] > 0) {
       params.set("minPrice", priceRange[0].toString());
@@ -85,10 +139,20 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
       params.delete("maxPrice");
     }
     params.delete("page");
+    setLoading(true);
     router.push(`?${params.toString()}`);
   }
 
   function clearFilters() {
+    if (isDeferred) {
+      setPendingCategory("");
+      setPendingMaterial("");
+      setPendingType("");
+      setPriceRange([0, 10000]);
+      notifyChange({ category: "", material: "", type: "", priceRange: [0, 10000] });
+      return;
+    }
+    setLoading(true);
     router.push("/products");
   }
 
@@ -104,26 +168,29 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
     });
   }
 
-  const hasFilters = currentCategory || currentMaterial || currentType || currentMinPrice > 0 || currentMaxPrice < 10000;
+  const hasFilters = currentCategory || currentMaterial || currentType || (isDeferred ? priceRange[0] > 0 || priceRange[1] < 10000 : urlMinPrice > 0 || urlMaxPrice < 10000);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="font-semibold">{t("title")}</h2>
-        {hasFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={clearFilters}
-            className="h-auto p-0 text-xs text-muted-foreground"
-          >
-            <X className="mr-1 h-3 w-3" />
-            {t("clearAll")}
-          </Button>
-        )}
-      </div>
-
-      <Separator />
+      {!isDeferred && (
+        <>
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold">{t("title")}</h2>
+            {hasFilters && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={clearFilters}
+                className="h-auto p-0 text-xs text-muted-foreground"
+              >
+                <X className="mr-1 h-3 w-3" />
+                {t("clearAll")}
+              </Button>
+            )}
+          </div>
+          <Separator />
+        </>
+      )}
 
       {/* Type: Sale / Rental */}
       <div>
@@ -245,14 +312,16 @@ export function ProductFilters({ categories = [] }: ProductFiltersProps) {
           <span>{formatPrice(priceRange[0])}</span>
           <span>{formatPrice(priceRange[1])}</span>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="mt-2 w-full"
-          onClick={applyPriceFilter}
-        >
-          {t("applyPrice")}
-        </Button>
+        {!isDeferred && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-2 w-full"
+            onClick={applyPriceFilter}
+          >
+            {t("applyPrice")}
+          </Button>
+        )}
       </div>
 
       <Separator />
