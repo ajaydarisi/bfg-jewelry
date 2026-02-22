@@ -46,6 +46,40 @@ const getAllCategories = unstable_cache(
   { revalidate: 300 }
 );
 
+const getProductCount = unstable_cache(
+  async (
+    categoryIds: string[],
+    material: string,
+    type: string,
+    minPrice: number,
+    maxPrice: number
+  ) => {
+    const supabase = createAdminClient();
+
+    let query = supabase
+      .from("products")
+      .select("id", { count: "exact", head: true })
+      .eq("is_active", true);
+
+    if (categoryIds.length === 1) {
+      query = query.eq("category_id", categoryIds[0]);
+    } else if (categoryIds.length > 1) {
+      query = query.in("category_id", categoryIds);
+    }
+
+    if (material) query = query.eq("material", material);
+    if (type === "sale") query = query.eq("is_sale", true);
+    else if (type === "rental") query = query.eq("is_rental", true);
+    if (minPrice > 0) query = query.gte("price", minPrice);
+    if (maxPrice > 0) query = query.lte("price", maxPrice);
+
+    const { count } = await query;
+    return count;
+  },
+  ["product-count"],
+  { revalidate: 60 }
+);
+
 const getFilteredProducts = unstable_cache(
   async (
     categoryIds: string[],
@@ -60,7 +94,7 @@ const getFilteredProducts = unstable_cache(
 
     let query = supabase
       .from("products")
-      .select(PRODUCT_LIST_FIELDS, { count: "exact" })
+      .select(PRODUCT_LIST_FIELDS)
       .eq("is_active", true);
 
     if (categoryIds.length === 1) {
@@ -69,23 +103,11 @@ const getFilteredProducts = unstable_cache(
       query = query.in("category_id", categoryIds);
     }
 
-    if (material) {
-      query = query.eq("material", material);
-    }
-
-    if (type === "sale") {
-      query = query.eq("is_sale", true);
-    } else if (type === "rental") {
-      query = query.eq("is_rental", true);
-    }
-
-    if (minPrice > 0) {
-      query = query.gte("price", minPrice);
-    }
-
-    if (maxPrice > 0) {
-      query = query.lte("price", maxPrice);
-    }
+    if (material) query = query.eq("material", material);
+    if (type === "sale") query = query.eq("is_sale", true);
+    else if (type === "rental") query = query.eq("is_rental", true);
+    if (minPrice > 0) query = query.gte("price", minPrice);
+    if (maxPrice > 0) query = query.lte("price", maxPrice);
 
     switch (sort) {
       case "price-asc":
@@ -105,8 +127,8 @@ const getFilteredProducts = unstable_cache(
     const to = from + PRODUCTS_PER_PAGE - 1;
     query = query.range(from, to);
 
-    const { data, count } = await query;
-    return { products: data, count };
+    const { data } = await query;
+    return data;
   },
   ["filtered-products"],
   { revalidate: 60 }
@@ -165,16 +187,11 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     }
   }
 
-  // Fetch products (cached by filter params)
-  const { products, count } = await getFilteredProducts(
-    categoryIds,
-    material,
-    type,
-    minPrice,
-    maxPrice,
-    sort,
-    page
-  );
+  // Fetch products and count in parallel (both independently cached)
+  const [products, count] = await Promise.all([
+    getFilteredProducts(categoryIds, material, type, minPrice, maxPrice, sort, page),
+    getProductCount(categoryIds, material, type, minPrice, maxPrice),
+  ]);
 
   const totalPages = Math.ceil((count || 0) / PRODUCTS_PER_PAGE);
 
