@@ -14,8 +14,8 @@ import { MobileFilterSheet } from "@/components/products/mobile-filter-sheet";
 import { FilterLoadingProvider } from "@/components/products/filter-loading-context";
 import { ProductsHeading } from "@/components/products/products-heading";
 import { Search } from "lucide-react";
-import { getTranslations, getLocale } from "next-intl/server";
-import { getCategoryName } from "@/lib/i18n-helpers";
+import { getTranslations } from "next-intl/server";
+
 import { unstable_cache } from "next/cache";
 
 interface ProductsPageProps {
@@ -49,7 +49,7 @@ const getAllCategories = unstable_cache(
 const getProductCount = unstable_cache(
   async (
     categoryIds: string[],
-    material: string,
+    materials: string[],
     type: string,
     minPrice: number,
     maxPrice: number
@@ -67,7 +67,8 @@ const getProductCount = unstable_cache(
       query = query.in("category_id", categoryIds);
     }
 
-    if (material) query = query.eq("material", material);
+    if (materials.length === 1) query = query.eq("material", materials[0]);
+    else if (materials.length > 1) query = query.in("material", materials);
     if (type === "sale") query = query.eq("is_sale", true);
     else if (type === "rental") query = query.eq("is_rental", true);
     if (minPrice > 0) query = query.gte("price", minPrice);
@@ -83,7 +84,7 @@ const getProductCount = unstable_cache(
 const getFilteredProducts = unstable_cache(
   async (
     categoryIds: string[],
-    material: string,
+    materials: string[],
     type: string,
     minPrice: number,
     maxPrice: number,
@@ -103,7 +104,8 @@ const getFilteredProducts = unstable_cache(
       query = query.in("category_id", categoryIds);
     }
 
-    if (material) query = query.eq("material", material);
+    if (materials.length === 1) query = query.eq("material", materials[0]);
+    else if (materials.length > 1) query = query.in("material", materials);
     if (type === "sale") query = query.eq("is_sale", true);
     else if (type === "rental") query = query.eq("is_rental", true);
     if (minPrice > 0) query = query.gte("price", minPrice);
@@ -141,9 +143,12 @@ export async function generateMetadata({
   const t = await getTranslations("products.listing");
   let title = t("allProducts");
   if (params.category) {
+    const categorySlugs = params.category.split(",").filter(Boolean);
     const categories = await getAllCategories();
-    const cat = categories.find((c) => c.slug === params.category);
-    if (cat) title = `${cat.name} - ${t("metaProductsSuffix")}`;
+    const names = categorySlugs
+      .map((slug) => categories.find((c) => c.slug === slug)?.name)
+      .filter(Boolean);
+    if (names.length > 0) title = `${names.join(", ")} - ${t("metaProductsSuffix")}`;
   }
   if (params.type === "rental") title = `${t("forRent")} - ${title}`;
   return { title };
@@ -151,34 +156,29 @@ export async function generateMetadata({
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams;
-  const category = params.category || "";
-  const material = params.material || "";
+  const categorySlugs = params.category ? params.category.split(",").filter(Boolean) : [];
+  const materials = params.material ? params.material.split(",").filter(Boolean) : [];
   const minPrice = Number(params.minPrice) || 0;
   const maxPrice = Number(params.maxPrice) || 0;
   const sort = (params.sort as SortOption) || "newest";
   const page = Number(params.page) || 1;
   const type = params.type || "";
 
-  const locale = await getLocale();
   const t = await getTranslations("products.listing");
   const tRoot = await getTranslations();
 
   // Fetch categories (cached)
   const categoriesList = await getAllCategories();
 
-  // Resolve category IDs — if a parent category is selected, include all children
+  // Resolve category IDs — for each selected slug, include all children
   let categoryIds: string[] = [];
-  let categoryName = "";
-  if (category) {
-    const cat = categoriesList.find((c) => c.slug === category);
+  for (const slug of categorySlugs) {
+    const cat = categoriesList.find((c) => c.slug === slug);
     if (cat) {
-      categoryName = getCategoryName(cat, locale);
-      // Collect this category and all its descendants
-      categoryIds = [cat.id];
+      categoryIds.push(cat.id);
       const children = categoriesList.filter((c) => c.parent_id === cat.id);
       for (const child of children) {
         categoryIds.push(child.id);
-        // Also include grandchildren
         const grandchildren = categoriesList.filter((c) => c.parent_id === child.id);
         for (const gc of grandchildren) {
           categoryIds.push(gc.id);
@@ -189,13 +189,13 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   // Fetch products and count in parallel (both independently cached)
   const [products, count] = await Promise.all([
-    getFilteredProducts(categoryIds, material, type, minPrice, maxPrice, sort, page),
-    getProductCount(categoryIds, material, type, minPrice, maxPrice),
+    getFilteredProducts(categoryIds, materials, type, minPrice, maxPrice, sort, page),
+    getProductCount(categoryIds, materials, type, minPrice, maxPrice),
   ]);
 
   const totalPages = Math.ceil((count || 0) / PRODUCTS_PER_PAGE);
 
-  const headingTitle = `${categoryName || t("allProducts")}${type === "rental" ? ` — ${t("forRent")}` : ""}${type === "sale" ? ` — ${t("forSale")}` : ""}`;
+  const headingTitle = `${t("allProducts")}${type === "rental" ? ` — ${t("forRent")}` : ""}${type === "sale" ? ` — ${t("forSale")}` : ""}`;
 
   return (
     <FilterLoadingProvider>
@@ -203,8 +203,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         <Breadcrumbs
           homeLabel={tRoot("breadcrumbHome")}
           items={[
-            { label: t("breadcrumb"), href: categoryName ? "/products" : undefined },
-            ...(categoryName ? [{ label: categoryName }] : []),
+            { label: t("breadcrumb") },
           ]}
         />
 

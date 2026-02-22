@@ -407,7 +407,6 @@ export function Header() {
         open={mobileNavOpen}
         onOpenChange={setMobileNavOpen}
         itemCount={itemCount}
-        wishlistCount={wishlistItems.length}
       />
     </>
   );

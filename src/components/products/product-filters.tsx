@@ -17,8 +17,8 @@ import { ChevronDown, X } from "lucide-react";
 import type { Category } from "@/types/product";
 
 export interface PendingFilters {
-  category: string;
-  material: string;
+  categories: string[];
+  materials: string[];
   type: string;
   priceRange: number[];
 }
@@ -41,6 +41,26 @@ function buildCategoryTree(categories: Category[]) {
   }));
 }
 
+export function parseList(value: string | null): string[] {
+  return value ? value.split(",").filter(Boolean) : [];
+}
+
+export function getFilterCount(searchParams: URLSearchParams): number {
+  let count = 0;
+  count += parseList(searchParams.get("category")).length;
+  count += parseList(searchParams.get("material")).length;
+  if (searchParams.get("type")) count++;
+  if (Number(searchParams.get("minPrice")) > 0) count++;
+  if (Number(searchParams.get("maxPrice")) > 0 && Number(searchParams.get("maxPrice")) < 10000) count++;
+  return count;
+}
+
+function toggleInList(list: string[], value: string): string[] {
+  return list.includes(value)
+    ? list.filter((v) => v !== value)
+    : [...list, value];
+}
+
 export function ProductFilters({ categories = [], mode = "immediate", onFiltersChange }: ProductFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -49,23 +69,24 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
   const tc = useTranslations("constants");
   const { setLoading } = useFilterLoading();
   const isDeferred = mode === "deferred";
+  const idPrefix = isDeferred ? "mobile-" : "";
 
-  const urlCategory = searchParams.get("category") || "";
-  const urlMaterial = searchParams.get("material") || "";
+  const urlCategories = parseList(searchParams.get("category"));
+  const urlMaterials = parseList(searchParams.get("material"));
   const urlType = searchParams.get("type") || "";
   const urlMinPrice = Number(searchParams.get("minPrice")) || 0;
   const urlMaxPrice = Number(searchParams.get("maxPrice")) || 10000;
 
   // In deferred mode, all selections are local state
-  const [pendingCategory, setPendingCategory] = useState(urlCategory);
-  const [pendingMaterial, setPendingMaterial] = useState(urlMaterial);
+  const [pendingCategories, setPendingCategories] = useState(urlCategories);
+  const [pendingMaterials, setPendingMaterials] = useState(urlMaterials);
   const [pendingType, setPendingType] = useState(urlType);
   const [priceRange, setPriceRange] = useState([urlMinPrice, urlMaxPrice]);
   const [expandedParents, setExpandedParents] = useState<Set<string>>(() => {
-    const cat = urlCategory;
     const set = new Set<string>();
-    if (cat) {
-      const found = categories.find((c) => c.slug === cat);
+    const cats = isDeferred ? pendingCategories : urlCategories;
+    for (const slug of cats) {
+      const found = categories.find((c) => c.slug === slug);
       if (found?.parent_id) {
         set.add(found.parent_id);
       } else if (found) {
@@ -76,8 +97,8 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
   });
 
   // Effective values: deferred reads local state, immediate reads URL
-  const currentCategory = isDeferred ? pendingCategory : urlCategory;
-  const currentMaterial = isDeferred ? pendingMaterial : urlMaterial;
+  const currentCategories = isDeferred ? pendingCategories : urlCategories;
+  const currentMaterials = isDeferred ? pendingMaterials : urlMaterials;
   const currentType = isDeferred ? pendingType : urlType;
 
   const categoryTree = buildCategoryTree(categories);
@@ -88,8 +109,8 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
   function notifyChange(overrides: Partial<PendingFilters>) {
     if (isDeferred && onFiltersChange) {
       onFiltersChange({
-        category: pendingCategory,
-        material: pendingMaterial,
+        categories: pendingCategories,
+        materials: pendingMaterials,
         type: pendingType,
         priceRange,
         ...overrides,
@@ -97,25 +118,55 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
     }
   }
 
-  function updateFilter(key: string, value: string) {
+  function toggleCategory(slug: string) {
     if (isDeferred) {
-      if (key === "category") {
-        setPendingCategory(value);
-        notifyChange({ category: value });
-      } else if (key === "material") {
-        setPendingMaterial(value);
-        notifyChange({ material: value });
-      } else if (key === "type") {
-        setPendingType(value);
-        notifyChange({ type: value });
-      }
+      const next = toggleInList(pendingCategories, slug);
+      setPendingCategories(next);
+      notifyChange({ categories: next });
+      return;
+    }
+    const params = new URLSearchParams(searchParams.toString());
+    const next = toggleInList(urlCategories, slug);
+    if (next.length > 0) {
+      params.set("category", next.join(","));
+    } else {
+      params.delete("category");
+    }
+    params.delete("page");
+    setLoading(true);
+    router.push(`?${params.toString()}`);
+  }
+
+  function toggleMaterial(material: string) {
+    if (isDeferred) {
+      const next = toggleInList(pendingMaterials, material);
+      setPendingMaterials(next);
+      notifyChange({ materials: next });
+      return;
+    }
+    const params = new URLSearchParams(searchParams.toString());
+    const next = toggleInList(urlMaterials, material);
+    if (next.length > 0) {
+      params.set("material", next.join(","));
+    } else {
+      params.delete("material");
+    }
+    params.delete("page");
+    setLoading(true);
+    router.push(`?${params.toString()}`);
+  }
+
+  function updateType(value: string) {
+    if (isDeferred) {
+      setPendingType(value);
+      notifyChange({ type: value });
       return;
     }
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
-      params.set(key, value);
+      params.set("type", value);
     } else {
-      params.delete(key);
+      params.delete("type");
     }
     params.delete("page");
     setLoading(true);
@@ -145,11 +196,11 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
 
   function clearFilters() {
     if (isDeferred) {
-      setPendingCategory("");
-      setPendingMaterial("");
+      setPendingCategories([]);
+      setPendingMaterials([]);
       setPendingType("");
       setPriceRange([0, 10000]);
-      notifyChange({ category: "", material: "", type: "", priceRange: [0, 10000] });
+      notifyChange({ categories: [], materials: [], type: "", priceRange: [0, 10000] });
       return;
     }
     setLoading(true);
@@ -168,14 +219,17 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
     });
   }
 
-  const hasFilters = currentCategory || currentMaterial || currentType || (isDeferred ? priceRange[0] > 0 || priceRange[1] < 10000 : urlMinPrice > 0 || urlMaxPrice < 10000);
+  const hasFilters = currentCategories.length > 0 || currentMaterials.length > 0 || currentType || (isDeferred ? priceRange[0] > 0 || priceRange[1] < 10000 : urlMinPrice > 0 || urlMaxPrice < 10000);
+  const filterCount = getFilterCount(searchParams);
 
   return (
     <div className="space-y-6">
       {!isDeferred && (
         <>
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold">{t("title")}</h2>
+            <h2 className="font-semibold">
+              {t("title")}{filterCount > 0 && ` (${filterCount})`}
+            </h2>
             {hasFilters && (
               <Button
                 variant="ghost"
@@ -198,14 +252,14 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
         <RadioGroup
           value={currentType || "all"}
           onValueChange={(value) =>
-            updateFilter("type", value === "all" ? "" : value)
+            updateType(value === "all" ? "" : value)
           }
         >
           {PRODUCT_TYPES.map((type) => (
             <div key={type.value} className="flex items-center gap-2">
-              <RadioGroupItem value={type.value} id={`type-${type.value}`} />
+              <RadioGroupItem value={type.value} id={`${idPrefix}type-${type.value}`} />
               <Label
-                htmlFor={`type-${type.value}`}
+                htmlFor={`${idPrefix}type-${type.value}`}
                 className="text-sm font-normal cursor-pointer"
               >
                 {tc(`productTypes.${type.value}`)}
@@ -236,14 +290,12 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
                   />
                 </button>
                 <Checkbox
-                  id={`cat-${parent.slug}`}
-                  checked={currentCategory === parent.slug}
-                  onCheckedChange={(checked) =>
-                    updateFilter("category", checked ? parent.slug : "")
-                  }
+                  id={`${idPrefix}cat-${parent.slug}`}
+                  checked={currentCategories.includes(parent.slug)}
+                  onCheckedChange={() => toggleCategory(parent.slug)}
                 />
                 <Label
-                  htmlFor={`cat-${parent.slug}`}
+                  htmlFor={`${idPrefix}cat-${parent.slug}`}
                   className="text-sm font-normal cursor-pointer"
                 >
                   {getCategoryName(parent, locale)}
@@ -256,14 +308,12 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
                     className="flex items-center gap-2 pl-8 mt-1"
                   >
                     <Checkbox
-                      id={`cat-${child.slug}`}
-                      checked={currentCategory === child.slug}
-                      onCheckedChange={(checked) =>
-                        updateFilter("category", checked ? child.slug : "")
-                      }
+                      id={`${idPrefix}cat-${child.slug}`}
+                      checked={currentCategories.includes(child.slug)}
+                      onCheckedChange={() => toggleCategory(child.slug)}
                     />
                     <Label
-                      htmlFor={`cat-${child.slug}`}
+                      htmlFor={`${idPrefix}cat-${child.slug}`}
                       className="text-sm font-normal cursor-pointer"
                     >
                       {getCategoryName(child, locale)}
@@ -278,14 +328,12 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
           {standaloneParents.map((cat) => (
             <div key={cat.slug} className="flex items-center gap-2 pl-5">
               <Checkbox
-                id={`cat-${cat.slug}`}
-                checked={currentCategory === cat.slug}
-                onCheckedChange={(checked) =>
-                  updateFilter("category", checked ? cat.slug : "")
-                }
+                id={`${idPrefix}cat-${cat.slug}`}
+                checked={currentCategories.includes(cat.slug)}
+                onCheckedChange={() => toggleCategory(cat.slug)}
               />
               <Label
-                htmlFor={`cat-${cat.slug}`}
+                htmlFor={`${idPrefix}cat-${cat.slug}`}
                 className="text-sm font-normal cursor-pointer"
               >
                 {getCategoryName(cat, locale)}
@@ -333,14 +381,12 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
           {MATERIALS.map((material) => (
             <div key={material} className="flex items-center gap-2">
               <Checkbox
-                id={`mat-${material}`}
-                checked={currentMaterial === material}
-                onCheckedChange={(checked) =>
-                  updateFilter("material", checked ? material : "")
-                }
+                id={`${idPrefix}mat-${material}`}
+                checked={currentMaterials.includes(material)}
+                onCheckedChange={() => toggleMaterial(material)}
               />
               <Label
-                htmlFor={`mat-${material}`}
+                htmlFor={`${idPrefix}mat-${material}`}
                 className="text-sm font-normal"
               >
                 {tc(`materials.${material}`)}

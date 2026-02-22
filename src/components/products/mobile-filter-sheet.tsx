@@ -13,7 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ProductFilters, type PendingFilters } from "./product-filters";
+import { ProductFilters, type PendingFilters, parseList, getFilterCount } from "./product-filters";
 import { useFilterLoading } from "./filter-loading-context";
 import type { Category } from "@/types/product";
 
@@ -28,10 +28,11 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
   const t = useTranslations("products.filters");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const filterCount = getFilterCount(searchParams);
 
   const filtersRef = useRef<PendingFilters>({
-    category: searchParams.get("category") || "",
-    material: searchParams.get("material") || "",
+    categories: parseList(searchParams.get("category")),
+    materials: parseList(searchParams.get("material")),
     type: searchParams.get("type") || "",
     priceRange: [
       Number(searchParams.get("minPrice")) || 0,
@@ -45,8 +46,8 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
 
   function buildUrl(filters: PendingFilters) {
     const params = new URLSearchParams();
-    if (filters.category) params.set("category", filters.category);
-    if (filters.material) params.set("material", filters.material);
+    if (filters.categories.length > 0) params.set("category", filters.categories.join(","));
+    if (filters.materials.length > 0) params.set("material", filters.materials.join(","));
     if (filters.type && filters.type !== "all") params.set("type", filters.type);
     if (filters.priceRange[0] > 0) params.set("minPrice", filters.priceRange[0].toString());
     if (filters.priceRange[1] < 10000) params.set("maxPrice", filters.priceRange[1].toString());
@@ -70,8 +71,8 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
 
   function handleClear() {
     filtersRef.current = {
-      category: "",
-      material: "",
+      categories: [],
+      materials: [],
       type: "",
       priceRange: [0, 10000],
     };
@@ -87,7 +88,7 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
       <SheetTrigger asChild>
         <Button variant="outline" size="sm" className="lg:hidden">
           <SlidersHorizontal className="mr-2 h-4 w-4" />
-          {t("title")}
+          {t("title")}{filterCount > 0 && ` (${filterCount})`}
         </Button>
       </SheetTrigger>
       <SheetContent side="left" showCloseButton={false} className="flex w-80 flex-col overflow-hidden p-0">
