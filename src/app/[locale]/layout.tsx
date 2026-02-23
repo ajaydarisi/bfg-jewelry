@@ -22,7 +22,6 @@ export const metadata: Metadata = {
     "jewellery Bapatla district",
     "jewellery Andhra Pradesh",
     "quality checked jewellery",
-    "Machilipatnam jewellery",
     "Bhagyalakshmi Future Gold Chirala",
     "necklaces",
     "earrings",
