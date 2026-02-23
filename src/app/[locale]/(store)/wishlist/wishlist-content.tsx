@@ -22,10 +22,12 @@ interface WishlistContentProps {
 export function WishlistContent({ products }: WishlistContentProps) {
   const t = useTranslations("wishlist");
   const locale = useLocale();
-  const { items, removeItem } = useWishlist();
+  const { items, isLoading, removeItem } = useWishlist();
   const { addItem } = useCart();
 
-  const wishlistedProducts = products.filter((p) => items.includes(p.id));
+  const wishlistedProducts = isLoading
+    ? products
+    : products.filter((p) => items.includes(p.id));
 
   if (wishlistedProducts.length === 0) {
     return (
