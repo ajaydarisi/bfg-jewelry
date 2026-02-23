@@ -161,9 +161,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {getCategoryName(typedProduct.category, locale)}
               </p>
             )}
-            <h1 className="text-2xl font-bold md:text-3xl">
-              {displayName}
-            </h1>
+            <div className="flex items-center justify-between gap-2">
+              <h1 className="text-2xl font-bold md:text-3xl">
+                {displayName}
+              </h1>
+              <WishlistButton productId={typedProduct.id} />
+            </div>
           </div>
 
           {typedProduct.is_sale && (
@@ -220,18 +223,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
 
 
-          <div className="flex gap-3">
-            <div className="flex-1">
-              {IS_ONLINE ? (
-                <AddToCartButton product={typedProduct} />
-              ) : (
-                <CheckAvailabilityButton
-                productName={displayName}
-                  productSlug={typedProduct.slug}
-                />
-              )}
-            </div>
-            <WishlistButton productId={typedProduct.id} />
+          <div>
+            {IS_ONLINE ? (
+              <AddToCartButton product={typedProduct} />
+            ) : (
+              <CheckAvailabilityButton
+              productName={displayName}
+                productSlug={typedProduct.slug}
+              />
+            )}
           </div>
 
           <Separator />

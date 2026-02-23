@@ -66,12 +66,14 @@ export function WishlistButton({
           e.stopPropagation();
           handleToggle();
         }}
-        className="relative rounded-full p-2 hover:text-red-500"
+        className="relative rounded-full p-2 border border-transparent hover:border-red-500"
       >
         <Heart
           className={cn(
             "h-5 w-5 transition-colors",
-            isWishlisted && "fill-red-500 text-red-500 animate-[heart-pop_0.3s_ease-out]"
+            isWishlisted
+              ? "fill-red-500 text-red-500 animate-[heart-pop_0.3s_ease-out]"
+              : "text-red-500"
           )}
         />
         {showParticles && PARTICLES.map((anim, i) => (
