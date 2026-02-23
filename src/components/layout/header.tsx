@@ -52,7 +52,7 @@ export function Header() {
   const t = useTranslations("nav");
   const tc = useTranslations("constants");
   const tCommon = useTranslations();
-  const { user, profile, isAdmin } = useAuth();
+  const { user, profile, isAdmin, isLoading } = useAuth();
   const { itemCount } = useCart();
   const { items: wishlistItems } = useWishlist();
   const router = useRouter();
@@ -186,7 +186,9 @@ export function Header() {
                 </Button>
               )}
 
-              {user ? (
+              {isLoading ? (
+                <div className="h-9 w-9 animate-pulse rounded-md bg-muted" />
+              ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">
@@ -251,7 +253,9 @@ export function Header() {
             </div>
 
             {/* Mobile-only: User dropdown with search/wishlist */}
-            {user ? (
+            {isLoading ? (
+              <div className="h-9 w-9 animate-pulse rounded-md bg-muted md:hidden" />
+            ) : user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="md:hidden">
