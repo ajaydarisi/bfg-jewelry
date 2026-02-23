@@ -171,7 +171,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const categoriesList = await getAllCategories();
 
   // Resolve category IDs — for each selected slug, include all children
-  let categoryIds: string[] = [];
+  const categoryIds: string[] = [];
   for (const slug of categorySlugs) {
     const cat = categoriesList.find((c) => c.slug === slug);
     if (cat) {

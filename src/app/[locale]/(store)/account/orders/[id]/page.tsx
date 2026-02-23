@@ -1,13 +1,11 @@
 import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
-import { Link } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { OrderStatusBadge } from "@/components/admin/order-status-badge";
 import { formatPrice, formatDate } from "@/lib/formatters";
-import { ROUTES } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";

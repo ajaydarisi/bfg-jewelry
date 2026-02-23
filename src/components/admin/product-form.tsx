@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import Image from "next/image";
-import { Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { Loader2, Trash2, Upload } from "lucide-react";
 
 import { productSchema, type ProductInput } from "@/lib/validators";
 import { generateSlug } from "@/lib/formatters";

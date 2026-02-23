@@ -92,17 +92,8 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" showCloseButton={false} className="flex w-80 flex-col overflow-hidden p-0">
-        <SheetHeader className="flex-row items-center justify-between border-b px-4 py-3">
+        <SheetHeader className="border-b px-4 py-3">
           <SheetTitle>{t("title")}</SheetTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleClear}
-            className="h-auto p-0 text-xs text-muted-foreground"
-          >
-            <X className="mr-1 h-3 w-3" />
-            {t("clearAll")}
-          </Button>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-4 py-4">
           <ProductFilters
@@ -119,6 +110,16 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
           >
             {applying && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t("applyFilters")}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleClear}
+            disabled={filterCount === 0}
+            className="w-full text-xs text-muted-foreground"
+          >
+            <X className="mr-1 h-3 w-3" />
+            {t("clearAll")}
           </Button>
         </SheetFooter>
       </SheetContent>

@@ -39,12 +39,15 @@ export function ProductSearch({ open, onOpenChange }: ProductSearchProps) {
   const t = useTranslations("products.search");
 
   useEffect(() => {
-    if (!debouncedQuery || debouncedQuery.length < 2) {
-      setResults([]);
-      return;
-    }
+    let cancelled = false;
 
     async function search() {
+      if (!debouncedQuery || debouncedQuery.length < 2) {
+        await Promise.resolve();
+        if (!cancelled) setResults([]);
+        return;
+      }
+
       setIsSearching(true);
       const supabase = createClient();
       const { data } = await supabase
@@ -54,11 +57,17 @@ export function ProductSearch({ open, onOpenChange }: ProductSearchProps) {
         .eq("is_active", true)
         .limit(8);
 
-      setResults(data || []);
-      setIsSearching(false);
+      if (!cancelled) {
+        setResults(data || []);
+        setIsSearching(false);
+      }
     }
 
     search();
+
+    return () => {
+      cancelled = true;
+    };
   }, [debouncedQuery]);
 
   function handleSelect(slug: string) {

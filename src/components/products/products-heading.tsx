@@ -11,7 +11,7 @@ interface ProductsHeadingProps {
   countLabel: string;
 }
 
-export function ProductsHeading({ title, count, countLabel }: ProductsHeadingProps) {
+export function ProductsHeading({ title, countLabel }: ProductsHeadingProps) {
   const { loading, setLoading } = useFilterLoading();
   const searchParams = useSearchParams();
   const prevParams = useRef(searchParams.toString());
@@ -31,9 +31,7 @@ export function ProductsHeading({ title, count, countLabel }: ProductsHeadingPro
         {title}
         {loading && <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />}
       </h1>
-      {!loading && (
         <p className="text-sm text-muted-foreground">{countLabel}</p>
-      )}
     </div>
   );
 }

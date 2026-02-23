@@ -226,7 +226,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
     <div className="space-y-6">
       {!isDeferred && (
         <>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between h-6">
             <h2 className="font-semibold">
               {t("title")}{filterCount > 0 && ` (${filterCount})`}
             </h2>
@@ -235,7 +235,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
-                className="h-auto p-0 text-xs text-muted-foreground"
+                className="h-auto py-2 cursor-pointer text-xs text-muted-foreground"
               >
                 <X className="mr-1 h-3 w-3" />
                 {t("clearAll")}

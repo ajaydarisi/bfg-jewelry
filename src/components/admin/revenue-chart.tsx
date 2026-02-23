@@ -50,8 +50,8 @@ export function RevenueChart({ data }: RevenueChartProps) {
           width={80}
         />
         <Tooltip
-          formatter={(value: any) => [formatPrice(value), "Revenue"]}
-          labelFormatter={(label: any) =>
+          formatter={(value: number | undefined) => [formatPrice(value ?? 0), "Revenue"]}
+          labelFormatter={(label) =>
             new Date(label).toLocaleDateString("en-IN", {
               year: "numeric",
               month: "short",

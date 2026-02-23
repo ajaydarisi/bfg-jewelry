@@ -69,7 +69,6 @@ export default async function HomePage() {
 
   const locale = await getLocale();
   const t = await getTranslations("home");
-  const tc = await getTranslations("constants");
   const tBrand = await getTranslations("constants.brandStory");
 
   return (

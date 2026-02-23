@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -41,7 +41,7 @@ export default function AddressesPage() {
   const supabase = createClient();
   const t = useTranslations("account.addresses");
 
-  async function fetchAddresses() {
+  const fetchAddresses = useCallback(async () => {
     if (!user) return;
     const { data } = await supabase
       .from("addresses")
@@ -51,11 +51,15 @@ export default function AddressesPage() {
       .order("created_at", { ascending: false });
     setAddresses(data || []);
     setIsLoading(false);
-  }
+  }, [user, supabase]);
 
   useEffect(() => {
-    if (user) fetchAddresses();
-  }, [user]);
+    if (!user) return;
+    const load = async () => {
+      await fetchAddresses();
+    };
+    load();
+  }, [user, fetchAddresses]);
 
   async function handleAddAddress(data: AddressInput) {
     if (!user) return;

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { formatPrice, formatDate, formatDateTime } from "@/lib/formatters";
+import { formatPrice, formatDateTime } from "@/lib/formatters";
 import { OrderStatusBadge } from "@/components/admin/order-status-badge";
 import { OrderStatusUpdater } from "@/components/admin/order-status-updater";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +14,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Json } from "@/types/database";
+
+interface OrderItem {
+  id: string;
+  product_name: string;
+  product_image: string | null;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+}
 
 interface ShippingAddress {
   full_name?: string;
@@ -98,7 +106,7 @@ export default async function OrderDetailPage({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {order.order_items.map((item: Record<string, any>) => (
+                  {order.order_items.map((item: OrderItem) => (
                     <TableRow key={item.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">

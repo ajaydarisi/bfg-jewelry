@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "@/i18n/routing";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -59,13 +59,7 @@ export default function CheckoutPage() {
     }
   }, [cartLoading, items.length, authLoading, router]);
 
-  useEffect(() => {
-    if (user) {
-      fetchAddresses();
-    }
-  }, [user]);
-
-  async function fetchAddresses() {
+  const fetchAddresses = useCallback(async () => {
     if (!user) return;
     const { data } = await supabase
       .from("addresses")
@@ -76,7 +70,15 @@ export default function CheckoutPage() {
     if (data && data.length > 0 && !selectedAddressId) {
       setSelectedAddressId(data[0].id);
     }
-  }
+  }, [user, supabase, selectedAddressId]);
+
+  useEffect(() => {
+    if (!user) return;
+    const load = async () => {
+      await fetchAddresses();
+    };
+    load();
+  }, [user, fetchAddresses]);
 
   async function handleAddAddress(data: AddressInput) {
     if (!user) return;
