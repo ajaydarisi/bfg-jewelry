@@ -1,4 +1,4 @@
-# BFG Jewelry — Bhagyalakshmi Future Gold
+# Bhagyalakshmi Future Gold
 
 A full-stack jewelry e-commerce platform built with Next.js 16, React 19, and Supabase. Features a customer-facing storefront with bilingual support (English & Telugu), a comprehensive admin panel, and Razorpay payment integration.
 
@@ -119,7 +119,7 @@ supabase/
 ```bash
 # Clone the repository
 git clone <repo-url>
-cd bfg-jewelry
+cd Bhagyalakshmi-Future-Gold
 
 # Install dependencies
 npm install
