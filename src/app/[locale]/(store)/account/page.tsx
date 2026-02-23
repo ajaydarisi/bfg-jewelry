@@ -23,9 +23,21 @@ import {
   type ChangePasswordInput,
 } from "@/lib/validators";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Eye, EyeOff, Loader2, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { changePassword } from "./actions";
+import { useRouter } from "next/navigation";
+import { changePassword, deleteMyAccount } from "./actions";
 
 function ChangePasswordCard() {
   const [isLoading, setIsLoading] = useState(false);
@@ -271,6 +283,88 @@ export default function ProfilePage() {
       </Card>
 
       <ChangePasswordCard />
+      <DeleteAccountCard />
     </div>
+  );
+}
+
+function DeleteAccountCard() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+  const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const t = useTranslations("account.deleteAccount");
+  const supabase = createClient();
+
+  async function handleDelete() {
+    setIsLoading(true);
+    try {
+      const result = await deleteMyAccount();
+      if (!result.success) {
+        toast.error(t("errorToast"));
+        return;
+      }
+      await supabase.auth.signOut();
+      toast.success(t("successToast"));
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error(t("errorToast"));
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <Card className="border-destructive">
+      <CardHeader>
+        <CardTitle className="text-destructive">{t("title")}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground">{t("description")}</p>
+        <p className="text-sm font-medium text-destructive">{t("warning")}</p>
+
+        <AlertDialog
+          open={open}
+          onOpenChange={(v) => {
+            setOpen(v);
+            if (!v) setConfirmText("");
+          }}
+        >
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive">
+              <Trash2 className="mr-2 h-4 w-4" />
+              {t("button")}
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t("confirmTitle")}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t("confirmDescription")}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <Input
+              placeholder={t("confirmPlaceholder")}
+              value={confirmText}
+              onChange={(e) => setConfirmText(e.target.value)}
+            />
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                disabled={confirmText !== "DELETE" || isLoading}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {isLoading && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {t("confirmButton")}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </CardContent>
+    </Card>
   );
 }

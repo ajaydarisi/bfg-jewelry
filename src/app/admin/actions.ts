@@ -237,6 +237,34 @@ export async function updateUserRole(
   return { success: true };
 }
 
+export async function deleteUser(userId: string) {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase.auth.admin.deleteUser(userId);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/users");
+  return { success: true };
+}
+
+export async function toggleUserDisabled(userId: string, disable: boolean) {
+  const supabase = createAdminClient();
+
+  const { error } = await supabase.auth.admin.updateUserById(userId, {
+    ban_duration: disable ? "876600h" : "none",
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath("/admin/users");
+  return { success: true };
+}
+
 // ---------------------------------------------------------------------------
 // Coupons
 // ---------------------------------------------------------------------------

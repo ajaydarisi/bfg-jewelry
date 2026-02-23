@@ -1,6 +1,7 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 export async function changePassword(
   email: string,
@@ -36,6 +37,28 @@ export async function changePassword(
 
   if (updateError) {
     return { success: false, error: "update_failed" };
+  }
+
+  return { success: true };
+}
+
+export async function deleteMyAccount() {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: "not_authenticated" };
+  }
+
+  const admin = createAdminClient();
+
+  const { error } = await admin.auth.admin.deleteUser(user.id);
+
+  if (error) {
+    return { success: false, error: "delete_failed" };
   }
 
   return { success: true };

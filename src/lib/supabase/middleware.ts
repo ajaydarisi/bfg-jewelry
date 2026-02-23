@@ -80,14 +80,29 @@ export async function updateSession(
     }
   }
 
-  // Protect account routes - require login
-  if (strippedPath.startsWith("/account") && !user) {
-    const url = request.nextUrl.clone();
-    // Preserve locale prefix in redirect
-    const localePrefix = pathname.replace(strippedPath, "");
-    url.pathname = `${localePrefix}/login`;
-    url.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(url);
+  // Protect account routes - require login and valid (non-banned/deleted) user
+  if (strippedPath.startsWith("/account")) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      const localePrefix = pathname.replace(strippedPath, "");
+      url.pathname = `${localePrefix}/login`;
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // Verify user is not banned/deleted
+    const {
+      data: { user: verifiedUser },
+    } = await supabase.auth.getUser();
+
+    if (!verifiedUser) {
+      // User was banned or deleted — clear session and redirect to login
+      await supabase.auth.signOut();
+      const url = request.nextUrl.clone();
+      const localePrefix = pathname.replace(strippedPath, "");
+      url.pathname = `${localePrefix}/login`;
+      return NextResponse.redirect(url);
+    }
   }
 
   // Protect admin routes - require login + admin role

@@ -84,5 +84,18 @@
     "errorToast": "Failed to update password",
     "wrongPassword": "Current password is incorrect",
     "samePassword": "New password must be different from current password"
+  },
+  "deleteAccount": {
+    "title": "Delete Account",
+    "description": "Once you delete your account, all your data including your profile, addresses, cart, and wishlist will be permanently removed. Your order history will be preserved.",
+    "warning": "This action is irreversible. Please be certain.",
+    "button": "Delete Account",
+    "confirmTitle": "Are you sure?",
+    "confirmDescription": "This will permanently delete your account and all associated data. Type DELETE to confirm.",
+    "confirmPlaceholder": "Type DELETE to confirm",
+    "confirmButton": "Delete My Account",
+    "cancel": "Cancel",
+    "successToast": "Account deleted successfully",
+    "errorToast": "Failed to delete account"
   }
 }
