@@ -30,6 +30,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { trackEvent } from "@/lib/gtag";
 
 export function SignupForm() {
   const t = useTranslations("auth.signup");
@@ -68,6 +69,7 @@ export function SignupForm() {
       return;
     }
 
+    trackEvent("sign_up", { method: "email" });
     toast.success(t("successToast"));
     router.push("/login");
   }

@@ -31,6 +31,7 @@ import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { trackEvent } from "@/lib/gtag";
 
 export function LoginForm() {
   const t = useTranslations("auth.login");
@@ -63,6 +64,7 @@ export function LoginForm() {
       return;
     }
 
+    trackEvent("login", { method: "email" });
     toast.success(t("successToast"));
     router.push(redirectTo);
     router.refresh();

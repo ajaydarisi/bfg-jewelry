@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/hooks/use-auth";
 import { feedbackSchema, type FeedbackInput } from "@/lib/validators";
 import { submitFeedback } from "@/app/[locale]/(store)/feedback/actions";
+import { trackEvent } from "@/lib/gtag";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,6 +61,7 @@ export function FeedbackDialog({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       await submitFeedback(data);
+      trackEvent("submit_feedback", { rating: data.rating });
       toast.success(t("successMessage"));
       form.reset();
       setOpen(false);

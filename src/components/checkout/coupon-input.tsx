@@ -9,6 +9,7 @@ import { formatPrice } from "@/lib/formatters";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Loader2, Tag, X } from "lucide-react";
+import { trackEvent } from "@/lib/gtag";
 
 interface CouponInputProps {
   subtotal: number;
@@ -33,6 +34,7 @@ export function CouponInput({
     try {
       const result = await applyCoupon(code, subtotal);
       onApply(result.code, result.discountAmount);
+      trackEvent("apply_coupon", { coupon_code: result.code, discount: result.discountAmount });
       toast.success(t("couponSuccess", { amount: formatPrice(result.discountAmount) }));
       setCode("");
     } catch (error) {

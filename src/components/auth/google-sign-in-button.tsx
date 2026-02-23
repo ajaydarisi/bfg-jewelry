@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/gtag";
 
 interface GoogleSignInButtonProps {
   label: string;
@@ -45,6 +46,8 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
 
     if (error) {
       toast.error(errorLabel);
+    } else {
+      trackEvent("login", { method: "google" });
     }
     setIsLoading(false);
   }

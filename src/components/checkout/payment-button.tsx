@@ -8,6 +8,7 @@ import Script from "next/script";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
+import { trackEvent } from "@/lib/gtag";
 
 declare global {
   interface Window {
@@ -44,6 +45,8 @@ export function PaymentButton({
         couponCode
       );
 
+      trackEvent("begin_checkout", { value: amount, currency: "INR" });
+
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: Math.round(amount * 100),
@@ -67,6 +70,11 @@ export function PaymentButton({
               response.razorpay_order_id,
               response.razorpay_signature
             );
+            trackEvent("purchase", {
+              transaction_id: response.razorpay_payment_id,
+              value: amount,
+              currency: "INR",
+            });
             toast.success(t("success"));
             onSuccess(orderId);
           } catch {
@@ -75,6 +83,7 @@ export function PaymentButton({
         },
         modal: {
           ondismiss: () => {
+            trackEvent("payment_failed");
             setIsLoading(false);
             toast.info(t("cancelled"));
           },

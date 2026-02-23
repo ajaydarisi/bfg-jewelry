@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { BUSINESS_INFO } from "@/lib/constants";
 import { MessageCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { trackEvent } from "@/lib/gtag";
 
 interface CheckAvailabilityButtonProps {
   productName: string;
@@ -20,6 +21,7 @@ export function CheckAvailabilityButton({
   const tw = useTranslations("wishlist");
 
   function handleClick() {
+    trackEvent("contact_whatsapp", { item_name: productName });
     const previewUrl = `${window.location.origin}/preview/${productSlug}`;
     const message = `${t("whatsappMessage")}\n\n*${productName}*\n${previewUrl}`;
 

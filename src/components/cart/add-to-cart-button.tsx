@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Loader2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Product } from "@/types/product";
+import { trackEvent } from "@/lib/gtag";
 
 interface AddToCartButtonProps {
   product: Product;
@@ -24,6 +25,12 @@ export function AddToCartButton({ product }: AddToCartButtonProps) {
     setIsAdding(true);
     try {
       await addItem(product, quantity);
+      trackEvent("add_to_cart", {
+        item_id: product.id,
+        item_name: product.name,
+        price: product.discount_price || product.price,
+        quantity,
+      });
       toast.success(t("addedToast", { name: product.name }));
       setQuantity(1);
     } catch {

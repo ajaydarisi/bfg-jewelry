@@ -10,6 +10,7 @@ import { Heart } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/lib/constants";
+import { trackEvent } from "@/lib/gtag";
 
 const PARTICLES = [
   "animate-[heart-float-1_0.6s_ease-out_forwards]",
@@ -50,10 +51,12 @@ export function WishlistButton({
 
     if (isWishlisted) {
       await removeItem(productId);
+      trackEvent("remove_from_wishlist", { item_id: productId });
       toast.success(t("removed"));
     } else {
       triggerParticles();
       await addItem(productId);
+      trackEvent("add_to_wishlist", { item_id: productId });
       toast.success(t("added"));
     }
   }

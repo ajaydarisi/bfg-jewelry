@@ -16,6 +16,7 @@ import { Search } from "lucide-react";
 import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { trackEvent } from "@/lib/gtag";
 
 interface ProductSearchProps {
   open: boolean;
@@ -71,6 +72,7 @@ export function ProductSearch({ open, onOpenChange }: ProductSearchProps) {
   }, [debouncedQuery]);
 
   function handleSelect(slug: string) {
+    trackEvent("select_content", { content_type: "product", item_id: slug });
     onOpenChange(false);
     setQuery("");
     router.push(ROUTES.product(slug));
@@ -78,6 +80,7 @@ export function ProductSearch({ open, onOpenChange }: ProductSearchProps) {
 
   function handleSearchAll() {
     if (query) {
+      trackEvent("search", { search_term: query });
       onOpenChange(false);
       router.push(`${ROUTES.search}?q=${encodeURIComponent(query)}`);
       setQuery("");
