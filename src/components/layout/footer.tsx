@@ -131,6 +131,22 @@ export function Footer() {
                   </button>
                 </FeedbackDialog>
               </li>
+              <li>
+                <Link
+                  href={ROUTES.termsAndConditions}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {t("termsAndConditions")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={ROUTES.privacyPolicy}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {t("privacyPolicy")}
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -95,6 +95,8 @@ export const ROUTES = {
   forgotPassword: "/forgot-password",
   resetPassword: "/reset-password",
   about: "/about",
+  termsAndConditions: "/terms-and-conditions",
+  privacyPolicy: "/privacy-policy",
   admin: "/admin",
   adminProducts: "/admin/products",
   adminProductNew: "/admin/products/new",

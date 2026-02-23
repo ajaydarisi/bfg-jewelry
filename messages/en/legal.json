@@ -1,0 +1,132 @@
+{
+  "terms": {
+    "title": "Terms & Conditions",
+    "lastUpdated": "Last updated: February 23, 2026",
+    "intro": "Welcome to Bhagyalakshmi Future Gold. By accessing or using our website (shop.darisi.in), you agree to be bound by these Terms & Conditions. Please read them carefully before placing an order or using our services.",
+    "useOfWebsite": {
+      "title": "Use of Website",
+      "content": "You may use this website for lawful purposes only. You agree not to misuse the website, attempt unauthorized access, or interfere with its functionality. We reserve the right to restrict or terminate access to any user who violates these terms."
+    },
+    "productsAndPricing": {
+      "title": "Products & Pricing",
+      "content": "We sell fashion jewellery (imitation/artificial jewellery), not precious metals or gemstones unless explicitly stated. All prices are listed in Indian Rupees (₹) and include applicable taxes. We reserve the right to modify prices at any time without prior notice. Product images are for illustration purposes and may vary slightly from the actual product."
+    },
+    "ordersAndPayments": {
+      "title": "Orders & Payments",
+      "content": "By placing an order, you make an offer to purchase the selected products. We reserve the right to accept or decline any order. Payments are processed securely through Razorpay. We accept UPI, debit cards, credit cards, net banking, and other methods supported by Razorpay. Orders are confirmed only after successful payment."
+    },
+    "shippingAndDelivery": {
+      "title": "Shipping & Delivery",
+      "content": "We ship across India. A shipping fee of ₹49 applies to orders below ₹999. Orders above ₹999 qualify for free shipping. Delivery timelines are estimates and may vary depending on your location and courier availability. We are not liable for delays caused by courier services or unforeseen circumstances."
+    },
+    "returnsAndExchanges": {
+      "title": "Returns & Exchanges",
+      "content": "If you receive a damaged or defective product, please contact us within 48 hours of delivery with photos of the item. We will arrange a replacement or refund at our discretion. Returns are not accepted for change of mind or incorrect size selection. Rental items must be returned in the same condition as received."
+    },
+    "rentalTerms": {
+      "title": "Rental Items",
+      "content": "Rental jewellery sets are available for a fixed rental period. Items must be returned in the original condition. Any damage or loss of rental items will be charged to the customer. Rental deposits, if applicable, will be refunded upon satisfactory return of items."
+    },
+    "intellectualProperty": {
+      "title": "Intellectual Property",
+      "content": "All content on this website — including text, images, logos, and design — is the property of Bhagyalakshmi Future Gold and is protected by copyright laws. You may not reproduce, distribute, or use any content without our prior written consent."
+    },
+    "limitationOfLiability": {
+      "title": "Limitation of Liability",
+      "content": "Bhagyalakshmi Future Gold shall not be liable for any indirect, incidental, or consequential damages arising from the use of this website or the purchase of our products. Our total liability shall not exceed the amount paid for the specific product in question."
+    },
+    "governingLaw": {
+      "title": "Governing Law",
+      "content": "These Terms & Conditions are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of the courts in Chirala, Bapatla District, Andhra Pradesh, India."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "content": "If you have any questions about these Terms & Conditions, please contact us:",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "addressLabel": "Address"
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: February 23, 2026",
+    "intro": "Bhagyalakshmi Future Gold (\"we\", \"us\", or \"our\") operates the website shop.darisi.in. This Privacy Policy explains how we collect, use, and protect your personal information when you use our website.",
+    "informationWeCollect": {
+      "title": "Information We Collect",
+      "content": "We collect the following types of information:",
+      "items": {
+        "account": "Account information: Name, email address, and phone number when you create an account or place an order.",
+        "google": "Google account data: If you sign in with Google, we receive your name, email address, and profile picture from your Google account.",
+        "shipping": "Shipping details: Delivery address provided during checkout.",
+        "order": "Order information: Products purchased, order history, and transaction details.",
+        "usage": "Usage data: Pages visited, browser type, and device information collected automatically through cookies."
+      }
+    },
+    "howWeUse": {
+      "title": "How We Use Your Information",
+      "content": "We use your personal information to:",
+      "items": {
+        "orders": "Process and fulfill your orders",
+        "account": "Manage your account and provide customer support",
+        "communicate": "Send order updates, shipping notifications, and receipts",
+        "improve": "Improve our website and product offerings",
+        "security": "Prevent fraud and ensure website security"
+      }
+    },
+    "googleAuth": {
+      "title": "Google Sign-In",
+      "content": "We offer Google Sign-In for convenient account creation and login. When you sign in with Google, we only access your basic profile information (name, email, and profile picture). We do not access your Google contacts, calendar, or any other Google services. You can revoke access at any time through your Google Account settings."
+    },
+    "paymentInfo": {
+      "title": "Payment Information",
+      "content": "All payments are processed securely by Razorpay, our payment gateway. We do not store your credit card numbers, debit card numbers, or banking details on our servers. Razorpay handles all payment data in compliance with PCI-DSS standards. Please refer to Razorpay's privacy policy for more information on how they handle your payment data."
+    },
+    "cookies": {
+      "title": "Cookies",
+      "content": "We use cookies and similar technologies to maintain your session, remember your preferences (such as language and theme), and improve your browsing experience. These are essential cookies required for the website to function properly. You can disable cookies in your browser settings, but this may affect website functionality."
+    },
+    "dataSecurity": {
+      "title": "Data Security",
+      "content": "We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. Our website uses HTTPS encryption for all data transmission. However, no method of internet transmission is 100% secure, and we cannot guarantee absolute security."
+    },
+    "thirdParty": {
+      "title": "Third-Party Services",
+      "content": "We use the following third-party services that may collect data:",
+      "items": {
+        "supabase": "Supabase: For user authentication and database services",
+        "razorpay": "Razorpay: For payment processing",
+        "google": "Google: For sign-in authentication",
+        "vercel": "Vercel: For website hosting"
+      }
+    },
+    "dataRetention": {
+      "title": "Data Retention",
+      "content": "We retain your personal information for as long as your account is active or as needed to provide you services. Order records are maintained for accounting and legal compliance. You may request deletion of your account and associated data by contacting us."
+    },
+    "childrensPrivacy": {
+      "title": "Children's Privacy",
+      "content": "Our website is not intended for children under the age of 18. We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please contact us and we will delete it promptly."
+    },
+    "yourRights": {
+      "title": "Your Rights",
+      "content": "You have the right to:",
+      "items": {
+        "access": "Access and review your personal information",
+        "update": "Update or correct your personal data through your account settings",
+        "delete": "Request deletion of your account and personal data",
+        "opt-out": "Opt out of promotional communications"
+      }
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "content": "We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated date. We encourage you to review this policy periodically."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "content": "If you have any questions or concerns about this Privacy Policy, please contact us:",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "addressLabel": "Address"
+    }
+  }
+}
