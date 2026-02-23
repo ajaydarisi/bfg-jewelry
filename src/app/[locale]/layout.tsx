@@ -33,6 +33,11 @@ export const metadata: Metadata = {
     "rose gold jewellery",
     "online jewellery store India",
   ],
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_NAME,
+  },
   openGraph: {
     title: `${APP_NAME}`,
     description: APP_DESCRIPTION,

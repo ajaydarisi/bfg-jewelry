@@ -49,6 +49,13 @@ export default function RootLayout({
             gtag('config', 'G-NKL5JQS5W6');
           `}
         </Script>
+        <Script id="sw-register" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/sw.js');
+            }
+          `}
+        </Script>
         {children}
       </body>
     </html>
