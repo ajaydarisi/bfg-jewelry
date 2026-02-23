@@ -74,11 +74,16 @@ export function Header() {
   }
 
   async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    toast.success(tCommon("signedOut"));
-    router.push("/");
-    router.refresh();
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut({ scope: "local" });
+      toast.success(tCommon("signedOut"));
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error(tCommon("error.title"));
+      router.refresh();
+    }
   }
 
   return (

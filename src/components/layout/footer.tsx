@@ -21,10 +21,15 @@ export function Footer() {
   const tCommon = useTranslations();
 
   async function handleSignOut() {
-    await supabase.auth.signOut();
-    toast.success(tCommon("signedOut"));
-    router.push("/");
-    router.refresh();
+    try {
+      await supabase.auth.signOut({ scope: "local" });
+      toast.success(tCommon("signedOut"));
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error(tCommon("error.title"));
+      router.refresh();
+    }
   }
   return (
     <footer className="border-t">
