@@ -14,7 +14,7 @@ import { MobileFilterSheet } from "@/components/products/mobile-filter-sheet";
 import { FilterLoadingProvider } from "@/components/products/filter-loading-context";
 import { ProductsHeading } from "@/components/products/products-heading";
 import { Search } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { unstable_cache } from "next/cache";
 
@@ -89,7 +89,8 @@ const getFilteredProducts = unstable_cache(
     minPrice: number,
     maxPrice: number,
     sort: string,
-    page: number
+    page: number,
+    locale: string
   ) => {
     const supabase = createAdminClient();
 
@@ -119,7 +120,7 @@ const getFilteredProducts = unstable_cache(
         query = query.order("price", { ascending: false });
         break;
       case "name-asc":
-        query = query.order("name", { ascending: true });
+        query = query.order(locale === "te" ? "name_telugu" : "name", { ascending: true });
         break;
       default:
         query = query.order("created_at", { ascending: false });
@@ -164,6 +165,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const page = Number(params.page) || 1;
   const type = params.type || "";
 
+  const locale = await getLocale();
   const t = await getTranslations("products.listing");
   const tRoot = await getTranslations();
 
@@ -189,7 +191,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   // Fetch products and count in parallel (both independently cached)
   const [products, count] = await Promise.all([
-    getFilteredProducts(categoryIds, materials, type, minPrice, maxPrice, sort, page),
+    getFilteredProducts(categoryIds, materials, type, minPrice, maxPrice, sort, page, locale),
     getProductCount(categoryIds, materials, type, minPrice, maxPrice),
   ]);
 
