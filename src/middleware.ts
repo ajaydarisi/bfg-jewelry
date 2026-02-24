@@ -10,6 +10,7 @@ export async function middleware(request: NextRequest) {
 
   // Skip i18n for admin, API, and preview routes
   if (
+    pathname.startsWith("/.well-known") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/api") ||
     pathname.startsWith("/preview")
