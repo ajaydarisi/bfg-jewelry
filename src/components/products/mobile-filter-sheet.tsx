@@ -91,7 +91,7 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
           {t("title")}{filterCount > 0 && ` (${filterCount})`}
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" showCloseButton={false} className="flex w-80 flex-col overflow-hidden p-0">
+      <SheetContent side="left" showCloseButton={false} className="flex w-80 flex-col overflow-hidden px-0 pb-0">
         <SheetHeader className="border-b px-4 py-3">
           <SheetTitle>{t("title")}</SheetTitle>
         </SheetHeader>

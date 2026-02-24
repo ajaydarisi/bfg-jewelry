@@ -1,5 +1,6 @@
 import { DM_Sans, Marcellus, Noto_Sans_Telugu, Playfair_Display } from "next/font/google";
 import Script from "next/script";
+import { CapacitorInit } from "@/components/shared/capacitor-init";
 import "./globals.css";
 
 const marcellus = Marcellus({
@@ -51,11 +52,12 @@ export default function RootLayout({
         </Script>
         <Script id="sw-register" strategy="afterInteractive">
           {`
-            if ('serviceWorker' in navigator) {
+            if ('serviceWorker' in navigator && !window.Capacitor) {
               navigator.serviceWorker.register('/sw.js');
             }
           `}
         </Script>
+        <CapacitorInit />
         {children}
       </body>
     </html>

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
+import { Capacitor } from "@capacitor/core";
+import { Browser } from "@capacitor/browser";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
@@ -37,17 +39,37 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
       callbackUrl.searchParams.set("locale_prefix", localePrefix);
     }
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: callbackUrl.toString(),
-      },
-    });
+    if (Capacitor.isNativePlatform()) {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: callbackUrl.toString(),
+          skipBrowserRedirect: true,
+        },
+      });
 
-    if (error) {
-      toast.error(errorLabel);
+      if (data?.url) {
+        await Browser.open({ url: data.url });
+      }
+
+      if (error) {
+        toast.error(errorLabel);
+      } else {
+        trackEvent("login", { method: "google" });
+      }
     } else {
-      trackEvent("login", { method: "google" });
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: callbackUrl.toString(),
+        },
+      });
+
+      if (error) {
+        toast.error(errorLabel);
+      } else {
+        trackEvent("login", { method: "google" });
+      }
     }
     setIsLoading(false);
   }

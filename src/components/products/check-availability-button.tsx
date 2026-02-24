@@ -1,5 +1,7 @@
 "use client";
 
+import { Capacitor } from "@capacitor/core";
+import { Browser } from "@capacitor/browser";
 import { Button } from "@/components/ui/button";
 import { BUSINESS_INFO } from "@/lib/constants";
 import { MessageCircle } from "lucide-react";
@@ -27,7 +29,12 @@ export function CheckAvailabilityButton({
 
     const encoded = encodeURIComponent(message);
     const url = `https://wa.me/91${BUSINESS_INFO.whatsapp}?text=${encoded}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+
+    if (Capacitor.isNativePlatform()) {
+      Browser.open({ url });
+    } else {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
   }
 
   return (
