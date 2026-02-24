@@ -32,10 +32,10 @@ export function CapacitorInit() {
         url.startsWith("bhagyalakshmifuturegold://auth")
       ) {
         Browser.close().catch(() => {});
-        // Forward query params to the web callback route so the server
+        // Navigate the webview to the callback URL so the server
         // can exchange the auth code and set the session
         const parsed = new URL(url);
-        window.location.href = `${window.location.origin}/api/auth/callback${parsed.search}`;
+        window.location.href = `${window.location.origin}${parsed.pathname}${parsed.search}`;
       }
     });
 
