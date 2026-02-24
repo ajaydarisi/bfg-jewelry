@@ -54,8 +54,10 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
 
       if (error) {
         toast.error(errorLabel);
+        setIsLoading(false);
       } else {
         trackEvent("login", { method: "google" });
+        // Keep isLoading true — page navigates away when callback completes
       }
     } else {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -70,8 +72,8 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
       } else {
         trackEvent("login", { method: "google" });
       }
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   return (
