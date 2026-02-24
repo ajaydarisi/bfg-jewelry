@@ -26,16 +26,16 @@ export function CapacitorInit() {
     });
 
     App.addListener("appUrlOpen", ({ url }) => {
-      // Handle OAuth deep link callbacks
+      // Handle OAuth deep link callbacks (HTTPS or custom scheme)
       if (
         url.includes("/api/auth/callback") ||
         url.startsWith("bhagyalakshmifuturegold://auth")
       ) {
         Browser.close().catch(() => {});
-        // Navigate the webview to the callback URL so the server
+        // Forward query params to the web callback route so the server
         // can exchange the auth code and set the session
         const parsed = new URL(url);
-        window.location.href = `${window.location.origin}${parsed.pathname}${parsed.search}`;
+        window.location.href = `${window.location.origin}/api/auth/callback${parsed.search}`;
       }
     });
 

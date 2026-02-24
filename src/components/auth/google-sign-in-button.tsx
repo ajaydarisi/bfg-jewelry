@@ -33,17 +33,21 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
       ? redirectParam
       : localePrefix || "/";
 
-    const callbackUrl = new URL(`${siteUrl}/api/auth/callback`);
-    callbackUrl.searchParams.set("next", next);
-    if (localePrefix) {
-      callbackUrl.searchParams.set("locale_prefix", localePrefix);
-    }
-
     if (Capacitor.isNativePlatform()) {
+      // Use custom URL scheme so Android/iOS reliably opens the app
+      // instead of staying in the external browser
+      const nativeCallbackUrl = new URL(
+        "bhagyalakshmifuturegold://auth/callback"
+      );
+      nativeCallbackUrl.searchParams.set("next", next);
+      if (localePrefix) {
+        nativeCallbackUrl.searchParams.set("locale_prefix", localePrefix);
+      }
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: callbackUrl.toString(),
+          redirectTo: nativeCallbackUrl.toString(),
           skipBrowserRedirect: true,
         },
       });
@@ -58,6 +62,12 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
         trackEvent("login", { method: "google" });
       }
     } else {
+      const callbackUrl = new URL(`${siteUrl}/api/auth/callback`);
+      callbackUrl.searchParams.set("next", next);
+      if (localePrefix) {
+        callbackUrl.searchParams.set("locale_prefix", localePrefix);
+      }
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
