@@ -112,7 +112,7 @@ export function Header() {
                 className="h-10 w-auto rounded-2xl"
                 priority
               />
-              {tCommon("appName")}
+              <span className="text-sm sm:text-base">{tCommon("appName")}</span>
             </Link>
           </div>
 
