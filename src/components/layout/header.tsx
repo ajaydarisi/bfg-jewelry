@@ -102,8 +102,16 @@ export function Header() {
             </Button>
             <Link
               href="/"
-              className="flex items-center gap-2 font-brand text-xl tracking-wide text-primary"
+              className="flex items-center gap-2 font-brand tracking-wide text-primary"
             >
+              <Image
+                src="/images/logo.png"
+                alt={tCommon("appName")}
+                width={120}
+                height={40}
+                className="h-10 w-auto rounded-2xl"
+                priority
+              />
               {tCommon("appName")}
             </Link>
           </div>

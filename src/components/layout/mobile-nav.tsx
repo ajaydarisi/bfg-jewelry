@@ -29,8 +29,14 @@ export function MobileNav({ open, onOpenChange, itemCount }: MobileNavProps) {
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="left" className="w-80 pl-3">
         <SheetHeader>
-          <SheetTitle className="flex items-center gap-2 text-left font-brand tracking-wide text-primary">
-            {tCommon("appName")}
+          <SheetTitle className="flex items-center gap-2 text-left">
+            <Image
+              src="/images/logo.png"
+              alt={tCommon("appName")}
+              width={96}
+              height={32}
+              className="h-8 w-auto rounded-sm"
+            />
           </SheetTitle>
         </SheetHeader>
         <div className="mt-6 flex flex-col gap-4 overflow-y-auto">
