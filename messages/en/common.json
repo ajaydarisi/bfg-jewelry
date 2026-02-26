@@ -17,7 +17,8 @@
     "aboutUs": "About Us",
     "lightMode": "Light Mode",
     "darkMode": "Dark Mode",
-    "changeLanguage": "Change Language"
+    "changeLanguage": "Change Language",
+    "openMenu": "Open menu"
   },
   "footer": {
     "stayInTouch": "Stay in Touch",

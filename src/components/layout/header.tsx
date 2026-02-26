@@ -97,6 +97,7 @@ export function Header() {
               size="icon"
               className="md:hidden"
               onClick={() => setMobileNavOpen(true)}
+              aria-label={t("openMenu")}
             >
               <Menu className="h-5 w-5" strokeWidth={1.5} />
             </Button>
@@ -160,11 +161,12 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setSearchOpen(true)}
+                aria-label={t("search")}
               >
                 <Search className="h-5 w-5" strokeWidth={1.5} />
               </Button>
 
-              <Button variant="ghost" size="icon" asChild>
+              <Button variant="ghost" size="icon" asChild aria-label={t("wishlist")}>
                 <Link href={ROUTES.wishlist} className="relative">
                   <Heart className="h-5 w-5" strokeWidth={1.5} />
                   {wishlistItems.length > 0 && (
@@ -179,7 +181,7 @@ export function Header() {
               </Button>
 
               {IS_ONLINE && (
-                <Button variant="ghost" size="icon" asChild>
+                <Button variant="ghost" size="icon" asChild aria-label={t("shoppingBag")}>
                   <Link href={ROUTES.cart} className="relative">
                     <ShoppingBag className="h-5 w-5" strokeWidth={1.5} />
                     {itemCount > 0 && (
@@ -199,7 +201,7 @@ export function Header() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" aria-label={t("myAccount")}>
                       <User className="h-5 w-5" strokeWidth={1.5} />
                     </Button>
                   </DropdownMenuTrigger>
@@ -266,7 +268,7 @@ export function Header() {
             ) : user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="md:hidden">
+                  <Button variant="ghost" size="icon" className="md:hidden" aria-label={t("myAccount")}>
                     <User className="h-5 w-5" strokeWidth={1.5} />
                   </Button>
                 </DropdownMenuTrigger>
@@ -352,7 +354,7 @@ export function Header() {
             ) : (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="md:hidden">
+                  <Button variant="ghost" size="icon" className="md:hidden" aria-label={t("signIn")}>
                     <User className="h-5 w-5" strokeWidth={1.5} />
                   </Button>
                 </DropdownMenuTrigger>

@@ -12,5 +12,7 @@
   "button": "Wishlist",
   "buttoned": "Wishlisted",
   "checkAvailability": "Check Availability",
-  "noImage": "No Image"
+  "noImage": "No Image",
+  "addToWishlist": "Add to wishlist",
+  "removeFromWishlist": "Remove from wishlist"
 }

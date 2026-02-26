@@ -70,6 +70,7 @@ export function WishlistButton({
           handleToggle();
         }}
         className="relative rounded-full p-2 border border-transparent hover:border-red-500"
+        aria-label={isWishlisted ? t("removeFromWishlist") : t("addToWishlist")}
       >
         <Heart
           className={cn(

@@ -40,9 +40,9 @@ export default function RootLayout({
       >
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-NKL5JQS5W6"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="lazyOnload">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -50,7 +50,7 @@ export default function RootLayout({
             gtag('config', 'G-NKL5JQS5W6');
           `}
         </Script>
-        <Script id="sw-register" strategy="afterInteractive">
+        <Script id="sw-register" strategy="lazyOnload">
           {`
             if ('serviceWorker' in navigator && !window.Capacitor) {
               navigator.serviceWorker.register('/sw.js');

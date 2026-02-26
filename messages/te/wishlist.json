@@ -12,5 +12,7 @@
   "button": "విష్‌లిస్ట్",
   "buttoned": "విష్‌లిస్ట్ చేయబడింది",
   "checkAvailability": "లభ్యత తనిఖీ చేయండి",
-  "noImage": "చిత్రం లేదు"
+  "noImage": "చిత్రం లేదు",
+  "addToWishlist": "విష్‌లిస్ట్‌కు జోడించండి",
+  "removeFromWishlist": "విష్‌లిస్ట్ నుండి తొలగించండి"
 }
