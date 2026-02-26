@@ -1,0 +1,13 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    Golden Ratio "D" Favicon — Darisi (filled for small-size legibility)
+    Outer D: height=400, width=400/φ ≈ 247  →  ratio ≈ φ
+    Inner counter offset by stem width (72px) and padding (64px)
+  -->
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M 120 56 L 120 456 C 460 456 460 56 120 56 Z M 192 120 L 192 392 C 400 392 400 120 192 120 Z"
+    fill="#8B1E2D"
+  />
+</svg>

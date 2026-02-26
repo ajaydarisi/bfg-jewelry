@@ -220,7 +220,7 @@ export default async function HomePage() {
               href={`${ROUTES.products}?category=${cat.slug}`}
               className="group relative flex items-center justify-center py-10 px-4 text-center border border-border bg-card transition-all duration-300 hover:border-primary hover:shadow-md"
             >
-              <h3 className="text-sm uppercase tracking-[0.15em] font-medium group-hover:text-primary transition-colors">
+              <h3 className="text-sm md:text-lg uppercase tracking-[0.15em] font-medium group-hover:text-primary transition-colors">
                 {getCategoryName(cat, locale)}
               </h3>
             </Link>

@@ -7,7 +7,7 @@ import { FeedbackDialog } from "@/components/feedback/feedback-form";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
 import { Link, useRouter, usePathname } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 const supabase = createClient();
@@ -19,6 +19,7 @@ export function Footer() {
   const t = useTranslations("footer");
   const tc = useTranslations("constants");
   const tCommon = useTranslations();
+  const locale = useLocale();
 
   async function handleSignOut() {
     try {
@@ -235,8 +236,19 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t pt-6 text-center text-xs text-muted-foreground tracking-wide">
+        <div className="mt-12 border-t pt-6 text-center text-sm flex justify-between items-center text-muted-foreground tracking-wide">
           <p>&copy; {new Date().getFullYear()} {tCommon("appName")}. {t("allRightsReserved")}</p>
+          <a
+            href="https://darisi.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-0.5 text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+          >
+            {locale === "en" && t("poweredBy")}
+            <Image src="/logos/darisi.svg" alt="DARISI" width={25} height={25} />
+            <span className="font-semibold tracking-widest uppercase">DARISI</span>
+            {locale !== "en" && <span>{t("poweredBy")}</span>}
+          </a>
         </div>
       </div>
     </footer>
