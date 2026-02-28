@@ -77,7 +77,7 @@ export async function POST(request: Request) {
           data: data || {},
           android: {
             priority: "high",
-            notification: { channelId: "default", sound: "default" },
+            notification: { channelId: "default", sound: "default", color: "#7a462e" },
           },
         });
         sentCount = 1;
@@ -104,7 +104,7 @@ export async function POST(request: Request) {
           data: data || {},
           android: {
             priority: "high",
-            notification: { channelId: "default", sound: "default" },
+            notification: { channelId: "default", sound: "default", color: "#7a462e" },
           },
         });
         sentCount = response.successCount;

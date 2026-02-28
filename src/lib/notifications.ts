@@ -71,7 +71,7 @@ export async function sendOrderStatusNotification(
       },
       android: {
         priority: "high",
-        notification: { channelId: "orders", sound: "default" },
+        notification: { channelId: "orders", sound: "default", color: "#7a462e" },
       },
     });
 
