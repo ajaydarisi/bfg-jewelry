@@ -146,6 +146,7 @@ export type Database = {
           is_sale: boolean;
           is_rental: boolean;
           rental_price: number | null;
+          rental_discount_price: number | null;
           rental_deposit: number | null;
           max_rental_days: number | null;
           created_at: string;
@@ -170,6 +171,7 @@ export type Database = {
           is_sale?: boolean;
           is_rental?: boolean;
           rental_price?: number | null;
+          rental_discount_price?: number | null;
           rental_deposit?: number | null;
           max_rental_days?: number | null;
           created_at?: string;
@@ -194,6 +196,7 @@ export type Database = {
           is_sale?: boolean;
           is_rental?: boolean;
           rental_price?: number | null;
+          rental_discount_price?: number | null;
           rental_deposit?: number | null;
           max_rental_days?: number | null;
           created_at?: string;

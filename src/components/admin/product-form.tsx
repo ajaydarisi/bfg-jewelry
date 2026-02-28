@@ -96,6 +96,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
       is_sale: product?.is_sale ?? true,
       is_rental: product?.is_rental ?? false,
       rental_price: product?.rental_price ?? null,
+      rental_discount_price: product?.rental_discount_price ?? null,
       rental_deposit: product?.rental_deposit ?? null,
       max_rental_days: product?.max_rental_days ?? null,
     },
@@ -190,6 +191,10 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         formData.set(
           "rental_price",
           data.rental_price ? String(data.rental_price) : ""
+        );
+        formData.set(
+          "rental_discount_price",
+          data.rental_discount_price ? String(data.rental_discount_price) : ""
         );
         formData.set(
           "rental_deposit",
@@ -413,7 +418,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                   <CardTitle>Rental Pricing</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <FormField
                       control={form.control}
                       name="rental_price"
@@ -426,6 +431,33 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                               step="0.01"
                               min="0"
                               placeholder="Per rental"
+                              value={field.value ?? ""}
+                              onChange={(e) =>
+                                field.onChange(
+                                  e.target.value
+                                    ? parseFloat(e.target.value)
+                                    : null
+                                )
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="rental_discount_price"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Discount Rental Price</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              min="0"
+                              placeholder="Leave empty if no discount"
                               value={field.value ?? ""}
                               onChange={(e) =>
                                 field.onChange(
