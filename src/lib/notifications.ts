@@ -152,6 +152,11 @@ export async function sendProductNotification(
   const imageUrl = product.images?.[0] || undefined;
 
   const messaging = getFirebaseMessaging();
+  const channelId = type === "price_drop" || type === "back_in_stock"
+    ? "wishlist"
+    : type === "new_product"
+      ? "new_products"
+      : "default";
   const notificationPayload = {
     notification: { title, body, imageUrl },
     data: {
@@ -161,7 +166,7 @@ export async function sendProductNotification(
     },
     android: {
       priority: "high" as const,
-      notification: { channelId: "default", sound: "default", color: "#7a462e" },
+      notification: { channelId, sound: "default", color: "#7a462e" },
     },
   };
 
