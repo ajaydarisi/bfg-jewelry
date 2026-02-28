@@ -282,9 +282,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <span className="text-muted-foreground">{t("rentalPrice")}</span>
-                  <span className="ml-2 font-medium">
-                    {formatPrice(typedProduct.rental_price)}
-                  </span>
+                  <div className="ml-2">
+                    <PriceDisplay
+                      price={typedProduct.rental_price}
+                      discountPrice={typedProduct.rental_discount_price}
+                      size="sm"
+                    />
+                  </div>
                 </div>
                 {typedProduct.rental_deposit && (
                   <div>

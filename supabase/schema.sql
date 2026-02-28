@@ -71,6 +71,7 @@ create table public.products (
   is_sale boolean not null default true,
   is_rental boolean not null default false,
   rental_price numeric(10,2) check (rental_price >= 0),
+  rental_discount_price numeric(10,2) check (rental_discount_price >= 0),
   rental_deposit numeric(10,2) check (rental_deposit >= 0),
   max_rental_days integer check (max_rental_days > 0),
   created_at timestamptz default now(),

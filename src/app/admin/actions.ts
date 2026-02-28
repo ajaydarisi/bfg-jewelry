@@ -31,6 +31,7 @@ export async function createProduct(formData: FormData) {
     is_sale: raw.is_sale === "true",
     is_rental: raw.is_rental === "true",
     rental_price: raw.rental_price ? Number(raw.rental_price) : null,
+    rental_discount_price: raw.rental_discount_price ? Number(raw.rental_discount_price) : null,
     rental_deposit: raw.rental_deposit ? Number(raw.rental_deposit) : null,
     max_rental_days: raw.max_rental_days ? Number(raw.max_rental_days) : null,
   });
@@ -69,6 +70,7 @@ export async function updateProduct(id: string, formData: FormData) {
     is_sale: raw.is_sale === "true",
     is_rental: raw.is_rental === "true",
     rental_price: raw.rental_price ? Number(raw.rental_price) : null,
+    rental_discount_price: raw.rental_discount_price ? Number(raw.rental_discount_price) : null,
     rental_deposit: raw.rental_deposit ? Number(raw.rental_deposit) : null,
     max_rental_days: raw.max_rental_days ? Number(raw.max_rental_days) : null,
   });

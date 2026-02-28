@@ -88,6 +88,7 @@ export const productSchema = z
     is_sale: z.boolean().default(true),
     is_rental: z.boolean().default(false),
     rental_price: z.number().positive().optional().nullable(),
+    rental_discount_price: z.number().positive().optional().nullable(),
     rental_deposit: z.number().positive().optional().nullable(),
     max_rental_days: z.number().int().positive().optional().nullable(),
   })

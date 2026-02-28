@@ -83,6 +83,7 @@ export function ProductCard({ product }: ProductCardProps) {
           ) : product.is_rental && product.rental_price ? (
             <PriceDisplay
               price={product.rental_price}
+              discountPrice={product.rental_discount_price}
               size="sm"
             />
           ) : (

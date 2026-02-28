@@ -80,8 +80,8 @@ export function WishlistContent({ products }: WishlistContentProps) {
               </Link>
               <div className="mt-1">
                 <PriceDisplay
-                  price={product.price}
-                  discountPrice={product.discount_price}
+                  price={product.is_sale ? product.price : (product.rental_price ?? product.price)}
+                  discountPrice={product.is_sale ? product.discount_price : product.rental_discount_price}
                   size="sm"
                 />
               </div>
