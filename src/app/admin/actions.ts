@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { productSchema, couponSchema } from "@/lib/validators";
 import { generateSlug } from "@/lib/formatters";
+import { sendOrderStatusNotification } from "@/lib/notifications";
 import type { OrderStatus } from "@/types/order";
 
 // ---------------------------------------------------------------------------
@@ -146,6 +147,10 @@ export async function updateOrderStatus(orderId: string, status: OrderStatus) {
 
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);
+
+  // Send push notification for order status change
+  sendOrderStatusNotification(orderId, status).catch(console.error);
+
   return { success: true };
 }
 

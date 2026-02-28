@@ -305,3 +305,59 @@ create trigger update_addresses_updated_at before update on public.addresses
   for each row execute procedure public.update_updated_at();
 create trigger update_payment_transactions_updated_at before update on public.payment_transactions
   for each row execute procedure public.update_updated_at();
+
+-- ============================================
+-- PUSH NOTIFICATIONS
+-- ============================================
+
+-- DEVICE TOKENS (FCM push notification tokens)
+create table public.device_tokens (
+  id uuid default uuid_generate_v4() primary key,
+  user_id uuid references public.profiles(id) on delete cascade,
+  token text not null unique,
+  platform text not null default 'android' check (platform in ('android', 'ios', 'web')),
+  is_active boolean default true,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+create index idx_device_tokens_user on public.device_tokens(user_id);
+create index idx_device_tokens_active on public.device_tokens(is_active) where is_active = true;
+
+alter table public.device_tokens enable row level security;
+
+create policy "Users manage own device tokens" on public.device_tokens
+  for all using (auth.uid() = user_id);
+
+create policy "Anyone can insert device tokens" on public.device_tokens
+  for insert with check (true);
+
+create trigger update_device_tokens_updated_at before update on public.device_tokens
+  for each row execute procedure public.update_updated_at();
+
+-- NOTIFICATIONS (history of sent notifications)
+create table public.notifications (
+  id uuid default uuid_generate_v4() primary key,
+  title text not null,
+  body text not null,
+  image_url text,
+  data jsonb default '{}',
+  type text not null default 'custom'
+    check (type in ('order_update', 'promotion', 'price_drop', 'back_in_stock', 'custom')),
+  target_type text not null default 'all'
+    check (target_type in ('all', 'user', 'topic')),
+  target_value text,
+  sent_count integer default 0,
+  failed_count integer default 0,
+  status text not null default 'draft'
+    check (status in ('draft', 'sending', 'sent', 'failed')),
+  sent_at timestamptz,
+  created_by uuid references public.profiles(id) on delete set null,
+  created_at timestamptz default now()
+);
+
+create index idx_notifications_type on public.notifications(type);
+create index idx_notifications_status on public.notifications(status);
+create index idx_notifications_created on public.notifications(created_at desc);
+
+alter table public.notifications enable row level security;

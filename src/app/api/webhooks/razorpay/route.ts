@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/lib/razorpay/verify";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendOrderStatusNotification } from "@/lib/notifications";
 
 export async function POST(request: Request) {
   try {
@@ -66,6 +67,11 @@ export async function POST(request: Request) {
           .delete()
           .eq("user_id", order.user_id);
       }
+
+      // Send push notification for payment confirmation
+      sendOrderStatusNotification(transaction.order_id, "paid").catch(
+        console.error
+      );
     }
 
     if (event.event === "payment.failed") {

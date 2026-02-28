@@ -10,6 +10,7 @@ import {
   Tag,
   Users,
   Ticket,
+  Bell,
   Sparkles,
   Menu,
 } from "lucide-react";
@@ -31,6 +32,7 @@ const navItems = [
   { label: "Categories", href: "/admin/categories", icon: Tag },
   { label: "Users", href: "/admin/users", icon: Users },
   { label: "Coupons", href: "/admin/coupons", icon: Ticket },
+  { label: "Notifications", href: "/admin/notifications", icon: Bell },
 ];
 
 function AdminNav({ onNavigate }: { onNavigate?: () => void }) {

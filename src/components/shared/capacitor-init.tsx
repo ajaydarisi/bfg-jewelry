@@ -6,6 +6,7 @@ import { App } from "@capacitor/app";
 import { Browser } from "@capacitor/browser";
 import { StatusBar, Style } from "@capacitor/status-bar";
 import { SplashScreen } from "@capacitor/splash-screen";
+import { initPushNotifications } from "@/lib/push-notifications";
 
 export function CapacitorInit() {
   useEffect(() => {
@@ -16,6 +17,9 @@ export function CapacitorInit() {
     StatusBar.setOverlaysWebView({ overlay: false }).catch(() => {});
 
     SplashScreen.hide().catch(() => {});
+
+    // Initialize push notifications
+    initPushNotifications().catch(console.error);
 
     App.addListener("backButton", ({ canGoBack }) => {
       if (canGoBack) {

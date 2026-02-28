@@ -35,6 +35,9 @@ const config: CapacitorConfig = {
       backgroundColor: "#7a462e",
       overlaysWebView: false,
     },
+    FirebaseMessaging: {
+      presentationOptions: ["badge", "sound", "alert"],
+    },
   },
   android: {
     allowMixedContent: !!devUrl,

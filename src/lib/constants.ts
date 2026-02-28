@@ -107,7 +107,22 @@ export const ROUTES = {
   adminCategories: "/admin/categories",
   adminUsers: "/admin/users",
   adminCoupons: "/admin/coupons",
+  adminNotifications: "/admin/notifications",
 } as const;
+
+export const NOTIFICATION_TYPES = [
+  { value: "custom", label: "Custom Message" },
+  { value: "promotion", label: "Promotion" },
+  { value: "order_update", label: "Order Update" },
+  { value: "price_drop", label: "Price Drop" },
+  { value: "back_in_stock", label: "Back in Stock" },
+] as const;
+
+export const NOTIFICATION_TARGETS = [
+  { value: "all", label: "All Users" },
+  { value: "user", label: "Specific User" },
+  { value: "topic", label: "Topic" },
+] as const;
 
 export const BUSINESS_INFO = {
   name: "Bhagyalakshmi Future Gold",
