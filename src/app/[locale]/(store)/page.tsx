@@ -70,11 +70,45 @@ const getTopCategories = unstable_cache(
   { revalidate: 300 }
 );
 
+const getHeroRentalProduct = unstable_cache(
+  async () => {
+    const supabase = createAdminClient();
+    // Try marriage-rental-sets category first
+    const { data: category } = await supabase
+      .from("categories")
+      .select("id")
+      .eq("slug", "marriage-rental-sets")
+      .single();
+    if (category) {
+      const { data } = await supabase
+        .from("products")
+        .select("name, images")
+        .eq("category_id", category.id)
+        .eq("is_active", true)
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (data?.[0]?.images?.[0]) return data[0];
+    }
+    // Fallback: newest product with an image from any category
+    const { data: fallback } = await supabase
+      .from("products")
+      .select("name, images")
+      .eq("is_active", true)
+      .not("images", "eq", "{}")
+      .order("created_at", { ascending: false })
+      .limit(1);
+    return fallback?.[0] ?? null;
+  },
+  ["hero-rental-product"],
+  { revalidate: 300 }
+);
+
 export default async function HomePage() {
-  const [featuredProducts, newProducts, topCategories] = await Promise.all([
+  const [featuredProducts, newProducts, topCategories, heroRentalProduct] = await Promise.all([
     getFeaturedProducts(),
     getNewProducts(),
     getTopCategories(),
+    getHeroRentalProduct(),
   ]);
 
   const locale = await getLocale();
@@ -154,49 +188,89 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {process.env.NEXT_PUBLIC_CONFETTI_ENABLED === "true" && <Confetti />}
-      {/* Hero Section */}
-      <section className="relative h-[70vh] min-h-125 max-h-200 overflow-hidden">
-        <Image
-          src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=1600&q=80"
-          alt="Fashion jewellery collection"
-          fill
-          priority
-          fetchPriority="high"
-          sizes="100vw"
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-linear-to-r from-black/50 via-black/25 to-transparent" />
-        <div className="container mx-auto relative h-full flex items-center px-4">
-          <div className="max-w-xl text-white">
-            <p className="text-xs uppercase tracking-[0.2em] mb-4 text-white/80">
-              <span className="underline decoration-white/50 underline-offset-4 decoration-2">{t("hero.badge")}</span>
-            </p>
-            <h1 className="text-4xl md:text-6xl leading-tight">
-              {t("hero.titleLine1")}
-              <br />
-              <span className="underline decoration-white/50 underline-offset-4 decoration-2">{t("hero.titleLine2")}</span>
-            </h1>
-            <p className="mt-4 text-base md:text-lg text-white/80 max-w-md font-sans">
-              {t("hero.subtitle")}
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Button
-                size="lg"
-                className="bg-white text-neutral-900 hover:bg-white/90"
-                asChild
-              >
-                <Link href={ROUTES.products}>{t("hero.shopCollection")}</Link>
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white bg-transparent text-white hover:bg-white/10"
-                asChild
-              >
-                <Link href={`${ROUTES.products}?category=marriage-rental-sets`}>
-                  {t("hero.rentalSets")}
-                </Link>
-              </Button>
+      {/* Hero Section — Wedding Season */}
+      <section className="relative overflow-hidden wedding-hero">
+        {/* Subtle traditional dot pattern overlay */}
+        <div className="absolute inset-0 wedding-hero-pattern" />
+        {/* Soft vignette */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.3)_100%)]" />
+
+        <div className="container mx-auto relative px-4 py-12 md:py-20 lg:py-24">
+          <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+            {/* Image — shows first on mobile, right side on desktop */}
+            <div className="order-first lg:order-last shrink-0 w-full max-w-xs sm:max-w-sm lg:max-w-md">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-amber-900/40 ring-2 ring-amber-400/30">
+                <Image
+                  src={heroRentalProduct?.images?.[0] || "https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?w=800&q=80"}
+                  alt={heroRentalProduct?.name || "South Indian bridal wedding jewelry set"}
+                  width={480}
+                  height={600}
+                  priority
+                  fetchPriority="high"
+                  sizes="(max-width: 640px) 80vw, (max-width: 1024px) 50vw, 400px"
+                  className="object-cover w-full h-64 sm:h-80 lg:h-112"
+                />
+                {/* Gold corner accents */}
+                <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-amber-400/50 rounded-tl-2xl" />
+                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-amber-400/50 rounded-br-2xl" />
+              </div>
+            </div>
+
+            {/* Text Content */}
+            <div className="flex-1 text-center lg:text-left">
+              {/* Badge */}
+              <div className="wedding-ornament lg:justify-start mb-6">
+                <span className="text-xs uppercase tracking-[0.25em] text-amber-300/90 font-sans">
+                  {t("hero.badge")}
+                </span>
+              </div>
+
+              {/* Headline */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-amber-50">
+                {t("hero.titleLine1")}
+                <br />
+                <span className="text-amber-300">{t("hero.titleLine2")}</span>
+              </h1>
+
+              {/* Subheading */}
+              <p className="mt-5 text-base md:text-lg text-amber-100/80 max-w-xl mx-auto lg:mx-0 font-brand">
+                {t("hero.subtitle")}
+              </p>
+
+              {/* Description */}
+              <p className="mt-3 text-sm md:text-base text-amber-100/60 max-w-lg mx-auto lg:mx-0 font-sans">
+                {t("hero.description")}
+              </p>
+
+              {/* Ornamental divider */}
+              <div className="mt-8 flex items-center gap-3 justify-center lg:justify-start">
+                <span className="h-px w-12 bg-linear-to-r from-transparent to-amber-400/50" />
+                <span className="text-amber-400/70 text-lg">✦</span>
+                <span className="h-px w-12 bg-linear-to-l from-transparent to-amber-400/50" />
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button
+                  size="lg"
+                  className="btn-gold-shimmer text-amber-950 font-semibold hover:opacity-90 transition-opacity"
+                  asChild
+                >
+                  <Link href={`${ROUTES.products}?category=marriage-rental-sets`}>
+                    {t("hero.shopCollection")}
+                  </Link>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-amber-400/50 bg-transparent text-amber-200 hover:bg-amber-400/10 hover:border-amber-400/70"
+                  asChild
+                >
+                  <Link href={`${ROUTES.products}?category=marriage-rental-sets&sort=discount`}>
+                    {t("hero.rentalSets")}
+                  </Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>

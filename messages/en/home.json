@@ -1,11 +1,12 @@
 {
   "hero": {
-    "badge": "New Collection 2026",
-    "titleLine1": "Adorn Your",
-    "titleLine2": "Every Moment",
-    "subtitle": "Explore our exquisite collection of fashion jewellery, designed to celebrate your unique style.",
-    "shopCollection": "Shop Collection",
-    "rentalSets": "Rental Sets"
+    "badge": "Wedding Season Special",
+    "titleLine1": "Celebrate This Wedding",
+    "titleLine2": "Season in Style",
+    "subtitle": "Exclusive Marriage Rental Sets Collection — Now Available at Special Discounted Prices",
+    "description": "Discover premium wedding rental sets curated specially for South Indian celebrations. Look royal, spend smart, and make your big moments unforgettable.",
+    "shopCollection": "Explore Collection",
+    "rentalSets": "View Discounts"
   },
   "categories": {
     "label": "Explore",
