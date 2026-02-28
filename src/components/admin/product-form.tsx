@@ -14,7 +14,6 @@ import { MATERIALS, PRODUCT_TAGS } from "@/lib/constants";
 import { createProduct, updateProduct } from "@/app/admin/actions";
 import { uploadProductImage, deleteProductImage } from "@/lib/supabase/storage";
 import type { Product, Category } from "@/types/product";
-import { ProductNotificationButtons } from "@/components/admin/product-notification-buttons";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,6 +72,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
     product?.images.map((url) => ({ url })) ?? []
   );
   const [isUploading, setIsUploading] = useState(false);
+  const [notifications, setNotifications] = useState<string[]>([]);
 
   const categoryTree = buildCategoryTree(categories);
 
@@ -221,6 +221,20 @@ export function ProductForm({ product, categories }: ProductFormProps) {
           toast.error(result.error);
         } else {
           toast.success(product ? "Product updated" : "Product created");
+
+          // Fire selected notifications after successful save
+          const productId = product?.id || ("productId" in result ? result.productId : undefined);
+          if (productId && notifications.length > 0) {
+            for (const type of notifications) {
+              fetch("/api/notifications/send-product", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ productId, type }),
+              }).catch(() => {});
+            }
+            setNotifications([]);
+          }
+
           router.push("/admin/products");
           router.refresh();
         }
@@ -795,12 +809,45 @@ export function ProductForm({ product, categories }: ProductFormProps) {
               </CardContent>
             </Card>
 
-            {product && (
-              <ProductNotificationButtons
-                productId={product.id}
-                productName={product.name}
-              />
-            )}
+            <Card>
+              <CardHeader>
+                <CardTitle>Notifications</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {[
+                    { value: "price_drop", label: "Price Drop" },
+                    { value: "new_product", label: "New Product" },
+                    { value: "back_in_stock", label: "Back in Stock" },
+                  ].map((n) => (
+                    <div key={n.value} className="flex items-center gap-2">
+                      <Checkbox
+                        id={`notif-${n.value}`}
+                        checked={notifications.includes(n.value)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setNotifications((prev) => [...prev, n.value]);
+                          } else {
+                            setNotifications((prev) =>
+                              prev.filter((t) => t !== n.value)
+                            );
+                          }
+                        }}
+                      />
+                      <Label
+                        htmlFor={`notif-${n.value}`}
+                        className="cursor-pointer font-normal"
+                      >
+                        {n.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Selected notifications will be sent to all users on save.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
 

@@ -107,11 +107,14 @@ export async function sendOrderStatusNotification(
 
 const PRODUCT_NOTIFICATION_TEMPLATES: Record<
   string,
-  { title: string; body: (name: string, price: string) => string }
+  { title: string; body: (name: string, price: string, isRentalOnly: boolean) => string }
 > = {
   price_drop: {
     title: "Price Drop!",
-    body: (name, price) => `${name} is now available at ₹${price}!`,
+    body: (name, price, isRentalOnly) =>
+      isRentalOnly
+        ? `${name} is now available for rent at ₹${price}!`
+        : `${name} is now available at ₹${price}!`,
   },
   new_product: {
     title: "New Arrival!",
@@ -131,7 +134,7 @@ export async function sendProductNotification(
 
   const { data: product } = await supabase
     .from("products")
-    .select("name, slug, price, discount_price, images")
+    .select("name, slug, price, discount_price, is_sale, is_rental, rental_price, rental_discount_price, images")
     .eq("id", productId)
     .single();
 
@@ -140,9 +143,12 @@ export async function sendProductNotification(
   const template = PRODUCT_NOTIFICATION_TEMPLATES[type];
   if (!template) throw new Error("Invalid notification type");
 
-  const price = product.discount_price ?? product.price;
+  const isRentalOnly = product.is_rental && !product.is_sale;
+  const price = isRentalOnly
+    ? (product.rental_discount_price ?? product.rental_price ?? product.price)
+    : (product.discount_price ?? product.price);
   const title = template.title;
-  const body = template.body(product.name, String(price));
+  const body = template.body(product.name, String(price), isRentalOnly);
   const imageUrl = product.images?.[0] || undefined;
 
   const messaging = getFirebaseMessaging();

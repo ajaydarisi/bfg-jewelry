@@ -39,7 +39,11 @@ export async function createProduct(formData: FormData) {
 
   const supabase = createAdminClient();
 
-  const { error } = await supabase.from("products").insert(data);
+  const { data: inserted, error } = await supabase
+    .from("products")
+    .insert(data)
+    .select("id")
+    .single();
 
   if (error) {
     return { error: error.message };
@@ -47,7 +51,8 @@ export async function createProduct(formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/products");
-  return { success: true };
+  revalidatePath(`/products/${data.slug}`);
+  return { success: true, productId: inserted.id };
 }
 
 export async function updateProduct(id: string, formData: FormData) {
@@ -89,6 +94,7 @@ export async function updateProduct(id: string, formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/products");
+  revalidatePath(`/products/${data.slug}`);
   revalidatePath(`/admin/products/${id}/edit`);
   return { success: true };
 }
