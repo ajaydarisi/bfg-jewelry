@@ -165,14 +165,14 @@ export default async function HomePage() {
           priority
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover object-[70%_30%] md:object-[center_30%] opacity-50 md:opacity-100"
+          className="object-cover object-[70%_30%] md:object-[center_30%] opacity-70 dark:opacity-50 md:opacity-100"
         />
         {/* Dark gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/60 to-black/30 md:bg-linear-to-r md:from-black/80 md:via-black/50 md:to-black/10" />
+        <div className="absolute inset-0 bg-linear-to-t from-white/90 via-white/70 to-white/40 md:bg-linear-to-r md:from-white/70 md:via-0% md:to-transparent dark:from-black/85 dark:via-black/60 dark:to-black/30 md:dark:from-black/80 md:dark:via-black/50 md:dark:to-transparent" />
         {/* Subtle traditional dot pattern overlay */}
         <div className="absolute inset-0 wedding-hero-pattern" />
         {/* Soft vignette */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.3)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.05)_100%)] dark:bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.3)_100%)]" />
 
         <div className="container mx-auto relative px-4 py-8 pb-10 md:py-20 lg:py-24 flex items-center min-h-[inherit]">
           <div className="max-w-xl lg:max-w-2xl text-center lg:text-left">
@@ -184,19 +184,19 @@ export default async function HomePage() {
             </div>
 
             {/* Headline */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-white">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight text-foreground dark:text-white">
               {t("hero.titleLine1")}
               <br />
               <span className="text-primary">{t("hero.titleLine2")}</span>
             </h1>
 
             {/* Subheading */}
-            <p className="mt-5 text-base md:text-lg text-white/85 max-w-xl mx-auto lg:mx-0 font-brand">
+            <p className="mt-5 text-base md:text-lg text-foreground/85 dark:text-white/85 max-w-xl mx-auto lg:mx-0 font-brand">
               {t("hero.subtitle")}
             </p>
 
             {/* Description */}
-            <p className="mt-3 text-sm md:text-base text-white/65 max-w-lg mx-auto lg:mx-0 font-sans">
+            <p className="mt-3 text-sm md:text-base text-muted-foreground dark:text-white/65 max-w-lg mx-auto lg:mx-0 font-sans">
               {t("hero.description")}
             </p>
 
@@ -211,7 +211,7 @@ export default async function HomePage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Button
                 size="lg"
-                className="btn-gold-shimmer text-foreground font-semibold hover:opacity-90 transition-opacity"
+                className="btn-gold-shimmer text-white font-semibold hover:opacity-90 transition-opacity"
                 asChild
               >
                 <Link href={`${ROUTES.products}?category=marriage-rental-sets`}>
@@ -221,7 +221,7 @@ export default async function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-primary/50 bg-transparent text-white hover:bg-primary/10 hover:border-primary/70"
+                className="border-primary/50 bg-transparent dark:text-white text-primary hover:text-primary hover:bg-primary/10 hover:border-primary/70"
                 asChild
               >
                 <Link href={`${ROUTES.products}?category=marriage-rental-sets&sort=discount`}>
@@ -260,7 +260,7 @@ export default async function HomePage() {
       </section>
 
       {/* Brand Story */}
-      <section className="py-20 bg-accent/30">
+      <section className="py-20 bg-accent">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
