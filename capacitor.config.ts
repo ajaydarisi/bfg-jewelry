@@ -11,6 +11,7 @@ const config: CapacitorConfig = {
   server: {
     url: devUrl || "https://bfg.darisi.in",
     cleartext: !!devUrl,
+    errorPath: "offline.html",
     allowNavigation: [
       "bfg.darisi.in",
       "*.supabase.co",
@@ -25,13 +26,13 @@ const config: CapacitorConfig = {
     SplashScreen: {
       launchShowDuration: 0,
       launchAutoHide: false,
-      backgroundColor: "#b8860b",
+      backgroundColor: "#7a462e",
       splashFullScreen: true,
       splashImmersive: true,
     },
     StatusBar: {
       style: "DARK",
-      backgroundColor: "#b8860b",
+      backgroundColor: "#7a462e",
       overlaysWebView: false,
     },
   },
