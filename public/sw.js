@@ -1,5 +1,9 @@
-const CACHE_NAME = "bfg-v1";
-const STATIC_ASSETS = ["/icons/icon-192x192.png", "/icons/icon-512x512.png"];
+const CACHE_NAME = "bfg-v2";
+const STATIC_ASSETS = [
+  "/icons/icon-192x192.png",
+  "/icons/icon-512x512.png",
+  "/offline.html",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -21,6 +25,13 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match("/offline.html"))
+    );
+    return;
+  }
 
   event.respondWith(
     fetch(event.request).catch(() => caches.match(event.request))
