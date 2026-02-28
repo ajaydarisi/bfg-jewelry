@@ -70,45 +70,11 @@ const getTopCategories = unstable_cache(
   { revalidate: 300 }
 );
 
-const getHeroRentalProduct = unstable_cache(
-  async () => {
-    const supabase = createAdminClient();
-    // Try marriage-rental-sets category first
-    const { data: category } = await supabase
-      .from("categories")
-      .select("id")
-      .eq("slug", "marriage-rental-sets")
-      .single();
-    if (category) {
-      const { data } = await supabase
-        .from("products")
-        .select("name, images")
-        .eq("category_id", category.id)
-        .eq("is_active", true)
-        .order("created_at", { ascending: false })
-        .limit(1);
-      if (data?.[0]?.images?.[0]) return data[0];
-    }
-    // Fallback: newest product with an image from any category
-    const { data: fallback } = await supabase
-      .from("products")
-      .select("name, images")
-      .eq("is_active", true)
-      .not("images", "eq", "{}")
-      .order("created_at", { ascending: false })
-      .limit(1);
-    return fallback?.[0] ?? null;
-  },
-  ["hero-rental-product"],
-  { revalidate: 300 }
-);
-
 export default async function HomePage() {
-  const [featuredProducts, newProducts, topCategories, heroRentalProduct] = await Promise.all([
+  const [featuredProducts, newProducts, topCategories] = await Promise.all([
     getFeaturedProducts(),
     getNewProducts(),
     getTopCategories(),
-    getHeroRentalProduct(),
   ]);
 
   const locale = await getLocale();
@@ -201,8 +167,8 @@ export default async function HomePage() {
             <div className="order-first lg:order-last shrink-0 w-full max-w-xs sm:max-w-sm lg:max-w-md">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-amber-900/40 ring-2 ring-amber-400/30">
                 <Image
-                  src={heroRentalProduct?.images?.[0] || "https://images.unsplash.com/photo-1610694955371-d4a3e0ce4b52?w=800&q=80"}
-                  alt={heroRentalProduct?.name || "South Indian bridal wedding jewelry set"}
+                  src="/images/hero.jpg"
+                  alt="South Indian bridal wedding jewelry set"
                   width={480}
                   height={600}
                   priority
