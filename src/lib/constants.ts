@@ -73,6 +73,7 @@ export const SORT_OPTIONS = [
   { value: "price-asc", label: "Price: Low → High" },
   { value: "price-desc", label: "Price: High → Low" },
   { value: "name-asc", label: "Name: A → Z" },
+  { value: "discount", label: "Discount" },
 ] as const;
 
 export const PRODUCTS_PER_PAGE = 12;

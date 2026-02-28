@@ -25,4 +25,4 @@ export interface ProductFilters {
   type?: "sale" | "rental" | "all";
 }
 
-export type SortOption = "newest" | "price-asc" | "price-desc" | "name-asc";
+export type SortOption = "newest" | "price-asc" | "price-desc" | "name-asc" | "discount";

@@ -276,7 +276,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </div>
 
           {/* Rental Pricing */}
-          {typedProduct.is_rental && typedProduct.rental_price && (
+          {!typedProduct.is_sale && typedProduct.is_rental && typedProduct.rental_price && (
             <div className="rounded-lg border bg-accent/50 p-4 space-y-2">
               <h3 className="font-semibold">{t("rentalDetails")}</h3>
               <div className="grid grid-cols-2 gap-2 text-sm">

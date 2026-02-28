@@ -122,6 +122,9 @@ const getFilteredProducts = unstable_cache(
       case "name-asc":
         query = query.order(locale === "te" ? "name_telugu" : "name", { ascending: true });
         break;
+      case "discount":
+        query = query.order("discount_price", { ascending: true, nullsFirst: false });
+        break;
       default:
         query = query.order("created_at", { ascending: false });
     }
