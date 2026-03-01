@@ -66,6 +66,10 @@ function buildCategoryTree(categories: Category[]) {
   }));
 }
 
+function roundPrice(v: number | null | undefined): number | null {
+  return v != null ? Math.round(Number(v) * 100) / 100 : null;
+}
+
 export function ProductForm({ product, copyFrom, categories }: ProductFormProps) {
   // Use copyFrom as source for defaults, but clear name/slug/images
   const source = product ?? copyFrom;
@@ -91,8 +95,8 @@ export function ProductForm({ product, copyFrom, categories }: ProductFormProps)
       slug: product?.slug ?? "",
       description: source?.description ?? "",
       description_telugu: source?.description_telugu ?? null,
-      price: source?.price ?? 0,
-      discount_price: source?.discount_price ?? null,
+      price: roundPrice(source?.price) ?? 0,
+      discount_price: roundPrice(source?.discount_price) ?? null,
       category_id: source?.category_id ?? "a0000000-0000-0000-0000-000000000008",
       stock: source?.stock ?? 1,
       material: source?.material ?? "Gold Plated",
@@ -102,9 +106,9 @@ export function ProductForm({ product, copyFrom, categories }: ProductFormProps)
       featured: source?.featured ?? false,
       is_sale: source?.is_sale ?? false,
       is_rental: source?.is_rental ?? true,
-      rental_price: product?.rental_price ?? null,
-      rental_discount_price: product?.rental_discount_price ?? null,
-      rental_deposit: product?.rental_deposit ?? null,
+      rental_price: roundPrice(product?.rental_price) ?? null,
+      rental_discount_price: roundPrice(product?.rental_discount_price) ?? null,
+      rental_deposit: roundPrice(product?.rental_deposit) ?? null,
       max_rental_days: 1,
       set_number: product?.set_number ?? null,
     },
