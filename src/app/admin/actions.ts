@@ -63,6 +63,7 @@ export async function createProduct(formData: FormData) {
     rental_discount_price: raw.rental_discount_price ? Number(raw.rental_discount_price) : null,
     rental_deposit: raw.rental_deposit ? Number(raw.rental_deposit) : null,
     max_rental_days: raw.max_rental_days ? Number(raw.max_rental_days) : null,
+    set_number: raw.set_number ? Number(raw.set_number) : null,
   });
 
   const supabase = createAdminClient();
@@ -107,6 +108,7 @@ export async function updateProduct(id: string, formData: FormData) {
     rental_discount_price: raw.rental_discount_price ? Number(raw.rental_discount_price) : null,
     rental_deposit: raw.rental_deposit ? Number(raw.rental_deposit) : null,
     max_rental_days: raw.max_rental_days ? Number(raw.max_rental_days) : null,
+    set_number: raw.set_number ? Number(raw.set_number) : null,
   });
 
   const supabase = createAdminClient();

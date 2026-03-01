@@ -105,6 +105,7 @@ export function ProductForm({ product, copyFrom, categories }: ProductFormProps)
       rental_discount_price: product?.rental_discount_price ?? null,
       rental_deposit: product?.rental_deposit ?? null,
       max_rental_days: 1,
+      set_number: product?.set_number ?? null,
     },
   });
 
@@ -235,6 +236,10 @@ export function ProductForm({ product, copyFrom, categories }: ProductFormProps)
         formData.set(
           "max_rental_days",
           data.max_rental_days ? String(data.max_rental_days) : ""
+        );
+        formData.set(
+          "set_number",
+          data.set_number ? String(data.set_number) : ""
         );
 
         for (const tag of data.tags) {
@@ -616,6 +621,31 @@ export function ProductForm({ product, copyFrom, categories }: ProductFormProps)
                               type="number"
                               min="1"
                               placeholder="Max rental days"
+                              value={field.value ?? ""}
+                              onChange={(e) =>
+                                field.onChange(
+                                  e.target.value
+                                    ? parseInt(e.target.value)
+                                    : null
+                                )
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="set_number"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Set Number</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="1"
+                              placeholder="e.g. 1"
                               value={field.value ?? ""}
                               onChange={(e) =>
                                 field.onChange(

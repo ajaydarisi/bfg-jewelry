@@ -34,7 +34,7 @@ interface ProductsPageProps {
 }
 
 const PRODUCT_LIST_FIELDS =
-  "id, name, name_telugu, slug, price, discount_price, images, tags, stock, is_sale, is_rental, rental_price, rental_discount_price, material, category:categories(name, name_telugu, slug)";
+  "id, name, name_telugu, slug, price, discount_price, images, tags, stock, is_sale, is_rental, rental_price, rental_discount_price, material, set_number, category:categories(name, name_telugu, slug)";
 
 const getAllCategories = unstable_cache(
   async () => {

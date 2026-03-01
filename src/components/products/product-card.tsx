@@ -74,6 +74,9 @@ export function ProductCard({ product }: ProductCardProps) {
         <h3 className="font-sans text-sm font-medium leading-snug group-hover:text-primary transition-colors">
           {displayName}
         </h3>
+        {product.set_number && (
+          <p className="text-xs text-muted-foreground">{td("setNumber", { number: product.set_number })}</p>
+        )}
         <div>
           {product.is_sale ? (
             <PriceDisplay

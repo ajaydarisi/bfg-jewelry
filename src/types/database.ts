@@ -149,6 +149,7 @@ export type Database = {
           rental_discount_price: number | null;
           rental_deposit: number | null;
           max_rental_days: number | null;
+          set_number: number | null;
           created_at: string;
           updated_at: string;
         };
@@ -174,6 +175,7 @@ export type Database = {
           rental_discount_price?: number | null;
           rental_deposit?: number | null;
           max_rental_days?: number | null;
+          set_number?: number | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -199,6 +201,7 @@ export type Database = {
           rental_discount_price?: number | null;
           rental_deposit?: number | null;
           max_rental_days?: number | null;
+          set_number?: number | null;
           created_at?: string;
           updated_at?: string;
         };

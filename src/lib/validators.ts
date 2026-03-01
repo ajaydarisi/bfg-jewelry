@@ -91,6 +91,7 @@ export const productSchema = z
     rental_discount_price: z.number().positive().optional().nullable(),
     rental_deposit: z.number().positive().optional().nullable(),
     max_rental_days: z.number().int().positive().optional().nullable(),
+    set_number: z.number().int().positive().optional().nullable(),
   })
   .refine((data) => data.is_sale || data.is_rental, {
     message: "Product must be available for sale, rental, or both",

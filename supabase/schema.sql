@@ -74,6 +74,7 @@ create table public.products (
   rental_discount_price numeric(10,2) check (rental_discount_price >= 0),
   rental_deposit numeric(10,2) check (rental_deposit >= 0),
   max_rental_days integer check (max_rental_days > 0),
+  set_number integer check (set_number > 0),
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );

@@ -259,6 +259,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <WishlistButton productId={typedProduct.id} variant="icon" />
               </div>
             </div>
+            {typedProduct.set_number && (
+              <p className="text-sm text-muted-foreground">
+                {t("setNumber", { number: typedProduct.set_number })}
+              </p>
+            )}
           </div>
 
           {typedProduct.is_sale && (

@@ -40,7 +40,8 @@
     "relatedProducts": "You May Also Like",
     "notFoundMeta": "Product Not Found",
     "metaDescription": "Shop {name} at Bhagyalakshmi Future Gold Commerce",
-    "rentalSetNote": "This is a complete set and is available for rent only as a whole. Individual items from the set cannot be rented separately."
+    "rentalSetNote": "This is a complete set and is available for rent only as a whole. Individual items from the set cannot be rented separately.",
+    "setNumber": "Set {number}"
   },
   "filters": {
     "title": "Filters",
