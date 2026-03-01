@@ -68,9 +68,24 @@ export async function createProduct(formData: FormData) {
 
   const supabase = createAdminClient();
 
+  // Deduplicate slug: if it already exists, append a random suffix
+  let slug = data.slug;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const { data: existing } = await supabase
+      .from("products")
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
+
+    if (!existing) break;
+
+    const suffix = Math.random().toString(36).substring(2, 6);
+    slug = `${data.slug}-${suffix}`;
+  }
+
   const { data: inserted, error } = await supabase
     .from("products")
-    .insert(data)
+    .insert({ ...data, slug })
     .select("id")
     .single();
 
@@ -80,7 +95,7 @@ export async function createProduct(formData: FormData) {
 
   revalidatePath("/admin/products");
   revalidatePath("/products");
-  revalidatePath(`/products/${data.slug}`);
+  revalidatePath(`/products/${slug}`);
   return { success: true, productId: inserted.id };
 }
 
