@@ -75,7 +75,11 @@ const columns: ColumnDef<ProductWithCategory>[] = [
       <SortableHeader column={column}>Price</SortableHeader>
     ),
     cell: ({ row }) => {
-      const { price, discount_price } = row.original;
+      const { price, discount_price, rental_price, is_rental, is_sale } = row.original;
+      const isRentalOnly = is_rental && !is_sale;
+      if (isRentalOnly && rental_price != null) {
+        return <span>{formatPrice(rental_price)}/day</span>;
+      }
       return (
         <div>
           <span>{formatPrice(discount_price ?? price)}</span>
@@ -258,13 +262,21 @@ function ProductMobileCard({ product }: { product: ProductWithCategory }) {
         </DropdownMenu>
       </div>
       <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
-        <span className="font-medium">
-          {formatPrice(product.discount_price ?? product.price)}
-        </span>
-        {product.discount_price && (
-          <span className="text-xs text-muted-foreground line-through">
-            {formatPrice(product.price)}
+        {product.is_rental && !product.is_sale && product.rental_price != null ? (
+          <span className="font-medium">
+            {formatPrice(product.rental_price)}/day
           </span>
+        ) : (
+          <>
+            <span className="font-medium">
+              {formatPrice(product.discount_price ?? product.price)}
+            </span>
+            {product.discount_price && (
+              <span className="text-xs text-muted-foreground line-through">
+                {formatPrice(product.price)}
+              </span>
+            )}
+          </>
         )}
         <Badge variant={product.stock > 0 ? "secondary" : "destructive"}>
           {product.stock} in stock
