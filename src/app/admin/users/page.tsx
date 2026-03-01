@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = { title: "Users" };
 import { createAdminClient } from "@/lib/supabase/admin";
 import { UsersTable } from "@/components/admin/users-table";
 

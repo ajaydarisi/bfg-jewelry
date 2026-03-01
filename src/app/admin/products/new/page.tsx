@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
+
+export const metadata: Metadata = { title: "New Product" };
 import { ProductForm } from "@/components/admin/product-form";
 
 export default async function NewProductPage() {

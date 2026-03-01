@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { IndianRupee, ShoppingBag, Package, Users } from "lucide-react";
+
+export const metadata: Metadata = { title: "Dashboard" };
 import { createAdminClient } from "@/lib/supabase/admin";
 import { formatPrice, formatDate } from "@/lib/formatters";
 import { StatsCard } from "@/components/admin/stats-card";

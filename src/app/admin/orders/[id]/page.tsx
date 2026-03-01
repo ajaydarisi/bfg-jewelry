@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -37,6 +38,19 @@ interface ShippingAddress {
 
 interface OrderDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: OrderDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = createAdminClient();
+  const { data: order } = await supabase
+    .from("orders")
+    .select("order_number")
+    .eq("id", id)
+    .single();
+  return { title: order ? `Order ${order.order_number}` : "Order" };
 }
 
 export default async function OrderDetailPage({

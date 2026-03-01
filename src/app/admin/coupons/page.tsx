@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CouponsManager } from "@/components/admin/coupons-manager";
+
+export const metadata: Metadata = { title: "Coupons" };
 
 export default async function AdminCouponsPage() {
   const supabase = createAdminClient();

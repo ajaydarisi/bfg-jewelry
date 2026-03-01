@@ -1,9 +1,23 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { ProductForm } from "@/components/admin/product-form";
 
 interface EditProductPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: EditProductPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const supabase = createAdminClient();
+  const { data: product } = await supabase
+    .from("products")
+    .select("name")
+    .eq("id", id)
+    .single();
+  return { title: product?.name ?? "Edit Product" };
 }
 
 export default async function EditProductPage({ params }: EditProductPageProps) {

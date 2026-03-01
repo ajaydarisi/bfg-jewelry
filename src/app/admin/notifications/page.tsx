@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { NotificationComposer } from "@/components/admin/notification-composer";
+
+export const metadata: Metadata = { title: "Notifications" };
 import { NotificationsTable } from "@/components/admin/notifications-table";
 
 export default async function AdminNotificationsPage() {

@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { OrdersTable } from "@/components/admin/orders-table";
+
+export const metadata: Metadata = { title: "Orders" };
 
 export default async function AdminOrdersPage() {
   const supabase = createAdminClient();
