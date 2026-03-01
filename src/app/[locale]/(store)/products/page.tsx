@@ -78,9 +78,24 @@ const getProductCount = unstable_cache(
     if (tags.length > 0) query = query.overlaps("tags", tags);
     if (type === "sale") query = query.eq("is_sale", true);
     else if (type === "rental") query = query.eq("is_rental", true);
-    const priceCol = type === "rental" ? "rental_price" : "price";
-    if (minPrice > 0) query = query.gte(priceCol, minPrice);
-    if (maxPrice > 0) query = query.lte(priceCol, maxPrice);
+    if (type === "rental") {
+      if (minPrice > 0) query = query.gte("rental_price", minPrice);
+      if (maxPrice > 0) query = query.lte("rental_price", maxPrice);
+    } else if (type === "sale") {
+      if (minPrice > 0) query = query.gte("price", minPrice);
+      if (maxPrice > 0) query = query.lte("price", maxPrice);
+    } else {
+      if (minPrice > 0) {
+        query = query.or(
+          `and(is_rental.eq.true,rental_price.gte.${minPrice}),and(is_rental.eq.false,price.gte.${minPrice})`
+        );
+      }
+      if (maxPrice > 0) {
+        query = query.or(
+          `and(is_rental.eq.true,rental_price.lte.${maxPrice}),and(is_rental.eq.false,price.lte.${maxPrice})`
+        );
+      }
+    }
     if (search) query = query.ilike("name", `%${search}%`);
 
     const { count } = await query;
@@ -122,8 +137,24 @@ const getFilteredProducts = unstable_cache(
     if (type === "sale") query = query.eq("is_sale", true);
     else if (type === "rental") query = query.eq("is_rental", true);
     const priceCol = type === "rental" ? "rental_price" : "price";
-    if (minPrice > 0) query = query.gte(priceCol, minPrice);
-    if (maxPrice > 0) query = query.lte(priceCol, maxPrice);
+    if (type === "rental") {
+      if (minPrice > 0) query = query.gte("rental_price", minPrice);
+      if (maxPrice > 0) query = query.lte("rental_price", maxPrice);
+    } else if (type === "sale") {
+      if (minPrice > 0) query = query.gte("price", minPrice);
+      if (maxPrice > 0) query = query.lte("price", maxPrice);
+    } else {
+      if (minPrice > 0) {
+        query = query.or(
+          `and(is_rental.eq.true,rental_price.gte.${minPrice}),and(is_rental.eq.false,price.gte.${minPrice})`
+        );
+      }
+      if (maxPrice > 0) {
+        query = query.or(
+          `and(is_rental.eq.true,rental_price.lte.${maxPrice}),and(is_rental.eq.false,price.lte.${maxPrice})`
+        );
+      }
+    }
     if (search) query = query.ilike("name", `%${search}%`);
 
     const isDiscountSort = sort === "discount";
