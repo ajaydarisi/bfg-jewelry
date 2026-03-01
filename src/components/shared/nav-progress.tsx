@@ -23,15 +23,30 @@ export function NavProgress() {
     return () => clearTimeout(timer);
   }, [state]);
 
+  // Safety timeout: reset loader if no navigation happens within 5s
+  useEffect(() => {
+    if (state !== "loading") return;
+    const timer = setTimeout(() => setState("idle"), 5000);
+    return () => clearTimeout(timer);
+  }, [state]);
+
   // Intercept clicks on links to start the progress bar
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      const anchor = (e.target as HTMLElement).closest("a");
+      const target = e.target as HTMLElement;
+
+      // Skip clicks on interactive elements inside links (buttons, inputs, etc.)
+      if (target.closest("button, [role='button'], input, select, textarea")) {
+        return;
+      }
+
+      const anchor = target.closest("a");
       if (!anchor) return;
 
       const href = anchor.getAttribute("href");
       if (
         !href ||
+        href === pathname ||
         href.startsWith("#") ||
         href.startsWith("http") ||
         href.startsWith("mailto:") ||
@@ -48,7 +63,7 @@ export function NavProgress() {
 
     document.addEventListener("click", handleClick, true);
     return () => document.removeEventListener("click", handleClick, true);
-  }, []);
+  }, [pathname]);
 
   if (state === "idle") return null;
 
