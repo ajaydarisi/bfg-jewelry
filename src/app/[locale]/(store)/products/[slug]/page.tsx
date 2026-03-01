@@ -315,6 +315,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   </div>
                 )}
               </div>
+              {typedProduct.category?.slug === "marriage-rental-sets" && (
+                <p className="text-sm text-muted-foreground italic mt-2">
+                  {t("rentalSetNote")}
+                </p>
+              )}
             </div>
           )}
 

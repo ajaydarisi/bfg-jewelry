@@ -104,7 +104,7 @@ export function ProductForm({ product, copyFrom, categories }: ProductFormProps)
       rental_price: product?.rental_price ?? null,
       rental_discount_price: product?.rental_discount_price ?? null,
       rental_deposit: product?.rental_deposit ?? null,
-      max_rental_days: product?.max_rental_days ?? 1,
+      max_rental_days: 1,
     },
   });
 
