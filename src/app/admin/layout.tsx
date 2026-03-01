@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { AdminSidebar, AdminMobileHeader } from "@/components/layout/admin-sidebar";
+import { AdminSidebar, AdminMobileNav, AdminHeader } from "@/components/layout/admin-sidebar";
 import { ThemeProvider } from "@/components/shared/theme-provider";
 import { SetHtmlLang } from "@/components/shared/set-html-lang";
 import { Toaster } from "@/components/ui/sonner";
@@ -28,7 +28,7 @@ export default async function AdminLayout({
   const adminClient = createAdminClient();
   const { data: profile } = await adminClient
     .from("profiles")
-    .select("role")
+    .select("role, full_name")
     .eq("id", user.id)
     .single();
 
@@ -45,10 +45,11 @@ export default async function AdminLayout({
       enableSystem
       disableTransitionOnChange
     >
+      <AdminHeader userName={profile?.full_name || "Admin"} userEmail={user.email || ""} />
       <div className="flex min-h-screen overflow-x-hidden">
         <AdminSidebar />
         <div className="flex flex-1 flex-col">
-          <AdminMobileHeader />
+          <AdminMobileNav />
           <main className="flex-1 overflow-y-auto">
             <div className="container max-w-7xl p-4 sm:p-6">{children}</div>
           </main>

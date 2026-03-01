@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -13,6 +14,9 @@ import {
   Bell,
   Sparkles,
   Menu,
+  User,
+  LogOut,
+  Store,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
@@ -24,6 +28,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -81,27 +95,89 @@ function AdminNav({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
+interface AdminHeaderProps {
+  userName: string;
+  userEmail: string;
+}
+
+export function AdminHeader({ userName, userEmail }: AdminHeaderProps) {
+  const router = useRouter();
+
+  async function handleSignOut() {
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut({ scope: "local" });
+      toast.success("Signed out successfully");
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error("Something went wrong");
+      router.refresh();
+    }
+  }
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-[env(safe-area-inset-top)]">
+      <div className="flex h-14 items-center justify-between px-4">
+        <Link href="/admin" className="flex items-center gap-2 font-brand tracking-wide text-primary">
+          <Image
+            src="/images/logo.png"
+            alt="BFG Admin"
+            width={60}
+            height={40}
+            className="h-8 w-12 rounded-lg"
+            priority
+          />
+          <span className="text-sm font-bold">BFG Admin</span>
+        </Link>
+
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Profile">
+                <User className="h-5 w-5" strokeWidth={1.5} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="px-2 py-1.5">
+                <p className="text-sm font-medium">{userName}</p>
+                <p className="text-xs text-muted-foreground">{userEmail}</p>
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href="/">
+                  <Store className="mr-2 h-4 w-4" />
+                  Back to Store
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleSignOut}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+    </header>
+  );
+}
+
 export function AdminSidebar() {
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r bg-card pt-[env(safe-area-inset-top)] lg:flex">
-      <div className="flex h-14 items-center gap-2 px-6">
-        <Sparkles className="size-5 text-primary" />
-        <span className="text-lg font-bold">BFG Admin</span>
-      </div>
-
-      <Separator />
-
+    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r bg-card lg:flex">
       <AdminNav />
     </aside>
   );
 }
 
-export function AdminMobileHeader() {
+export function AdminMobileNav() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background pt-[env(safe-area-inset-top)] lg:hidden">
-      <div className="flex h-14 items-center gap-4 px-4">
+    <div className="border-b bg-background lg:hidden">
+      <div className="flex h-12 items-center px-4">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
             <Button variant="ghost" size="icon">
@@ -119,11 +195,8 @@ export function AdminMobileHeader() {
             <AdminNav onNavigate={() => setOpen(false)} />
           </SheetContent>
         </Sheet>
-        <div className="flex items-center gap-2">
-          <Sparkles className="size-5 text-primary" />
-          <span className="text-lg font-bold">BFG Admin</span>
-        </div>
+        <span className="ml-2 text-sm font-medium text-muted-foreground">Menu</span>
       </div>
-    </header>
+    </div>
   );
 }
