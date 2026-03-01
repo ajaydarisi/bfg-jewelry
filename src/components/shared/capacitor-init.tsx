@@ -53,7 +53,16 @@ export function CapacitorInit() {
     });
 
     App.addListener("appUrlOpen", ({ url }) => {
-      // Handle OAuth deep link callbacks (HTTPS or custom scheme)
+      // Handle Google OAuth callback (direct ID token flow)
+      if (url.includes("/auth/google")) {
+        Browser.close().catch(() => {});
+        const parsed = new URL(url);
+        // Preserve hash fragment — it contains the id_token from Google
+        window.location.href = `${window.location.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+        return;
+      }
+
+      // Handle legacy Supabase OAuth deep link callbacks (HTTPS or custom scheme)
       if (
         url.includes("/api/auth/callback") ||
         url.startsWith("bhagyalakshmifuturegold://auth")

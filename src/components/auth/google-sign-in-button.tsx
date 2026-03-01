@@ -5,11 +5,12 @@ import { useSearchParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { Capacitor } from "@capacitor/core";
 import { Browser } from "@capacitor/browser";
-import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { trackEvent } from "@/lib/gtag";
+
+const GOOGLE_AUTH_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
 
 function isPwaStandalone(): boolean {
   if (typeof window === "undefined") return false;
@@ -17,6 +18,30 @@ function isPwaStandalone(): boolean {
     window.matchMedia("(display-mode: standalone)").matches &&
     !Capacitor.isNativePlatform()
   );
+}
+
+function generateNonce(): string {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return Array.from(array, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function buildGoogleAuthUrl(next: string, localePrefix: string): string {
+  const redirectUri = `${window.location.origin}/auth/google`;
+  const state = btoa(JSON.stringify({ next, locale_prefix: localePrefix }));
+  const nonce = generateNonce();
+
+  const params = new URLSearchParams({
+    client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+    redirect_uri: redirectUri,
+    response_type: "id_token",
+    scope: "openid email profile",
+    nonce,
+    state,
+    prompt: "select_account",
+  });
+
+  return `${GOOGLE_AUTH_ENDPOINT}?${params.toString()}`;
 }
 
 interface GoogleSignInButtonProps {
@@ -29,11 +54,8 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
   const searchParams = useSearchParams();
   const locale = useLocale();
 
-  async function handleGoogleSignIn() {
+  function handleGoogleSignIn() {
     setIsLoading(true);
-    const supabase = createClient();
-
-    const siteUrl = window.location.origin;
 
     const localePrefix = locale === "en" ? "" : `/${locale}`;
     const redirectParam = searchParams.get("redirect");
@@ -41,59 +63,27 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
       ? redirectParam
       : localePrefix || "/";
 
-    const callbackUrl = new URL(`${siteUrl}/api/auth/callback`);
-    callbackUrl.searchParams.set("next", next);
-    if (localePrefix) {
-      callbackUrl.searchParams.set("locale_prefix", localePrefix);
-    }
+    const googleAuthUrl = buildGoogleAuthUrl(next, localePrefix);
+
+    trackEvent("login", { method: "google" });
 
     if (Capacitor.isNativePlatform()) {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: callbackUrl.toString(),
-          skipBrowserRedirect: true,
-        },
-      });
-
-      if (data?.url) {
-        await Browser.open({ url: data.url });
-      }
-
-      if (error) {
+      Browser.open({ url: googleAuthUrl }).catch(() => {
         toast.error(errorLabel);
         setIsLoading(false);
-      } else {
-        trackEvent("login", { method: "google" });
-        // Keep isLoading true — page navigates away when callback completes
-      }
+      });
+      // Keep isLoading true — deep link handler navigates when callback completes
     } else if (isPwaStandalone()) {
       // PWA standalone mode — use popup to stay within the installed app
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: callbackUrl.toString(),
-          skipBrowserRedirect: true,
-        },
-      });
-
-      if (error || !data?.url) {
-        toast.error(errorLabel);
-        setIsLoading(false);
-        return;
-      }
-
-      trackEvent("login", { method: "google" });
-
       const popup = window.open(
-        data.url,
+        googleAuthUrl,
         "google-auth",
         "width=500,height=600,left=100,top=100"
       );
 
       if (!popup) {
-        // Popup blocked — fall back to redirect (no worse than current behavior)
-        window.location.href = data.url;
+        // Popup blocked — fall back to redirect
+        window.location.href = googleAuthUrl;
         return;
       }
 
@@ -105,15 +95,12 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
         try {
           if (popup.closed) {
             clearInterval(timer);
-            setIsLoading(false);
+            // Popup closed after callback page exchanged token — reload to pick up session
+            window.location.href = next;
             return;
           }
           if (popup.location.origin === window.location.origin) {
-            clearInterval(timer);
-            popup.close();
-            // Session cookies already set by callback route — navigate PWA
-            window.location.href = next;
-            return;
+            // Popup landed on our callback page — it will exchange the token and close itself
           }
         } catch {
           // Cross-origin — expected while on Google's domain
@@ -126,19 +113,8 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
         }
       }, POLL_MS);
     } else {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: callbackUrl.toString(),
-        },
-      });
-
-      if (error) {
-        toast.error(errorLabel);
-      } else {
-        trackEvent("login", { method: "google" });
-      }
-      setIsLoading(false);
+      // Standard web redirect
+      window.location.href = googleAuthUrl;
     }
   }
 

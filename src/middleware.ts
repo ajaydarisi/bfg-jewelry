@@ -13,6 +13,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/.well-known") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/api") ||
+    pathname.startsWith("/auth") ||
     pathname.startsWith("/preview")
   ) {
     return await updateSession(request);
