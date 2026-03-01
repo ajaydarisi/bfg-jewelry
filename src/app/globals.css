@@ -372,3 +372,35 @@
 .wedding-ornament::after {
   --dir: left;
 }
+
+/* Override Sonner's forced full-width on mobile */
+@media (max-width: 600px) {
+  [data-sonner-toaster] {
+    width: auto !important;
+    left: auto !important;
+    right: 5 !important;
+  }
+  [data-sonner-toaster] [data-sonner-toast] {
+    width: auto !important;
+    left: auto !important;
+    min-width: 200px;
+    max-width: 340px;
+    white-space: nowrap;
+  }
+}
+
+/* Toast slide in/out from right */
+[data-sonner-toaster][data-x-position="right"] [data-sonner-toast][data-mounted="true"] {
+  animation: toast-slide-in-right 0.3s ease-out !important;
+}
+[data-sonner-toaster][data-x-position="right"] [data-sonner-toast][data-removed="true"] {
+  animation: toast-slide-out-right 0.2s ease-in forwards !important;
+}
+@keyframes toast-slide-in-right {
+  from { transform: translateX(calc(100% + 16px)); }
+  to { transform: translateX(0); }
+}
+@keyframes toast-slide-out-right {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(calc(100% + 16px)); opacity: 0; }
+}
