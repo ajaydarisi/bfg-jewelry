@@ -28,8 +28,8 @@ function generateNonce(): string {
 
 function buildGoogleAuthUrl(next: string, localePrefix: string): string {
   const redirectUri = `${window.location.origin}/auth/google`;
-  const state = btoa(JSON.stringify({ next, locale_prefix: localePrefix }));
   const nonce = generateNonce();
+  const state = btoa(JSON.stringify({ next, locale_prefix: localePrefix, nonce }));
 
   const params = new URLSearchParams({
     client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,

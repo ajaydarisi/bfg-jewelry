@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
   try {
-    const { id_token, next } = await request.json();
+    const { id_token, nonce, next } = await request.json();
 
     if (!id_token || typeof id_token !== "string") {
       return NextResponse.json(
@@ -17,6 +17,7 @@ export async function POST(request: Request) {
     const { error } = await supabase.auth.signInWithIdToken({
       provider: "google",
       token: id_token,
+      nonce,
     });
 
     if (error) {

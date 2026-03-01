@@ -16,14 +16,18 @@ export default function GoogleAuthCallbackPage() {
       const params = new URLSearchParams(hash);
       const idToken = params.get("id_token");
 
-      // Decode state to get redirect info
+      // Decode state to get redirect info and nonce
       let next = "/";
+      let nonce: string | undefined;
       const stateParam = params.get("state");
       if (stateParam) {
         try {
           const state = JSON.parse(atob(stateParam));
           if (typeof state.next === "string" && state.next.startsWith("/")) {
             next = state.next;
+          }
+          if (typeof state.nonce === "string") {
+            nonce = state.nonce;
           }
         } catch {
           // Invalid state, use default redirect
@@ -39,7 +43,7 @@ export default function GoogleAuthCallbackPage() {
         const res = await fetch("/api/auth/google-token", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id_token: idToken, next }),
+          body: JSON.stringify({ id_token: idToken, nonce, next }),
         });
 
         const data = await res.json();
