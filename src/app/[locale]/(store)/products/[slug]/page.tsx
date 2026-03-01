@@ -1,25 +1,25 @@
-import { Suspense } from "react";
 import { AddToCartButton } from "@/components/cart/add-to-cart-button";
 import { CheckAvailabilityButton } from "@/components/products/check-availability-button";
+import { ProductCacheWriter } from "@/components/products/product-cache-writer";
 import { ProductGrid } from "@/components/products/product-grid";
 import { ProductImages } from "@/components/products/product-images";
+import { ShareButton } from "@/components/products/share-button";
 import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { ProductGridSkeleton } from "@/components/shared/loading-skeleton";
 import { PriceDisplay } from "@/components/shared/price-display";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { ShareButton } from "@/components/products/share-button";
 import { WishlistButton } from "@/components/wishlist/wishlist-button";
-import { ProductCacheWriter } from "@/components/products/product-cache-writer";
 import { APP_NAME, IS_ONLINE, ROUTES } from "@/lib/constants";
 import { formatPrice } from "@/lib/formatters";
 import { getCategoryName, getProductDescription, getProductName } from "@/lib/i18n-helpers";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { ProductWithCategory } from "@/types/product";
 import type { Metadata } from "next";
-import { unstable_cache } from "next/cache";
 import { getLocale, getTranslations } from "next-intl/server";
+import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 const RELATED_PRODUCT_FIELDS =
   "id, name, name_telugu, slug, price, discount_price, images, tags, stock, is_sale, is_rental, rental_price, material, category:categories(name, name_telugu, slug)";
@@ -195,13 +195,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
       },
       ...(typedProduct.category
         ? [
-            {
-              "@type": "ListItem",
-              position: 3,
-              name: getCategoryName(typedProduct.category, "en"),
-              item: `${SITE_URL}/products?category=${typedProduct.category.slug}`,
-            },
-          ]
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: getCategoryName(typedProduct.category, "en"),
+            item: `${SITE_URL}/products?category=${typedProduct.category.slug}`,
+          },
+        ]
         : []),
       {
         "@type": "ListItem",
@@ -226,11 +226,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
           { label: tl("breadcrumb"), href: ROUTES.products },
           ...(typedProduct.category
             ? [
-                {
-                  label: getCategoryName(typedProduct.category, locale),
-                  href: `${ROUTES.products}?category=${typedProduct.category.slug}`,
-                },
-              ]
+              {
+                label: getCategoryName(typedProduct.category, locale),
+                href: `${ROUTES.products}?category=${typedProduct.category.slug}`,
+              },
+            ]
             : []),
           { label: displayName },
         ]}
@@ -248,13 +248,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {getCategoryName(typedProduct.category, locale)}
               </p>
             )}
+
             <div className="flex items-center justify-between gap-2">
               <h1 className="text-2xl font-bold md:text-3xl">
                 {displayName}
               </h1>
-              <div className="flex items-center gap-1">
-                <ShareButton productName={displayName} productSlug={typedProduct.slug} />
-                <WishlistButton productId={typedProduct.id} />
+              <div className="flex items-center gap-2">
+                <ShareButton productName={displayName} productSlug={typedProduct.slug} variant="icon" />
+                <WishlistButton productId={typedProduct.id} variant="icon" />
               </div>
             </div>
           </div>
@@ -316,13 +317,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           )}
 
-
           <div>
             {IS_ONLINE ? (
               <AddToCartButton product={typedProduct} />
             ) : (
               <CheckAvailabilityButton
-              productName={displayName}
+                productName={displayName}
                 productSlug={typedProduct.slug}
               />
             )}
