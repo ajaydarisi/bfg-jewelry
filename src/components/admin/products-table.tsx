@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DataTable, SortableHeader } from "@/components/admin/data-table";
 import { formatPrice } from "@/lib/formatters";
+import { PRODUCT_TAGS } from "@/lib/constants";
 import { deleteProduct } from "@/app/admin/actions";
 import type { ProductWithCategory } from "@/types/product";
 
@@ -128,6 +129,16 @@ const columns: ColumnDef<ProductWithCategory>[] = [
       if (filterValue === "sale") return row.original.is_sale;
       if (filterValue === "rental") return row.original.is_rental;
       return true;
+    },
+  },
+  {
+    accessorKey: "tags",
+    header: () => null,
+    cell: () => null,
+    enableSorting: false,
+    filterFn: (row, _columnId, filterValue) => {
+      if (!filterValue || filterValue === "all") return true;
+      return row.original.tags?.includes(filterValue) ?? false;
     },
   },
   {
@@ -270,8 +281,9 @@ function ProductsToolbar({
   const categoryFilter = (table.getColumn("category")?.getFilterValue() as string) ?? "";
   const statusFilter = (table.getColumn("is_active")?.getFilterValue() as string) ?? "all";
   const typeFilter = (table.getColumn("type")?.getFilterValue() as string) ?? "all";
+  const tagFilter = (table.getColumn("tags")?.getFilterValue() as string) ?? "all";
 
-  const isFiltered = nameFilter || categoryFilter || statusFilter !== "all" || typeFilter !== "all";
+  const isFiltered = nameFilter || categoryFilter || statusFilter !== "all" || typeFilter !== "all" || tagFilter !== "all";
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -333,6 +345,25 @@ function ProductsToolbar({
           <SelectItem value="all">All Types</SelectItem>
           <SelectItem value="sale">For Sale</SelectItem>
           <SelectItem value="rental">For Rent</SelectItem>
+        </SelectContent>
+      </Select>
+
+      <Select
+        value={tagFilter}
+        onValueChange={(value) =>
+          table.getColumn("tags")?.setFilterValue(value)
+        }
+      >
+        <SelectTrigger className="w-40">
+          <SelectValue placeholder="All Tags" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Tags</SelectItem>
+          {PRODUCT_TAGS.map((tag) => (
+            <SelectItem key={tag} value={tag}>
+              {tag}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
 

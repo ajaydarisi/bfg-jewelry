@@ -28,6 +28,7 @@ interface ProductsPageProps {
     sort?: string;
     page?: string;
     type?: string;
+    tag?: string;
     search?: string;
   }>;
 }
@@ -52,6 +53,7 @@ const getProductCount = unstable_cache(
   async (
     categoryIds: string[],
     materials: string[],
+    tags: string[],
     type: string,
     minPrice: number,
     maxPrice: number,
@@ -72,6 +74,7 @@ const getProductCount = unstable_cache(
 
     if (materials.length === 1) query = query.eq("material", materials[0]);
     else if (materials.length > 1) query = query.in("material", materials);
+    if (tags.length > 0) query = query.overlaps("tags", tags);
     if (type === "sale") query = query.eq("is_sale", true);
     else if (type === "rental") query = query.eq("is_rental", true);
     if (minPrice > 0) query = query.gte("price", minPrice);
@@ -89,6 +92,7 @@ const getFilteredProducts = unstable_cache(
   async (
     categoryIds: string[],
     materials: string[],
+    tags: string[],
     type: string,
     minPrice: number,
     maxPrice: number,
@@ -112,6 +116,7 @@ const getFilteredProducts = unstable_cache(
 
     if (materials.length === 1) query = query.eq("material", materials[0]);
     else if (materials.length > 1) query = query.in("material", materials);
+    if (tags.length > 0) query = query.overlaps("tags", tags);
     if (type === "sale") query = query.eq("is_sale", true);
     else if (type === "rental") query = query.eq("is_rental", true);
     if (minPrice > 0) query = query.gte("price", minPrice);
@@ -174,6 +179,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const sort = (params.sort as SortOption) || "newest";
   const page = Number(params.page) || 1;
   const type = params.type || "";
+  const tags = params.tag ? params.tag.split(",").filter(Boolean) : [];
   const search = params.search || "";
 
   const locale = await getLocale();
@@ -202,8 +208,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   // Fetch products and count in parallel (both independently cached)
   const [products, count] = await Promise.all([
-    getFilteredProducts(categoryIds, materials, type, minPrice, maxPrice, sort, page, locale, search),
-    getProductCount(categoryIds, materials, type, minPrice, maxPrice, search),
+    getFilteredProducts(categoryIds, materials, tags, type, minPrice, maxPrice, sort, page, locale, search),
+    getProductCount(categoryIds, materials, tags, type, minPrice, maxPrice, search),
   ]);
 
   const totalPages = Math.ceil((count || 0) / PRODUCTS_PER_PAGE);

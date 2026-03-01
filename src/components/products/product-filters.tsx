@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { MATERIALS, PRODUCT_TYPES } from "@/lib/constants";
+import { MATERIALS, PRODUCT_TAGS, PRODUCT_TYPES } from "@/lib/constants";
 import { formatPrice } from "@/lib/formatters";
 import { getCategoryName } from "@/lib/i18n-helpers";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -21,6 +21,7 @@ import type { Category } from "@/types/product";
 export interface PendingFilters {
   categories: string[];
   materials: string[];
+  tags: string[];
   type: string;
   priceRange: number[];
   search: string;
@@ -52,6 +53,7 @@ export function getFilterCount(searchParams: URLSearchParams): number {
   let count = 0;
   count += parseList(searchParams.get("category")).length;
   count += parseList(searchParams.get("material")).length;
+  count += parseList(searchParams.get("tag")).length;
   if (searchParams.get("type")) count++;
   if (Number(searchParams.get("minPrice")) > 0) count++;
   if (Number(searchParams.get("maxPrice")) > 0 && Number(searchParams.get("maxPrice")) < 10000) count++;
@@ -77,6 +79,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
 
   const urlCategories = parseList(searchParams.get("category"));
   const urlMaterials = parseList(searchParams.get("material"));
+  const urlTags = parseList(searchParams.get("tag"));
   const urlType = searchParams.get("type") || "";
   const urlMinPrice = Number(searchParams.get("minPrice")) || 0;
   const urlMaxPrice = Number(searchParams.get("maxPrice")) || 10000;
@@ -85,6 +88,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
   // In deferred mode, all selections are local state
   const [pendingCategories, setPendingCategories] = useState(urlCategories);
   const [pendingMaterials, setPendingMaterials] = useState(urlMaterials);
+  const [pendingTags, setPendingTags] = useState(urlTags);
   const [pendingType, setPendingType] = useState(urlType);
   const [priceRange, setPriceRange] = useState([urlMinPrice, urlMaxPrice]);
   const [searchQuery, setSearchQuery] = useState(urlSearch);
@@ -125,6 +129,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
   // Effective values: deferred reads local state, immediate reads URL
   const currentCategories = isDeferred ? pendingCategories : urlCategories;
   const currentMaterials = isDeferred ? pendingMaterials : urlMaterials;
+  const currentTags = isDeferred ? pendingTags : urlTags;
   const currentType = isDeferred ? pendingType : urlType;
 
   const categoryTree = buildCategoryTree(categories);
@@ -137,6 +142,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
       onFiltersChange({
         categories: pendingCategories,
         materials: pendingMaterials,
+        tags: pendingTags,
         type: pendingType,
         priceRange,
         search: searchQuery,
@@ -177,6 +183,25 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
       params.set("material", next.join(","));
     } else {
       params.delete("material");
+    }
+    params.delete("page");
+    setLoading(true);
+    router.push(`?${params.toString()}`);
+  }
+
+  function toggleTag(tag: string) {
+    if (isDeferred) {
+      const next = toggleInList(pendingTags, tag);
+      setPendingTags(next);
+      notifyChange({ tags: next });
+      return;
+    }
+    const params = new URLSearchParams(searchParams.toString());
+    const next = toggleInList(urlTags, tag);
+    if (next.length > 0) {
+      params.set("tag", next.join(","));
+    } else {
+      params.delete("tag");
     }
     params.delete("page");
     setLoading(true);
@@ -225,10 +250,11 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
     if (isDeferred) {
       setPendingCategories([]);
       setPendingMaterials([]);
+      setPendingTags([]);
       setPendingType("");
       setPriceRange([0, 10000]);
       setSearchQuery("");
-      notifyChange({ categories: [], materials: [], type: "", priceRange: [0, 10000], search: "" });
+      notifyChange({ categories: [], materials: [], tags: [], type: "", priceRange: [0, 10000], search: "" });
       return;
     }
     setSearchQuery("");
@@ -248,7 +274,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
     });
   }
 
-  const hasFilters = currentCategories.length > 0 || currentMaterials.length > 0 || currentType || searchQuery || (isDeferred ? priceRange[0] > 0 || priceRange[1] < 10000 : urlMinPrice > 0 || urlMaxPrice < 10000);
+  const hasFilters = currentCategories.length > 0 || currentMaterials.length > 0 || currentTags.length > 0 || currentType || searchQuery || (isDeferred ? priceRange[0] > 0 || priceRange[1] < 10000 : urlMinPrice > 0 || urlMaxPrice < 10000);
   const filterCount = getFilterCount(searchParams);
 
   return (
@@ -324,6 +350,30 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
             </div>
           ))}
         </RadioGroup>
+      </div>
+
+      <Separator />
+
+      {/* Tags */}
+      <div>
+        <h3 className="mb-3 text-sm font-medium">{t("tag")}</h3>
+        <div className="space-y-2">
+          {PRODUCT_TAGS.map((tag) => (
+            <div key={tag} className="flex items-center gap-2">
+              <Checkbox
+                id={`${idPrefix}tag-${tag}`}
+                checked={currentTags.includes(tag)}
+                onCheckedChange={() => toggleTag(tag)}
+              />
+              <Label
+                htmlFor={`${idPrefix}tag-${tag}`}
+                className="text-sm font-normal"
+              >
+                {tc(`tags.${tag}`)}
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
 
       <Separator />
@@ -452,6 +502,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
           ))}
         </div>
       </div>
+
     </div>
   );
 }

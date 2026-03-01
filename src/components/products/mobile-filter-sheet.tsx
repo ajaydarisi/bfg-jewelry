@@ -33,6 +33,7 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
   const filtersRef = useRef<PendingFilters>({
     categories: parseList(searchParams.get("category")),
     materials: parseList(searchParams.get("material")),
+    tags: parseList(searchParams.get("tag")),
     type: searchParams.get("type") || "",
     priceRange: [
       Number(searchParams.get("minPrice")) || 0,
@@ -49,6 +50,7 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
     const params = new URLSearchParams();
     if (filters.categories.length > 0) params.set("category", filters.categories.join(","));
     if (filters.materials.length > 0) params.set("material", filters.materials.join(","));
+    if (filters.tags.length > 0) params.set("tag", filters.tags.join(","));
     if (filters.type && filters.type !== "all") params.set("type", filters.type);
     if (filters.priceRange[0] > 0) params.set("minPrice", filters.priceRange[0].toString());
     if (filters.priceRange[1] < 10000) params.set("maxPrice", filters.priceRange[1].toString());
@@ -75,6 +77,7 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
     filtersRef.current = {
       categories: [],
       materials: [],
+      tags: [],
       type: "",
       priceRange: [0, 10000],
       search: "",
