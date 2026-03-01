@@ -18,7 +18,10 @@
     "lightMode": "లైట్ మోడ్",
     "darkMode": "డార్క్ మోడ్",
     "changeLanguage": "భాష మార్చండి",
-    "openMenu": "మెనూ తెరవండి"
+    "openMenu": "మెనూ తెరవండి",
+    "home": "హోమ్",
+    "shop": "షాప్",
+    "account": "ఖాతా"
   },
   "footer": {
     "stayInTouch": "టచ్‌లో ఉండండి",

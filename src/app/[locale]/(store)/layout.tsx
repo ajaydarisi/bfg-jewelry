@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { BottomNav } from "@/components/layout/bottom-nav";
 import { CartProvider } from "@/components/cart/cart-provider";
 import { WishlistProvider } from "@/components/wishlist/wishlist-provider";
 import { PushTokenLinker } from "@/components/shared/push-token-linker";
@@ -23,8 +24,9 @@ export default async function StoreLayout({
             {user && <PushTokenLinker userId={user.id} />}
             <OfflineBanner />
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 pb-20 lg:pb-0">{children}</main>
             <Footer />
+            <BottomNav />
           </div>
         </WishlistProvider>
       </CartProvider>

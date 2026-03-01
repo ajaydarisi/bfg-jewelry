@@ -33,7 +33,7 @@ export function Footer() {
     }
   }
   return (
-    <footer className="border-t">
+    <footer className="hidden lg:block border-t">
       {/* Newsletter / Community section */}
       <div className="container mx-auto px-4 py-16 text-center border-b">
         <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">

@@ -237,8 +237,8 @@ export default async function HomePage() {
       <InstallAppBanner />
 
       {/* Categories */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="mb-12 text-center">
+      <section className="container mx-auto px-4 py-10 lg:py-20">
+        <div className="mb-8 lg:mb-12 text-center">
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
             <span className="underline decoration-primary underline-offset-4 decoration-2">{t("categories.label")}</span>
           </p>
@@ -260,7 +260,7 @@ export default async function HomePage() {
       </section>
 
       {/* Brand Story */}
-      <section className="py-20 bg-accent">
+      <section className="py-10 lg:py-20 bg-accent">
         <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
@@ -292,8 +292,8 @@ export default async function HomePage() {
 
       {/* Featured Products */}
       {featuredProducts && featuredProducts.length > 0 && (
-        <section className="container mx-auto px-4 py-20">
-          <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <section className="container mx-auto px-4 py-10 lg:py-20">
+          <div className="mb-8 lg:mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
                 <span className="underline decoration-primary underline-offset-4 decoration-2">{t("featured.label")}</span>
@@ -316,7 +316,7 @@ export default async function HomePage() {
       {/* Wishlist CTA — offline only */}
       {!IS_ONLINE && (
         <section className="bg-accent/30">
-          <div className="container mx-auto px-4 py-16 text-center max-w-xl">
+          <div className="container mx-auto px-4 py-10 lg:py-16 text-center max-w-xl">
             <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
               <span className="underline decoration-primary underline-offset-4 decoration-2">{t("wishlistCta.label")}</span>
             </p>
@@ -339,8 +339,8 @@ export default async function HomePage() {
       {/* New Arrivals */}
       {newProducts && newProducts.length > 0 && (
         <section className="border-t border-b">
-          <div className="container mx-auto px-4 py-20">
-            <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="container mx-auto px-4 py-10 lg:py-20">
+            <div className="mb-8 lg:mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
                   <span className="underline decoration-primary underline-offset-4 decoration-2">{t("newArrivals.label")}</span>
@@ -362,7 +362,7 @@ export default async function HomePage() {
       )}
 
       {/* Trust Bar */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-10 lg:py-16">
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-4">
           {(IS_ONLINE
             ? [

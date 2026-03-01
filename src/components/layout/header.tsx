@@ -87,7 +87,7 @@ export function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 pt-[env(safe-area-inset-top)]">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="container mx-auto flex h-12 lg:h-16 items-center justify-between px-4">
           {/* Left: Mobile menu + Logo */}
           <div className="flex items-center gap-4">
             <Button
@@ -108,10 +108,10 @@ export function Header() {
                 alt={tCommon("appName")}
                 width={60}
                 height={40}
-                className="h-10 w-15 rounded-lg"
+                className="h-8 w-12 lg:h-10 lg:w-15 rounded-lg"
                 priority
               />
-              <span className="text-sm sm:text-base">{tCommon("appName")}</span>
+              <span className="text-xs sm:text-sm lg:text-base">{tCommon("appName")}</span>
             </Link>
           </div>
 
@@ -151,6 +151,22 @@ export function Header() {
 
           {/* Right: Actions */}
           <div className="flex items-center gap-2">
+            {/* Mobile-only cart button */}
+            {IS_ONLINE && (
+              <Button variant="ghost" size="icon" className="lg:hidden h-8 w-8" asChild aria-label={t("shoppingBag")}>
+                <Link href={ROUTES.cart} className="relative">
+                  <ShoppingBag className="h-4 w-4" strokeWidth={1.5} />
+                  {itemCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -right-1 -top-1 h-4 w-4 rounded-full p-0 text-[9px] flex items-center justify-center"
+                    >
+                      {itemCount}
+                    </Badge>
+                  )}
+                </Link>
+              </Button>
+            )}
             {/* Desktop-only actions */}
             <div className="hidden md:flex items-center gap-2">
               <LanguageSwitcher />

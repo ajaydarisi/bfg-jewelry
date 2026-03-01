@@ -18,7 +18,10 @@
     "lightMode": "Light Mode",
     "darkMode": "Dark Mode",
     "changeLanguage": "Change Language",
-    "openMenu": "Open menu"
+    "openMenu": "Open menu",
+    "home": "Home",
+    "shop": "Shop",
+    "account": "Account"
   },
   "footer": {
     "stayInTouch": "Stay in Touch",

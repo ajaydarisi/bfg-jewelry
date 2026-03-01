@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/shared/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { routing } from "@/i18n/routing";
 import { SetHtmlLang } from "@/components/shared/set-html-lang";
+import { NavProgress } from "@/components/shared/nav-progress";
 import { APP_DESCRIPTION, APP_NAME } from "@/lib/constants";
 import type { Metadata, Viewport } from "next";
 
@@ -125,6 +126,7 @@ export default async function LocaleLayout({
         disableTransitionOnChange
       >
         <AuthProvider>
+          <NavProgress />
           {children}
         </AuthProvider>
         <Toaster position="bottom-right" />
