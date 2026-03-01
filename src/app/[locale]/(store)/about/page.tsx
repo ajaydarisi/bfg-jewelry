@@ -1,5 +1,11 @@
 import { ExternalLink } from "@/components/shared/external-link";
 import { ShopImage } from "@/components/shared/shop-image";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   APP_DESCRIPTION,
@@ -9,12 +15,10 @@ import {
 } from "@/lib/constants";
 import {
   Clock,
-  Gem,
   Mail,
   MapPin,
   Phone,
   Shield,
-  Star,
 } from "lucide-react";
 import type { Metadata } from "next";
 import { Link } from "@/i18n/routing";
@@ -43,6 +47,27 @@ export default async function AboutPage() {
 
   const SITE_URL =
     process.env.NEXT_PUBLIC_SITE_URL || "https://bfg.darisi.in";
+
+  const faqItems = [
+    { q: t("faq.q1"), a: t("faq.a1") },
+    { q: t("faq.q2"), a: t("faq.a2") },
+    { q: t("faq.q3"), a: t("faq.a3") },
+    { q: t("faq.q4"), a: t("faq.a4") },
+    { q: t("faq.q5"), a: t("faq.a5") },
+  ];
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
 
   const aboutJsonLd = {
     "@context": "https://schema.org",
@@ -93,6 +118,7 @@ export default async function AboutPage() {
       name: BUSINESS_INFO.proprietor.name,
       jobTitle: BUSINESS_INFO.proprietor.title,
     },
+    hasMap: BUSINESS_INFO.map.linkUrl,
   };
 
   return (
@@ -100,6 +126,10 @@ export default async function AboutPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       {/* Hero Banner */}
       <section className="bg-accent/30 py-20">
@@ -188,6 +218,30 @@ export default async function AboutPage() {
               <ShopImage src={img.src} alt={img.alt} />
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="bg-accent/30 py-20">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <div className="mb-12 text-center">
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              {t("faqLabel")}
+            </p>
+            <h2 className="text-3xl md:text-4xl">{t("faqTitle")}</h2>
+          </div>
+          <Accordion type="single" collapsible className="w-full">
+            {faqItems.map((item, index) => (
+              <AccordionItem key={index} value={`faq-${index}`}>
+                <AccordionTrigger className="text-left text-base">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground font-sans">
+                  {item.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </section>
 

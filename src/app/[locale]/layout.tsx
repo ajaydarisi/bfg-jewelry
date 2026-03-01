@@ -47,8 +47,15 @@ export const metadata: Metadata = {
     "rings",
     "jewellery sets",
     "gold plated jewellery",
-    "rose gold jewellery",
-    "online jewellery store India",
+    "imitation jewellery Chirala",
+    "wedding jewellery rental Chirala",
+    "bridal jewellery Chirala",
+    "South Indian fashion jewellery",
+    "one gram gold jewellery Chirala",
+    "panchaloha jewellery Chirala",
+    "CZ jewellery Chirala",
+    "antique jewellery Chirala",
+    "jewellery on rent Chirala",
   ],
   alternates: {
     canonical: SITE_URL,
@@ -88,6 +95,14 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: SITE_URL,
     siteName: APP_NAME,
+    images: [
+      {
+        url: "/images/logo.png",
+        width: 512,
+        height: 512,
+        alt: APP_NAME,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",

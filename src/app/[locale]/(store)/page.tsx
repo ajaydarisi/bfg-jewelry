@@ -103,6 +103,14 @@ export default async function HomePage() {
       name: APP_NAME,
       url: SITE_URL,
       description: APP_DESCRIPTION,
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${SITE_URL}/search?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
     },
     {
       "@context": "https://schema.org",
@@ -147,6 +155,7 @@ export default async function HomePage() {
           closes: "14:00",
         },
       ],
+      hasMap: BUSINESS_INFO.map.linkUrl,
     },
   ];
 

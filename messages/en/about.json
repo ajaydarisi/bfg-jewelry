@@ -23,5 +23,19 @@
   "sunday": "Sunday",
   "getDirections": "Get Directions",
   "mapFallbackCity": "Chirala, Bapatla District",
-  "mapFallbackState": "Andhra Pradesh, India"
+  "mapFallbackState": "Andhra Pradesh, India",
+  "faqLabel": "Common Questions",
+  "faqTitle": "Frequently Asked Questions",
+  "faq": {
+    "q1": "Where is Bhagyalakshmi Future Gold located?",
+    "a1": "Bhagyalakshmi Future Gold is located opposite SBI Bank on the right, Chirala, Bapatla District, Andhra Pradesh 523155. You can find us easily on Google Maps.",
+    "q2": "What types of jewellery are available at Bhagyalakshmi Future Gold?",
+    "a2": "We offer a wide range of fashion jewellery including necklaces, earrings, bangles, bracelets, rings, jewellery sets, dance & traditional ornaments, and leg & hair accessories. We carry gold plated, panchaloha, antique, nakshi, CZ, and uncut stone jewellery.",
+    "q3": "Do you offer jewellery on rent for weddings?",
+    "a3": "Yes, we offer complete marriage rental sets for weddings. You can rent bridal jewellery sets at affordable prices with a refundable deposit. Visit our store or browse our rental collection online.",
+    "q4": "What are the store hours?",
+    "a4": "We are open Monday to Saturday from 10:00 AM to 9:00 PM, and on Sundays from 10:00 AM to 2:00 PM.",
+    "q5": "Is the jewellery quality checked?",
+    "a5": "Yes, every piece of jewellery passes through our hands before it reaches yours. We personally quality-check each item for finish, durability, and design accuracy. We also provide warranty on specific items."
+  }
 }
