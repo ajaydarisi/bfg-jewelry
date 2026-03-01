@@ -101,10 +101,10 @@ export function ProductForm({ product, copyFrom, categories }: ProductFormProps)
       featured: source?.featured ?? false,
       is_sale: source?.is_sale ?? false,
       is_rental: source?.is_rental ?? true,
-      rental_price: source?.rental_price ?? null,
-      rental_discount_price: source?.rental_discount_price ?? null,
-      rental_deposit: source?.rental_deposit ?? null,
-      max_rental_days: source?.max_rental_days ?? null,
+      rental_price: product?.rental_price ?? null,
+      rental_discount_price: product?.rental_discount_price ?? null,
+      rental_deposit: product?.rental_deposit ?? null,
+      max_rental_days: product?.max_rental_days ?? 1,
     },
   });
 

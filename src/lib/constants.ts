@@ -36,6 +36,7 @@ export const MATERIALS = [
   "Nakshi",
   "GJ Polish",
   "CZ",
+  "Un Cut Stone",
 ] as const;
 
 export const PRODUCT_TAGS = [
