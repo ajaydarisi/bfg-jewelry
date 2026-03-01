@@ -26,17 +26,28 @@ function generateNonce(): string {
   return Array.from(array, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-function buildGoogleAuthUrl(next: string, localePrefix: string): string {
+async function sha256hex(input: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash), (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function buildGoogleAuthUrl(next: string, localePrefix: string): Promise<string> {
   const redirectUri = `${window.location.origin}/auth/google`;
-  const nonce = generateNonce();
-  const state = btoa(JSON.stringify({ next, locale_prefix: localePrefix, nonce }));
+  const rawNonce = generateNonce();
+  // Google embeds the nonce as-is in the ID token.
+  // Supabase hashes the raw nonce we send and compares it to the nonce in the token.
+  // So we send the SHA-256 hash to Google (embedded in token) and the raw nonce to Supabase.
+  const hashedNonce = await sha256hex(rawNonce);
+  const state = btoa(JSON.stringify({ next, locale_prefix: localePrefix, nonce: rawNonce }));
 
   const params = new URLSearchParams({
     client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
     redirect_uri: redirectUri,
     response_type: "id_token",
     scope: "openid email profile",
-    nonce,
+    nonce: hashedNonce,
     state,
     prompt: "select_account",
   });
@@ -54,7 +65,7 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
   const searchParams = useSearchParams();
   const locale = useLocale();
 
-  function handleGoogleSignIn() {
+  async function handleGoogleSignIn() {
     setIsLoading(true);
 
     const localePrefix = locale === "en" ? "" : `/${locale}`;
@@ -63,7 +74,7 @@ export function GoogleSignInButton({ label, errorLabel }: GoogleSignInButtonProp
       ? redirectParam
       : localePrefix || "/";
 
-    const googleAuthUrl = buildGoogleAuthUrl(next, localePrefix);
+    const googleAuthUrl = await buildGoogleAuthUrl(next, localePrefix);
 
     trackEvent("login", { method: "google" });
 
