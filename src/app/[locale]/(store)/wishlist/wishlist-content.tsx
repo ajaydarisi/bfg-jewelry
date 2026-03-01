@@ -14,6 +14,7 @@ import { IS_ONLINE, ROUTES } from "@/lib/constants";
 import { getProductName } from "@/lib/i18n-helpers";
 import { useLocale, useTranslations } from "next-intl";
 import type { ProductWithCategory } from "@/types/product";
+import { hapticNotification } from "@/lib/haptics";
 
 interface WishlistContentProps {
   products: ProductWithCategory[];
@@ -44,6 +45,7 @@ export function WishlistContent({ products }: WishlistContentProps) {
   async function handleMoveToCart(product: ProductWithCategory) {
     await addItem(product, 1);
     await removeItem(product.id);
+    hapticNotification("success");
     toast.success(`${getProductName(product, locale)} moved to cart`);
   }
 
@@ -107,6 +109,7 @@ export function WishlistContent({ products }: WishlistContentProps) {
                   size="sm"
                   variant="outline"
                   onClick={() => {
+                    hapticNotification("warning");
                     removeItem(product.id);
                     toast.success(t("removed"));
                   }}
