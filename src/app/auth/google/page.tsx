@@ -35,9 +35,12 @@ export default function GoogleAuthCallbackPage() {
       }
 
       if (!idToken) {
-        window.location.href = "/login?error=auth";
+        console.error("[auth/google] No id_token in hash fragment. Hash:", hash);
+        window.location.href = "/login?error=no_token";
         return;
       }
+
+      console.log("[auth/google] Got id_token, nonce:", !!nonce, "next:", next);
 
       try {
         const res = await fetch("/api/auth/google-token", {
@@ -47,6 +50,7 @@ export default function GoogleAuthCallbackPage() {
         });
 
         const data = await res.json();
+        console.log("[auth/google] API response:", data);
 
         if (data.success) {
           // If opened as a popup (PWA standalone), close self — parent will navigate
@@ -56,10 +60,12 @@ export default function GoogleAuthCallbackPage() {
           }
           window.location.href = data.next || "/";
         } else {
-          window.location.href = "/login?error=auth";
+          console.error("[auth/google] Token exchange failed:", data.error);
+          window.location.href = `/login?error=${encodeURIComponent(data.error || "auth")}`;
         }
-      } catch {
-        window.location.href = "/login?error=auth";
+      } catch (err) {
+        console.error("[auth/google] Fetch error:", err);
+        window.location.href = "/login?error=fetch_failed";
       }
     }
 
