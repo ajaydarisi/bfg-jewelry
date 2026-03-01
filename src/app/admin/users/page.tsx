@@ -22,7 +22,7 @@ export default async function AdminUsersPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Users</h1>
+      <h1 className="text-2xl font-bold md:text-3xl">Users</h1>
       <UsersTable
         users={users ?? []}
         bannedUserIds={bannedUserIds}

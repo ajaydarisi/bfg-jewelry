@@ -74,6 +74,31 @@ const columns: ColumnDef<OrderWithEmail>[] = [
   },
 ];
 
+function OrderMobileCard({ order }: { order: OrderWithEmail }) {
+  return (
+    <Link
+      href={`/admin/orders/${order.id}`}
+      className="block rounded-md border bg-card p-3"
+    >
+      <div className="flex items-center justify-between">
+        <span className="font-medium">{order.order_number}</span>
+        <OrderStatusBadge status={order.status} />
+      </div>
+      <div className="mt-1 flex items-center justify-between text-sm">
+        <span className="min-w-0 truncate text-muted-foreground">
+          {order.customer_email}
+        </span>
+        <span className="shrink-0 pl-2 font-medium">
+          {formatPrice(order.total)}
+        </span>
+      </div>
+      <p className="mt-1 text-xs text-muted-foreground">
+        {formatDate(order.created_at)}
+      </p>
+    </Link>
+  );
+}
+
 interface OrdersTableProps {
   orders: OrderWithEmail[];
 }
@@ -90,7 +115,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-45">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -103,7 +128,11 @@ export function OrdersTable({ orders }: OrdersTableProps) {
           </SelectContent>
         </Select>
       </div>
-      <DataTable columns={columns} data={filtered} />
+      <DataTable
+        columns={columns}
+        data={filtered}
+        mobileCard={(order) => <OrderMobileCard order={order} />}
+      />
     </div>
   );
 }

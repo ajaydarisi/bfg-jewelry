@@ -60,7 +60,7 @@ function RoleCell({ user }: { user: Profile }) {
       onValueChange={handleRoleChange}
       disabled={isPending}
     >
-      <SelectTrigger className="w-[120px]">
+      <SelectTrigger className="w-30">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -230,6 +230,42 @@ function createColumns(
   ];
 }
 
+function UserMobileCard({
+  user,
+  bannedSet,
+  currentUserId,
+}: {
+  user: Profile;
+  bannedSet: Set<string>;
+  currentUserId?: string;
+}) {
+  const isBanned = bannedSet.has(user.id);
+
+  return (
+    <div className="rounded-md border bg-card p-3 space-y-2">
+      <div className="flex items-center justify-between">
+        <span className="font-medium">
+          {user.full_name || "No name"}
+        </span>
+        {isBanned ? (
+          <Badge variant="destructive">Disabled</Badge>
+        ) : (
+          <Badge variant="secondary">Active</Badge>
+        )}
+      </div>
+      <p className="truncate text-sm text-muted-foreground">{user.email}</p>
+      <div className="flex items-center justify-between">
+        <RoleCell user={user} />
+        <ActionsCell
+          user={user}
+          isBanned={isBanned}
+          isCurrentUser={user.id === currentUserId}
+        />
+      </div>
+    </div>
+  );
+}
+
 interface UsersTableProps {
   users: Profile[];
   bannedUserIds: string[];
@@ -242,5 +278,19 @@ export function UsersTable({
   currentUserId,
 }: UsersTableProps) {
   const columns = createColumns(bannedUserIds, currentUserId);
-  return <DataTable columns={columns} data={users} />;
+  const bannedSet = new Set(bannedUserIds);
+
+  return (
+    <DataTable
+      columns={columns}
+      data={users}
+      mobileCard={(user) => (
+        <UserMobileCard
+          user={user}
+          bannedSet={bannedSet}
+          currentUserId={currentUserId}
+        />
+      )}
+    />
+  );
 }

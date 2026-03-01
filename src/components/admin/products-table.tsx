@@ -159,6 +159,85 @@ const columns: ColumnDef<ProductWithCategory>[] = [
   },
 ];
 
+function ProductMobileCard({ product }: { product: ProductWithCategory }) {
+  const router = useRouter();
+
+  async function handleDelete() {
+    if (!confirm(`Delete "${product.name}"? This cannot be undone.`)) return;
+
+    const result = await deleteProduct(product.id);
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      toast.success("Product deleted");
+      router.refresh();
+    }
+  }
+
+  return (
+    <div className="rounded-md border bg-card p-3">
+      <div className="flex items-start gap-3">
+        {product.images && product.images.length > 0 ? (
+          <div className="relative size-12 shrink-0 overflow-hidden rounded-md">
+            <Image
+              src={product.images[0]}
+              alt={product.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-md bg-muted text-xs text-muted-foreground">
+            N/A
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <p className="truncate font-medium">{product.name}</p>
+          <p className="text-sm text-muted-foreground">
+            {product.category?.name ?? "Uncategorized"}
+          </p>
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon-xs" className="shrink-0">
+              <MoreHorizontal className="size-4" />
+              <span className="sr-only">Actions</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <Link href={`/admin/products/${product.id}/edit`}>
+                <Pencil className="size-4" />
+                Edit
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem variant="destructive" onClick={handleDelete}>
+              <Trash2 className="size-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+        <span className="font-medium">
+          {formatPrice(product.discount_price ?? product.price)}
+        </span>
+        {product.discount_price && (
+          <span className="text-xs text-muted-foreground line-through">
+            {formatPrice(product.price)}
+          </span>
+        )}
+        <Badge variant={product.stock > 0 ? "secondary" : "destructive"}>
+          {product.stock} in stock
+        </Badge>
+        <Badge variant={product.is_active ? "default" : "outline"}>
+          {product.is_active ? "Active" : "Draft"}
+        </Badge>
+      </div>
+    </div>
+  );
+}
+
 interface ProductsTableProps {
   products: ProductWithCategory[];
   categories: { id: string; name: string }[];
@@ -179,7 +258,7 @@ function ProductsToolbar({
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <div className="relative flex-1 min-w-50 max-w-sm">
+      <div className="relative w-full sm:flex-1 sm:min-w-50 sm:max-w-sm">
         <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
         <Input
           placeholder="Search products..."
@@ -251,6 +330,7 @@ export function ProductsTable({ products, categories }: ProductsTableProps) {
           categories={categories}
         />
       )}
+      mobileCard={(product) => <ProductMobileCard product={product} />}
     />
   );
 }

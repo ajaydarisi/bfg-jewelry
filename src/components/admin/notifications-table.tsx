@@ -88,7 +88,40 @@ export function NotificationsTable({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="overflow-x-auto">
+        {/* Mobile card view */}
+        <div className="space-y-3 lg:hidden">
+          {notifications.map((n) => (
+            <div key={n.id} className="rounded-md border bg-card p-3 space-y-1">
+              <p className="font-medium">{n.title}</p>
+              <p className="text-xs text-muted-foreground line-clamp-1">
+                {n.body}
+              </p>
+              <div className="flex flex-wrap items-center gap-2 text-xs">
+                <Badge variant="outline">
+                  {typeLabels[n.type] || n.type}
+                </Badge>
+                <span
+                  className={`inline-flex rounded-full px-2 py-0.5 font-medium ${
+                    statusColors[n.status] || ""
+                  }`}
+                >
+                  {n.status}
+                </span>
+                <span className="text-muted-foreground">
+                  {targetLabels[n.target_type] || n.target_type}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                <span>Sent: {n.sent_count}</span>
+                <span>Failed: {n.failed_count}</span>
+                <span>{formatDate(n.sent_at || n.created_at)}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop table view */}
+        <div className="hidden overflow-hidden lg:block">
           <Table>
             <TableHeader>
               <TableRow>

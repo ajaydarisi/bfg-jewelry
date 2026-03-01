@@ -276,7 +276,67 @@ export function CouponsManager({ coupons }: CouponsManagerProps) {
         </Dialog>
       </div>
 
-      <div className="rounded-md border">
+      {/* Mobile card view */}
+      <div className="space-y-3 lg:hidden">
+        {coupons.length > 0 ? (
+          coupons.map((coupon) => (
+            <div key={coupon.id} className="rounded-md border bg-card p-3 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="font-mono font-medium">{coupon.code}</span>
+                <div className="flex items-center gap-2">
+                  <Badge variant={coupon.is_active ? "default" : "secondary"}>
+                    {coupon.is_active ? "Active" : "Inactive"}
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    onClick={() => openEditDialog(coupon)}
+                  >
+                    <Pencil className="size-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon-xs"
+                    onClick={() => handleDelete(coupon)}
+                    disabled={isPending}
+                  >
+                    <Trash2 className="size-4 text-destructive" />
+                    <span className="sr-only">Delete</span>
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+                <span>{formatDiscount(coupon)}</span>
+                {coupon.min_order_amount > 0 && (
+                  <span className="text-muted-foreground">
+                    Min: {formatPrice(coupon.min_order_amount)}
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span>
+                  Used: {coupon.used_count}
+                  {coupon.max_uses !== null ? ` / ${coupon.max_uses}` : ""}
+                </span>
+                <span>
+                  Expires:{" "}
+                  {coupon.expires_at
+                    ? formatDate(coupon.expires_at)
+                    : "Never"}
+                </span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="py-8 text-center text-muted-foreground">
+            No coupons yet. Create one to get started.
+          </p>
+        )}
+      </div>
+
+      {/* Desktop table view */}
+      <div className="hidden rounded-md border lg:block">
         <Table>
           <TableHeader>
             <TableRow>

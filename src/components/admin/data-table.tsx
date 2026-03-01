@@ -23,12 +23,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   pageSize?: number;
   toolbar?: (table: TanStackTable<TData>) => React.ReactNode;
+  mobileCard?: (row: TData) => React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -36,6 +38,7 @@ export function DataTable<TData, TValue>({
   data,
   pageSize = 10,
   toolbar,
+  mobileCard,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -56,7 +59,29 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       {toolbar?.(table)}
-      <div className="rounded-md border overflow-x-auto">
+
+      {/* Mobile card view */}
+      {mobileCard && (
+        <div className="space-y-3 lg:hidden">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <div key={row.id}>{mobileCard(row.original)}</div>
+            ))
+          ) : (
+            <p className="py-8 text-center text-muted-foreground">
+              No results.
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Desktop table view */}
+      <div
+        className={cn(
+          "rounded-md border overflow-hidden",
+          mobileCard && "hidden lg:block"
+        )}
+      >
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

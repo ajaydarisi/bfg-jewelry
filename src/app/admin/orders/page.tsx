@@ -32,7 +32,7 @@ export default async function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Orders</h1>
+      <h1 className="text-2xl font-bold md:text-3xl">Orders</h1>
       <OrdersTable orders={ordersWithEmail} />
     </div>
   );

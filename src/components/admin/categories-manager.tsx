@@ -227,6 +227,72 @@ export function CategoriesManager({ categories }: CategoriesManagerProps) {
     ));
   }
 
+  function renderMobileCard(cat: Category, depth: number) {
+    return (
+      <div
+        key={cat.id}
+        className="rounded-md border bg-card p-3"
+        style={{ marginLeft: `${depth * 16}px` }}
+      >
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1">
+              {depth > 0 && (
+                <ChevronRight className="size-3 shrink-0 text-muted-foreground" />
+              )}
+              <p className="truncate font-medium">{cat.name}</p>
+            </div>
+            {cat.name_telugu && (
+              <p className="text-xs text-muted-foreground">
+                {cat.name_telugu}
+              </p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              Sort: {cat.sort_order}
+            </p>
+          </div>
+          <div className="flex shrink-0 gap-1">
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={() => openCreateDialog(cat.id)}
+              title="Add subcategory"
+            >
+              <Plus className="size-4" />
+              <span className="sr-only">Add subcategory</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={() => openEditDialog(cat)}
+            >
+              <Pencil className="size-4" />
+              <span className="sr-only">Edit</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              onClick={() => handleDelete(cat)}
+              disabled={isPending}
+            >
+              <Trash2 className="size-4 text-destructive" />
+              <span className="sr-only">Delete</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderMobileTree(nodes: CategoryNode[], depth: number) {
+    return nodes.map((node) => (
+      <Fragment key={node.id}>
+        {renderMobileCard(node, depth)}
+        {node.children.length > 0 && renderMobileTree(node.children, depth + 1)}
+      </Fragment>
+    ));
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
@@ -341,7 +407,19 @@ export function CategoriesManager({ categories }: CategoriesManagerProps) {
         </Dialog>
       </div>
 
-      <div className="rounded-md border">
+      {/* Mobile card view */}
+      <div className="space-y-2 lg:hidden">
+        {categoryTree.length > 0 ? (
+          renderMobileTree(categoryTree, 0)
+        ) : (
+          <p className="py-8 text-center text-muted-foreground">
+            No categories yet. Create one to get started.
+          </p>
+        )}
+      </div>
+
+      {/* Desktop table view */}
+      <div className="hidden rounded-md border lg:block">
         <Table>
           <TableHeader>
             <TableRow>

@@ -75,7 +75,7 @@ export default async function OrderDetailPage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-2xl font-bold md:text-3xl">
             Order {order.order_number}
           </h1>
           <p className="text-muted-foreground">
@@ -96,12 +96,13 @@ export default async function OrderDetailPage({
               <CardTitle>Items</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="overflow-hidden">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Product</TableHead>
                     <TableHead className="text-center">Qty</TableHead>
-                    <TableHead className="text-right">Price</TableHead>
+                    <TableHead className="hidden text-right sm:table-cell">Price</TableHead>
                     <TableHead className="text-right">Total</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -128,7 +129,7 @@ export default async function OrderDetailPage({
                       <TableCell className="text-center">
                         {item.quantity}
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="hidden text-right sm:table-cell">
                         {formatPrice(item.unit_price)}
                       </TableCell>
                       <TableCell className="text-right">
@@ -138,6 +139,7 @@ export default async function OrderDetailPage({
                   ))}
                 </TableBody>
               </Table>
+              </div>
 
               <Separator className="my-4" />
 

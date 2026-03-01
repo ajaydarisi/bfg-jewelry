@@ -45,7 +45,7 @@ export default async function AdminLayout({
       enableSystem
       disableTransitionOnChange
     >
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen overflow-x-hidden">
         <AdminSidebar />
         <div className="flex flex-1 flex-col">
           <AdminMobileHeader />

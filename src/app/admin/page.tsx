@@ -144,7 +144,7 @@ export default async function AdminDashboardPage() {
         <CardHeader>
           <CardTitle>Recent Orders</CardTitle>
         </CardHeader>
-        <CardContent className="overflow-x-auto">
+        <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
