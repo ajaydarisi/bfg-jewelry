@@ -24,13 +24,6 @@ export const PRODUCT_TYPES = [
 
 export const MATERIALS = [
   "Gold Plated",
-  "Silver",
-  "Rose Gold",
-  "Beads",
-  "Pearl",
-  "Crystal",
-  "Stainless Steel",
-  "Brass",
   "Panchaloha",
   "Antique",
   "Nakshi",

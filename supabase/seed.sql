@@ -28,7 +28,7 @@ insert into public.products (name, slug, description, price, discount_price, cat
     'Classic pearl drop earrings with a modern twist. These lightweight earrings add elegance to any outfit.',
     799, null,
     (select id from public.categories where slug = 'earrings'),
-    75, 'Pearl',
+    75, 'Gold Plated',
     array['New', 'Best Seller'],
     array['https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600'],
     true, true
@@ -39,7 +39,7 @@ insert into public.products (name, slug, description, price, discount_price, cat
     'A beautiful sterling silver charm bracelet with customizable charms. Makes a perfect gift.',
     1499, 1199,
     (select id from public.categories where slug = 'bracelets'),
-    30, 'Silver',
+    30, 'Gold Plated',
     array['Trending'],
     array['https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=600'],
     true, true
@@ -50,7 +50,7 @@ insert into public.products (name, slug, description, price, discount_price, cat
     'An exquisite rose gold ring featuring sparkling crystals. A statement piece for special occasions.',
     899, 699,
     (select id from public.categories where slug = 'rings'),
-    40, 'Rose Gold',
+    40, 'Gold Plated',
     array['Sale', 'Trending'],
     array['https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600'],
     true, true
@@ -83,7 +83,7 @@ insert into public.products (name, slug, description, price, discount_price, cat
     'Colorful handcrafted beaded earrings with a bohemian flair. Lightweight and comfortable.',
     449, 349,
     (select id from public.categories where slug = 'earrings'),
-    60, 'Beads',
+    60, 'Gold Plated',
     array['Sale'],
     array['https://images.unsplash.com/photo-1630019852942-f89202989a59?w=600'],
     true, false
@@ -94,7 +94,7 @@ insert into public.products (name, slug, description, price, discount_price, cat
     'A bold and modern stainless steel cuff bracelet. Adjustable fit for comfort.',
     999, null,
     (select id from public.categories where slug = 'bracelets'),
-    45, 'Stainless Steel',
+    45, 'Gold Plated',
     array['New'],
     array['https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600'],
     true, false
@@ -105,7 +105,7 @@ insert into public.products (name, slug, description, price, discount_price, cat
     'A vintage-inspired ring featuring a single pearl on a brass band. Timeless elegance.',
     649, null,
     (select id from public.categories where slug = 'rings'),
-    55, 'Brass',
+    55, 'Gold Plated',
     array['Trending'],
     array['https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=600'],
     true, false
@@ -116,7 +116,7 @@ insert into public.products (name, slug, description, price, discount_price, cat
     'A beautiful crystal teardrop pendant on a silver chain. Catches light beautifully.',
     1099, 899,
     (select id from public.categories where slug = 'necklaces'),
-    35, 'Crystal',
+    35, 'Gold Plated',
     array['Best Seller'],
     array['https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=600'],
     true, false
@@ -138,7 +138,7 @@ insert into public.products (name, slug, description, price, discount_price, cat
     'A mesmerizing moonstone set in a sterling silver band. Each stone is unique.',
     1199, 999,
     (select id from public.categories where slug = 'rings'),
-    25, 'Silver',
+    25, 'Gold Plated',
     array['Limited Edition'],
     array['https://images.unsplash.com/photo-1608042314453-ae338d80c427?w=600'],
     true, false
