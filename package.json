@@ -13,7 +13,8 @@
     "cap:ios": "cap sync ios && cap open ios",
     "cap:clean": "rm -rf android/app/build android/build android/.gradle",
     "cap:install": "npm run cap:clean && cap sync android && cd android && JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew assembleDebug && cd .. && adb install -r android/app/build/outputs/apk/debug/app-debug.apk",
-    "cap:dev": "cap sync android && cap run android -l --host $(hostname -I | awk '{print $1}') --port 3000"
+    "cap:dev": "cap sync android && cap run android -l --host $(hostname -I | awk '{print $1}') --port 3000",
+    "cap:release": "npm run cap:clean && npx cap sync android && cd android && JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 ./gradlew bundleRelease && cd .. && echo 'AAB ready at: android/app/build/outputs/bundle/release/app-release.aab'"
   },
   "dependencies": {
     "@capacitor-firebase/messaging": "^8.1.0",
