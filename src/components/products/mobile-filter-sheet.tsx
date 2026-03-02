@@ -39,6 +39,7 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
       Number(searchParams.get("minPrice")) || 0,
       Number(searchParams.get("maxPrice")) || 10000,
     ],
+    search: searchParams.get("search") || "",
   });
 
   const handleFiltersChange = useCallback((filters: PendingFilters) => {
@@ -81,6 +82,7 @@ export function MobileFilterSheet({ categories }: MobileFilterSheetProps) {
       tags: [],
       type: "",
       priceRange: [0, 10000],
+      search: "",
     };
     setOpen(false);
     setTimeout(() => {
