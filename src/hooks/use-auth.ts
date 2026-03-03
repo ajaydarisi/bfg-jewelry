@@ -31,12 +31,16 @@ export function useAuthProvider(): AuthContextType {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfile = useCallback(async (userId: string) => {
-    const { data } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
-    setProfile(data);
+    try {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+      setProfile(data);
+    } catch {
+      setProfile(null);
+    }
   }, []);
 
   useEffect(() => {
@@ -62,13 +66,18 @@ export function useAuthProvider(): AuthContextType {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event: AuthChangeEvent, session: Session | null) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        await fetchProfile(session.user.id);
-      } else {
-        setProfile(null);
+      try {
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          await fetchProfile(session.user.id);
+        } else {
+          setProfile(null);
+        }
+      } catch {
+        // Don't block loading on profile fetch failure
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     });
 
     const handleVisibilityChange = () => {
