@@ -155,13 +155,12 @@ const getFilteredProducts = unstable_cache(
     if (search) query = query.ilike("name", `%${search}%`);
 
     const isDiscountSort = sort === "discount";
+    const isPriceSort = sort === "price-asc" || sort === "price-desc";
 
     switch (sort) {
       case "price-asc":
-        query = query.order(priceCol, { ascending: true });
-        break;
       case "price-desc":
-        query = query.order(priceCol, { ascending: false });
+        // Sort in-app by effective displayed price (considers discounts)
         break;
       case "name-asc":
         query = query.order(locale === "te" ? "name_telugu" : "name", { ascending: true });
@@ -176,11 +175,26 @@ const getFilteredProducts = unstable_cache(
     const from = (page - 1) * PRODUCTS_PER_PAGE;
     const to = from + PRODUCTS_PER_PAGE - 1;
 
-    if (!isDiscountSort) {
+    if (!isDiscountSort && !isPriceSort) {
       query = query.range(from, to);
     }
 
     const { data } = await query;
+
+    if (isPriceSort && data) {
+      const getEffectivePrice = (p: (typeof data)[number]) => {
+        if (p.is_rental && p.rental_price) {
+          return p.rental_discount_price ?? p.rental_price;
+        }
+        return p.discount_price ?? p.price;
+      };
+      const asc = sort === "price-asc";
+      data.sort((a, b) => asc
+        ? getEffectivePrice(a) - getEffectivePrice(b)
+        : getEffectivePrice(b) - getEffectivePrice(a)
+      );
+      return data.slice(from, to + 1);
+    }
 
     if (isDiscountSort && data) {
       const getDiscountPct = (p: (typeof data)[number]) => {

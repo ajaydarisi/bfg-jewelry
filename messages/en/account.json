@@ -85,6 +85,13 @@
     "wrongPassword": "Current password is incorrect",
     "samePassword": "New password must be different from current password"
   },
+  "signOut": {
+    "title": "Sign Out",
+    "description": "Sign out of your account on this device.",
+    "button": "Sign Out",
+    "successToast": "Signed out successfully",
+    "errorToast": "Failed to sign out"
+  },
   "deleteAccount": {
     "title": "Delete Account",
     "description": "Once you delete your account, all your data including your profile, addresses, cart, and wishlist will be permanently removed. Your order history will be preserved.",

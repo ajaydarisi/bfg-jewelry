@@ -55,8 +55,8 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const locale = useLocale();
-  const { theme, setTheme } = useTheme();
-  const themeToggle = () => setTheme(theme === "dark" ? "light" : "dark");
+  const { resolvedTheme, setTheme } = useTheme();
+  const themeToggle = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [langDialogOpen, setLangDialogOpen] = useState(false);
@@ -312,7 +312,7 @@ export function Header() {
         onSearchOpen={() => setSearchOpen(true)}
         onSignOut={handleSignOut}
         onLangDialogOpen={() => setLangDialogOpen(true)}
-        theme={theme}
+        theme={resolvedTheme}
         onThemeToggle={themeToggle}
         pathname={pathname}
       />

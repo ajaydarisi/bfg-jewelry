@@ -80,13 +80,12 @@ export async function fetchProducts(
   // Sorting
   const priceCol = type === "rental" ? "rental_price" : "price";
   const isDiscountSort = sort === "discount";
+  const isPriceSort = sort === "price-asc" || sort === "price-desc";
 
   switch (sort) {
     case "price-asc":
-      query = query.order(priceCol, { ascending: true });
-      break;
     case "price-desc":
-      query = query.order(priceCol, { ascending: false });
+      // Sort in-app by effective displayed price (considers discounts)
       break;
     case "name-asc":
       query = query.order(locale === "te" ? "name_telugu" : "name", {
@@ -102,7 +101,7 @@ export async function fetchProducts(
   const from = (page - 1) * PRODUCTS_PER_PAGE;
   const to = from + PRODUCTS_PER_PAGE - 1;
 
-  if (!isDiscountSort) {
+  if (!isDiscountSort && !isPriceSort) {
     query = query.range(from, to);
   }
 
@@ -112,6 +111,21 @@ export async function fetchProducts(
   ]);
 
   let result = (products ?? []) as unknown as ProductWithCategory[];
+
+  if (isPriceSort && products) {
+    const getEffectivePrice = (p: ProductWithCategory) => {
+      if (p.is_rental && p.rental_price) {
+        return p.rental_discount_price ?? p.rental_price;
+      }
+      return p.discount_price ?? p.price;
+    };
+    const asc = sort === "price-asc";
+    result.sort((a, b) => asc
+      ? getEffectivePrice(a) - getEffectivePrice(b)
+      : getEffectivePrice(b) - getEffectivePrice(a)
+    );
+    result = result.slice(from, to + 1);
+  }
 
   if (isDiscountSort && products) {
     const getDiscountPct = (p: ProductWithCategory) => {

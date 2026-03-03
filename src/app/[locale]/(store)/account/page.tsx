@@ -34,7 +34,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Eye, EyeOff, Loader2, Trash2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, LogOut, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { changePassword, deleteMyAccount } from "./actions";
@@ -283,8 +283,49 @@ export default function ProfilePage() {
       </Card>
 
       <ChangePasswordCard />
+      <SignOutCard />
       <DeleteAccountCard />
     </div>
+  );
+}
+
+function SignOutCard() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const t = useTranslations("account.signOut");
+
+  async function handleSignOut() {
+    setIsLoading(true);
+    try {
+      const supabase = createClient();
+      await supabase.auth.signOut({ scope: "local" });
+      toast.success(t("successToast"));
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error(t("errorToast"));
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("title")}</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <p className="text-sm text-muted-foreground">{t("description")}</p>
+        <Button variant="outline" onClick={handleSignOut} disabled={isLoading}>
+          {isLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <LogOut className="mr-2 h-4 w-4" />
+          )}
+          {t("button")}
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 
