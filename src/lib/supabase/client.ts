@@ -12,7 +12,7 @@ export function createClient() {
         // Increase from default 10s — native WebViews (Capacitor) can be
         // slow to release Navigator LockManager locks after app resume.
         lockAcquireTimeout: 20_000,
-      },
+      } as Record<string, unknown>,
     }
   );
   return client;

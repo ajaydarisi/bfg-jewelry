@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
+import { useSearchParams } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -458,6 +459,9 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
         <Slider
           value={priceRange}
           onValueChange={setPriceRange}
+          onValueCommit={(val: number[]) => {
+            if (isDeferred) notifyChange({ priceRange: val });
+          }}
           min={0}
           max={10000}
           step={100}
