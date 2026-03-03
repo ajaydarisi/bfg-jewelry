@@ -78,9 +78,17 @@ export function useAuthProvider(): AuthContextType {
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
+    // Re-verify auth when Capacitor app resumes from background
+    // (visibilitychange doesn't reliably fire in native WebViews)
+    const handleAppResume = () => {
+      initAuth();
+    };
+    window.addEventListener("bfg:app-resume", handleAppResume);
+
     return () => {
       subscription.unsubscribe();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("bfg:app-resume", handleAppResume);
     };
   }, [fetchProfile]);
 
