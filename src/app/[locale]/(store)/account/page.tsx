@@ -342,7 +342,8 @@ function DeleteAccountCard() {
     try {
       const result = await deleteMyAccount();
       if (!result.success) {
-        toast.error(t("errorToast"));
+        toast.error(result.error || t("errorToast"));
+        setOpen(false);
         return;
       }
       await supabase.auth.signOut();
@@ -351,6 +352,7 @@ function DeleteAccountCard() {
       router.refresh();
     } catch {
       toast.error(t("errorToast"));
+      setOpen(false);
     } finally {
       setIsLoading(false);
     }
@@ -393,7 +395,10 @@ function DeleteAccountCard() {
             <AlertDialogFooter>
               <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
               <AlertDialogAction
-                onClick={handleDelete}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDelete();
+                }}
                 disabled={confirmText !== "DELETE" || isLoading}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >

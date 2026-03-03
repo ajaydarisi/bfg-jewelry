@@ -58,7 +58,8 @@ export async function deleteMyAccount() {
   const { error } = await admin.auth.admin.deleteUser(user.id);
 
   if (error) {
-    return { success: false, error: "delete_failed" };
+    console.error("Failed to delete user:", error.message);
+    return { success: false, error: error.message };
   }
 
   return { success: true };
