@@ -1,7 +1,13 @@
 import { BUSINESS_INFO } from "@/lib/constants";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend: Resend | null = null;
+function getResend() {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return _resend;
+}
 
 const FROM_EMAIL =
   "Bhagyalakshmi Future Gold <noreply@bhagylakshmi-future-gold-commerce.com>";
@@ -17,7 +23,7 @@ const ADDRESS_FOOTER = `
 
 export async function sendWelcomeEmail(email: string, name: string) {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to: email,
       subject: "Welcome to Bhagyalakshmi Future Gold!",
@@ -60,7 +66,7 @@ export async function sendOrderConfirmationEmail(
     .join("");
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to: email,
       subject: `Order Confirmed - ${orderNumber}`,
@@ -104,7 +110,7 @@ export async function sendFeedbackNotificationEmail(
   const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
 
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to: BUSINESS_INFO.email,
       subject: `New Feedback (${rating}/5 stars) from ${name}`,
@@ -139,7 +145,7 @@ export async function sendShippingNotificationEmail(
   orderNumber: string,
 ) {
   try {
-    await resend.emails.send({
+    await getResend().emails.send({
       from: FROM_EMAIL,
       to: email,
       subject: `Your Order ${orderNumber} Has Been Shipped!`,
