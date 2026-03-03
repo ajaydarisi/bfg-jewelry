@@ -50,7 +50,7 @@ export function ProductsContent({
         title={t("noProducts")}
         description={t("noProductsDesc")}
         actionLabel={t("clearFilters")}
-        actionHref={locale === "en" ? "/products" : `/${locale}/products`}
+        actionHref="/products"
       />
     );
   }
