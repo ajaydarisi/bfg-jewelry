@@ -93,6 +93,14 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
   const [pendingType, setPendingType] = useState(urlType);
   const [priceRange, setPriceRange] = useState([urlMinPrice, urlMaxPrice]);
   const [searchQuery, setSearchQuery] = useState(urlSearch);
+
+  // Sync price range when URL params change (e.g. "Clear Filters" link navigation)
+  const [prevUrlPrices, setPrevUrlPrices] = useState([urlMinPrice, urlMaxPrice]);
+  if (!isDeferred && (urlMinPrice !== prevUrlPrices[0] || urlMaxPrice !== prevUrlPrices[1])) {
+    setPrevUrlPrices([urlMinPrice, urlMaxPrice]);
+    setPriceRange([urlMinPrice, urlMaxPrice]);
+  }
+
   const debouncedSearch = useDebounce(searchQuery, 400);
   const prevDebouncedSearch = useRef(debouncedSearch);
 
@@ -256,6 +264,7 @@ export function ProductFilters({ categories = [], mode = "immediate", onFiltersC
       notifyChange({ categories: [], materials: [], tags: [], type: "", priceRange: [0, 10000] });
       return;
     }
+    setPriceRange([0, 10000]);
     setSearchQuery("");
     setLoading(true);
     router.push("/products");
