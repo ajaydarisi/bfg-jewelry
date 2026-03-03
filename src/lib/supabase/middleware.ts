@@ -79,8 +79,11 @@ export async function updateSession(
     }
   }
 
+  // Let server actions handle their own auth (they return structured errors)
+  const isServerAction = request.headers.get("next-action") !== null;
+
   // Protect account routes - require login and valid (non-banned/deleted) user
-  if (strippedPath.startsWith("/account")) {
+  if (strippedPath.startsWith("/account") && !isServerAction) {
     if (!user) {
       const url = request.nextUrl.clone();
       const localePrefix = pathname.replace(strippedPath, "");
