@@ -3,7 +3,7 @@ import { PRODUCTS_PER_PAGE } from "@/lib/constants";
 import { calculateDiscount } from "@/lib/formatters";
 import type { ProductWithCategory } from "@/types/product";
 
-const PRODUCT_LIST_FIELDS =
+export const PRODUCT_LIST_FIELDS =
   "id, name, name_telugu, slug, price, discount_price, images, tags, stock, is_sale, is_rental, rental_price, rental_discount_price, material, set_number, category:categories(name, name_telugu, slug)";
 
 export interface FetchProductsParams {
@@ -76,9 +76,9 @@ export async function fetchProducts(
   params: FetchProductsParams
 ): Promise<{ products: ProductWithCategory[]; count: number }> {
   const supabase = createClient();
-  const { type, sort, page, locale } = params;
+  const { sort, page, locale } = params;
 
-  let countQuery = applyFilters(
+  const countQuery = applyFilters(
     supabase
       .from("products")
       .select("id", { count: "exact", head: true })
@@ -92,7 +92,6 @@ export async function fetchProducts(
   );
 
   // Sorting
-  const priceCol = type === "rental" ? "rental_price" : "price";
   const isDiscountSort = sort === "discount";
   const isPriceSort = sort === "price-asc" || sort === "price-desc";
 

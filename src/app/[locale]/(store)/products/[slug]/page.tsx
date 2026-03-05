@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/shared/breadcrumbs";
 import { ProductGridSkeleton } from "@/components/shared/loading-skeleton";
 import { APP_NAME, ROUTES } from "@/lib/constants";
 import { getCategoryName, getProductDescription, getProductName } from "@/lib/i18n-helpers";
+import { PRODUCT_LIST_FIELDS } from "@/lib/queries/products";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { ProductWithCategory } from "@/types/product";
 import type { Metadata } from "next";
@@ -12,9 +13,6 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { unstable_cache } from "next/cache";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-
-const RELATED_PRODUCT_FIELDS =
-  "id, name, name_telugu, slug, price, discount_price, images, tags, stock, is_sale, is_rental, rental_price, material, category:categories(name, name_telugu, slug)";
 
 const getProduct = unstable_cache(
   async (slug: string) => {
@@ -36,7 +34,7 @@ const getRelatedProducts = unstable_cache(
     const supabase = createAdminClient();
     const { data } = await supabase
       .from("products")
-      .select(RELATED_PRODUCT_FIELDS)
+      .select(PRODUCT_LIST_FIELDS)
       .eq("is_active", true)
       .eq("category_id", categoryId)
       .neq("id", excludeId)
