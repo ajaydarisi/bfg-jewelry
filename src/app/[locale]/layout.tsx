@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { routing } from "@/i18n/routing";
 import { SetHtmlLang } from "@/components/shared/set-html-lang";
 import { NavProgress } from "@/components/shared/nav-progress";
+import { OnboardingScreen } from "@/components/shared/onboarding-screen";
 import { APP_DESCRIPTION, APP_NAME } from "@/lib/constants";
 import type { Metadata, Viewport } from "next";
 
@@ -140,6 +141,7 @@ export default async function LocaleLayout({
         enableSystem
         disableTransitionOnChange
       >
+        <OnboardingScreen />
         <AuthProvider>
           <NavProgress />
           {children}
