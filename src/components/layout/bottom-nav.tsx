@@ -85,7 +85,7 @@ export function BottomNav() {
                 <Icon
                   className="h-5 w-5"
                   strokeWidth={active ? 2 : 1.5}
-                  fill={active ? "currentColor" : "none"}
+                  fill={active && tab.key !== "home" ? "currentColor" : "none"}
                 />
                 {"badge" in tab && tab.badge > 0 && (
                   <Badge
