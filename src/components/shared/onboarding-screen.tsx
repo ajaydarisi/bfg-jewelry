@@ -42,9 +42,9 @@ export function OnboardingScreen() {
         <Image
           src="/images/logo.png"
           alt="Bhagyalakshmi Future Gold"
-          width={80}
-          height={80}
-          className="rounded-full"
+          width={200}
+          height={200}
+          className="h-32 w-auto rounded-lg"
         />
       </div>
 
